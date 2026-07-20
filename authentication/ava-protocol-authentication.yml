@@ -1,0 +1,18 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/ava-protocol-avs-openapi-original.yml
+summary:
+  types:
+  - http
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  description: |-
+    JWT bearer token. Obtained via `POST /auth:exchange` (wallet
+    signature flow) or via the operator-run `create-api-key` CLI
+    (long-lived, server-to-server). Send on every request as
+    `Authorization: Bearer <jwt>`.
+  sources:
+  - openapi/ava-protocol-avs-openapi-original.yml

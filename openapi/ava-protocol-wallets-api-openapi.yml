@@ -1,0 +1,414 @@
+openapi: 3.0.3
+info:
+  title: Ava Protocol AVS Auth Wallets API
+  version: 1.0.0
+  description: 'Public REST API for the Ava Protocol AVS aggregator. Exposes workflow
+
+    creation, execution monitoring, smart-wallet management, and related
+
+    operations.
+
+
+    Authentication is a single credential type — a JWT bearer token — obtained
+
+    either via the wallet-signing flow (`POST /auth:exchange`) or out-of-band
+
+    via the operator-run `create-api-key` CLI. Every request must include
+
+    `Authorization: Bearer <jwt>`.
+
+    '
+servers:
+- url: https://gateway.avaprotocol.org/api/v1
+  description: Production gateway
+- url: https://gateway-staging.avaprotocol.org/api/v1
+  description: Staging gateway
+- url: http://localhost:8080/api/v1
+  description: Local dev
+security:
+- bearerAuth: []
+tags:
+- name: Wallets
+  description: Smart-wallet derivation and operations
+paths:
+  /wallets:
+    get:
+      tags:
+      - Wallets
+      summary: List the authenticated user's smart wallets
+      operationId: listWallets
+      responses:
+        '200':
+          description: All wallets for the authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+      - Wallets
+      summary: Derive (and persist) a smart wallet address from (owner, salt, factory)
+      description: 'Idempotent "ensure exists". Returns the deterministic CREATE2-derived
+
+        address. POST (not GET) because it persists a wallet record server-side
+
+        as a side effect of the derivation.
+
+        '
+      operationId: createWallet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWalletRequest'
+      responses:
+        '200':
+          description: Wallet derived (existing record returned if already present).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wallet'
+        '201':
+          description: Wallet derived (new record persisted).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wallet'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /wallets/{address}:
+    parameters:
+    - name: address
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/EthereumAddress'
+    patch:
+      tags:
+      - Wallets
+      summary: Update wallet properties
+      description: Partial update; only fields present in the body are changed (e.g., `isHidden`).
+      operationId: updateWallet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWalletRequest'
+      responses:
+        '200':
+          description: Wallet updated.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wallet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wallets/{address}:withdraw:
+    parameters:
+    - name: address
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/EthereumAddress'
+    post:
+      tags:
+      - Wallets
+      summary: Withdraw funds from a smart wallet
+      operationId: withdrawWallet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithdrawRequest'
+      responses:
+        '200':
+          description: Withdrawal submitted (UserOp may still be in flight).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WithdrawResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '412':
+          description: Insufficient balance or other on-chain precondition failure.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /wallets/{address}:getNonce:
+    parameters:
+    - name: address
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/EthereumAddress'
+    - $ref: '#/components/parameters/ChainIdQuery'
+    get:
+      tags:
+      - Wallets
+      summary: Get the smart wallet's current nonce
+      operationId: getWalletNonce
+      responses:
+        '200':
+          description: Wallet nonce.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NonceResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    Wallet:
+      type: object
+      required:
+      - address
+      - salt
+      properties:
+        address:
+          $ref: '#/components/schemas/EthereumAddress'
+        salt:
+          type: string
+          description: Salt used in CREATE2 derivation (decimal string).
+        factoryAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+          description: Factory contract used to derive this address.
+        isHidden:
+          type: boolean
+        totalWorkflowCount:
+          type: integer
+          format: int64
+        enabledWorkflowCount:
+          type: integer
+          format: int64
+        completedWorkflowCount:
+          type: integer
+          format: int64
+        failedWorkflowCount:
+          type: integer
+          format: int64
+        disabledWorkflowCount:
+          type: integer
+          format: int64
+    WithdrawResponse:
+      type: object
+      required:
+      - status
+      properties:
+        status:
+          type: string
+          enum:
+          - pending
+          - confirmed
+          - failed
+        message:
+          type: string
+        userOpHash:
+          $ref: '#/components/schemas/Hex'
+        transactionHash:
+          $ref: '#/components/schemas/Hex'
+        submittedAt:
+          type: integer
+          format: int64
+        smartWalletAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        recipientAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        amount:
+          type: string
+        token:
+          type: string
+    NonceResponse:
+      type: object
+      required:
+      - nonce
+      properties:
+        nonce:
+          type: string
+          description: Smart wallet nonce as a decimal string.
+    UpdateWalletRequest:
+      type: object
+      properties:
+        isHidden:
+          type: boolean
+    Problem:
+      type: object
+      description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
+
+        4xx/5xx response. `type` and `title` describe the error class; `detail`
+
+        is human-readable; `instance` is a per-request identifier suitable for
+
+        log correlation.
+
+        '
+      required:
+      - type
+      - title
+      - status
+      properties:
+        type:
+          type: string
+          format: uri
+          description: URI identifying the problem type.
+          example: https://docs.avaprotocol.org/errors/workflow-not-found
+        title:
+          type: string
+          description: Short, human-readable summary.
+          example: Workflow not found
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code (echoed for clients that surface only the body).
+          example: 404
+        detail:
+          type: string
+          description: Human-readable explanation specific to this occurrence.
+          example: No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...
+        instance:
+          type: string
+          description: URI / opaque ID identifying this specific occurrence (e.g., request id).
+          example: req_01JG2FE5MFKTH0754RGF2DMVY7
+        code:
+          type: string
+          description: 'Machine-readable error code. Stable across releases; clients can
+
+            switch on this for programmatic handling. Mirrors the gRPC-era
+
+            ErrorCode enum vocabulary.
+
+            '
+          example: WORKFLOW_NOT_FOUND
+    ChainId:
+      type: integer
+      format: int64
+      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
+
+        chain-aware trigger/node configs this is required and must be a
+
+        configured chain; on query/filter params it is optional.
+
+        '
+      example: 11155111
+    EthereumAddress:
+      type: string
+      pattern: ^0x[a-fA-F0-9]{40}$
+      description: Lowercase or checksummed hex EOA / contract address.
+      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
+    CreateWalletRequest:
+      type: object
+      required:
+      - salt
+      properties:
+        salt:
+          type: string
+          description: Salt as a decimal string (big-int). Determines the derived address together with the factory.
+        factoryAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+          description: Optional factory override. Defaults to the aggregator's configured factory.
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: 'Chain to derive the wallet on. Optional override — when
+
+            omitted, the gateway defaults to the JWT `aud` chain (i.e.
+
+            the chain the caller signed the auth message for). Set
+
+            this when minting a wallet for a chain different from the
+
+            one the JWT was issued against; the JWT proves EOA
+
+            ownership, which is chain-independent.
+
+            '
+    WithdrawRequest:
+      type: object
+      required:
+      - recipientAddress
+      - amount
+      - token
+      properties:
+        recipientAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        amount:
+          type: string
+          description: Amount in wei (decimal string) or `max` for the full balance.
+        token:
+          type: string
+          description: '`ETH` for native token, or an ERC-20 contract address.'
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: Chain to execute the withdrawal on. 0 = aggregator default.
+    WalletList:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Wallet'
+    Hex:
+      type: string
+      pattern: ^0x[a-fA-F0-9]*$
+      description: Arbitrary-length hex-encoded byte string.
+  responses:
+    Unauthorized:
+      description: Missing or invalid bearer token.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    BadRequest:
+      description: Request validation failed.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  parameters:
+    ChainIdQuery:
+      name: chainId
+      in: query
+      description: 'The chain to operate on (a single value). Omit to use the aggregator
+
+        default (the request''s JWT `aud` chain, then the gateway default).
+
+        '
+      schema:
+        type: integer
+        format: int64
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT bearer token. Obtained via `POST /auth:exchange` (wallet
+
+        signature flow) or via the operator-run `create-api-key` CLI
+
+        (long-lived, server-to-server). Send on every request as
+
+        `Authorization: Bearer <jwt>`.
+
+        '

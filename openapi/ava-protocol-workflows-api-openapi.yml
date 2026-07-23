@@ -1,0 +1,1666 @@
+openapi: 3.0.3
+info:
+  title: Ava Protocol AVS Auth Workflows API
+  version: 1.0.0
+  description: 'Public REST API for the Ava Protocol AVS aggregator. Exposes workflow
+
+    creation, execution monitoring, smart-wallet management, and related
+
+    operations.
+
+
+    Authentication is a single credential type — a JWT bearer token — obtained
+
+    either via the wallet-signing flow (`POST /auth:exchange`) or out-of-band
+
+    via the operator-run `create-api-key` CLI. Every request must include
+
+    `Authorization: Bearer <jwt>`.
+
+    '
+servers:
+- url: https://gateway.avaprotocol.org/api/v1
+  description: Production gateway
+- url: https://gateway-staging.avaprotocol.org/api/v1
+  description: Staging gateway
+- url: http://localhost:8080/api/v1
+  description: Local dev
+security:
+- bearerAuth: []
+tags:
+- name: Workflows
+  description: Workflow CRUD and lifecycle actions
+paths:
+  /workflows:
+    post:
+      tags:
+      - Workflows
+      summary: Create a workflow
+      description: 'Persist a new workflow definition. Each chain-aware trigger and node
+
+        carries its own required `chainId` (there is no workflow-level chain);
+
+        the server validates those chains and ensures the smart wallet belongs
+
+        to the authenticated user. Returns the persisted Workflow with its
+
+        server-assigned `id` and `createdAt`.
+
+        '
+      operationId: createWorkflow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkflowRequest'
+      responses:
+        '201':
+          description: Workflow created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workflow'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    get:
+      tags:
+      - Workflows
+      summary: List workflows
+      operationId: listWorkflows
+      parameters:
+      - name: smartWalletAddress
+        in: query
+        description: Filter by smart wallet address. Repeat to OR multiple addresses.
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/EthereumAddress'
+      - name: status
+        in: query
+        description: Filter by status. Repeat to OR multiple statuses.
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkflowStatus'
+      - $ref: '#/components/parameters/PageBefore'
+      - $ref: '#/components/parameters/PageAfter'
+      - $ref: '#/components/parameters/PageLimit'
+      responses:
+        '200':
+          description: Page of workflows.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+  /workflows/{id}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Ulid'
+    get:
+      tags:
+      - Workflows
+      summary: Retrieve a workflow
+      operationId: getWorkflow
+      responses:
+        '200':
+          description: The workflow.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workflow'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+      - Workflows
+      summary: Cancel a workflow
+      description: 'Permanently cancels and removes the workflow. SDK method is
+
+        `cancel(id)` to align with Stripe-style vocabulary.
+
+        '
+      operationId: cancelWorkflow
+      responses:
+        '204':
+          description: Workflow cancelled.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /workflows/{id}:pause:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Ulid'
+    post:
+      tags:
+      - Workflows
+      summary: Pause a workflow
+      description: Transition from `enabled` to `disabled`. Idempotent.
+      operationId: pauseWorkflow
+      responses:
+        '200':
+          description: Workflow paused.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workflow'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Workflow is in a terminal state and cannot be paused.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /workflows/{id}:resume:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Ulid'
+    post:
+      tags:
+      - Workflows
+      summary: Resume a workflow
+      description: Transition from `disabled` to `enabled`. Idempotent.
+      operationId: resumeWorkflow
+      responses:
+        '200':
+          description: Workflow resumed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workflow'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Workflow is in a terminal state and cannot be resumed.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /workflows/{id}:trigger:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Ulid'
+    post:
+      tags:
+      - Workflows
+      summary: Manually trigger a workflow
+      description: 'Simulate an operator-detected trigger fire. The server enqueues an
+
+        execution; when `isBlocking=true`, the response waits for the
+
+        execution to complete.
+
+        '
+      operationId: triggerWorkflow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TriggerWorkflowRequest'
+      responses:
+        '202':
+          description: Execution enqueued (async). Returned when isBlocking=false.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TriggerWorkflowResponse'
+        '200':
+          description: Execution completed (blocking). Returned when isBlocking=true.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TriggerWorkflowResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '412':
+          description: Workflow is disabled or has reached its max execution count.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /workflows:simulate:
+    post:
+      tags:
+      - Workflows
+      summary: Simulate a workflow without persisting it
+      description: 'Run a workflow definition end-to-end against the engine (Tenderly
+
+        simulation for chain-writing nodes) and return the full Execution.
+
+        Nothing is persisted.
+
+        '
+      operationId: simulateWorkflow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimulateWorkflowRequest'
+      responses:
+        '200':
+          description: Simulated execution.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /workflows:estimateFees:
+    post:
+      tags:
+      - Workflows
+      summary: Estimate per-execution fees for a workflow definition
+      description: 'Returns the platform execution fee, per-node COGS (gas, external
+
+        API costs), and the workflow-level value-capture fee tier.
+
+        '
+      operationId: estimateWorkflowFees
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EstimateFeesRequest'
+      responses:
+        '200':
+          description: Fee estimate.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstimateFeesResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /workflows:count:
+    get:
+      tags:
+      - Workflows
+      summary: Count workflows
+      description: Cheap aggregation over the same filter set as `GET /workflows`.
+      operationId: countWorkflows
+      parameters:
+      - name: smartWalletAddress
+        in: query
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/EthereumAddress'
+      - name: status
+        in: query
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/WorkflowStatus'
+      responses:
+        '200':
+          description: Workflow count for the filter set.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowCount'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    SimulateWorkflowRequest:
+      type: object
+      required:
+      - trigger
+      - nodes
+      - inputVariables
+      properties:
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+        trigger:
+          $ref: '#/components/schemas/Trigger'
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Node'
+        edges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Edge'
+        inputVariables:
+          $ref: '#/components/schemas/InputVariables'
+    PageInfo:
+      type: object
+      required:
+      - hasNextPage
+      - hasPreviousPage
+      properties:
+        hasNextPage:
+          type: boolean
+        hasPreviousPage:
+          type: boolean
+        startCursor:
+          type: string
+          description: Cursor for the first item in the current page; pass to `before` for the previous page.
+        endCursor:
+          type: string
+          description: Cursor for the last item in the current page; pass to `after` for the next page.
+    EventTriggerQuery:
+      type: object
+      description: Single ethereum.FilterQuery — one subscription per query.
+      properties:
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/EthereumAddress'
+          description: Contract addresses to filter events from. Empty matches any contract.
+        topics:
+          type: array
+          items:
+            type: string
+            nullable: true
+          description: 'Topic filters (`topics[0]` is the event signature, `topics[1..]`
+
+            are indexed parameter values). `null` means wildcard at that
+
+            position.
+
+            '
+        maxEventsPerBlock:
+          type: integer
+          format: int32
+          description: Safety ceiling per query per block. Exceeded → task cancelled.
+        contractAbi:
+          type: array
+          items:
+            additionalProperties: true
+          description: Contract ABI entries (JSON form) for event decoding.
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventCondition'
+          description: Filters applied to decoded event data.
+        methodCalls:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventMethodCall'
+          description: Method calls used to enrich decoded event data (e.g., `decimals`).
+    EventCondition:
+      type: object
+      description: Predicate evaluated against decoded event data.
+      required:
+      - fieldName
+      - operator
+      - value
+      properties:
+        fieldName:
+          type: string
+        operator:
+          type: string
+          enum:
+          - eq
+          - ne
+          - gt
+          - gte
+          - lt
+          - lte
+          - contains
+        value:
+          type: string
+          description: 'Value to compare against, encoded as a string. The operator
+
+            parses it according to `fieldType` (e.g. `int256` / `uint256`
+
+            → big.Int, `address` → checksummed hex, `bool` →
+
+            "true"/"false"). Matches the proto `EventCondition.value`,
+
+            which is also a string.
+
+            '
+        fieldType:
+          type: string
+    WorkflowStatus:
+      type: string
+      enum:
+      - enabled
+      - disabled
+      - running
+      - completed
+      - failed
+      description: 'Lifecycle status. `enabled` means actively monitored; `disabled` is
+
+        paused. `running`, `completed`, `failed` are terminal-ish states
+
+        emitted during/after execution.
+
+        '
+    FilterNodeConfig:
+      type: object
+      required:
+      - inputVariable
+      - expression
+      properties:
+        inputVariable:
+          type: string
+          description: Template path for the source array (e.g., `{{custom_code1.data}}`).
+        expression:
+          type: string
+          description: JavaScript predicate evaluated per item.
+    ContractReadNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - contractRead
+          config:
+            $ref: '#/components/schemas/ContractReadNodeConfig'
+    EthereumAddress:
+      type: string
+      pattern: ^0x[a-fA-F0-9]{40}$
+      description: Lowercase or checksummed hex EOA / contract address.
+      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
+    InputVariables:
+      type: object
+      additionalProperties: true
+      description: 'Free-form key-value bag of values used to resolve `{{variable.path}}`
+
+        template references inside trigger and node configs. Conventional
+
+        well-known keys: `settings.runner` (smart wallet address),
+
+        `settings.chainId` (chain id). camelCase keys; back-compat support
+
+        for snake_case keys exists during the migration window.
+
+        '
+    RestAPINodeConfig:
+      type: object
+      required:
+      - url
+      - method
+      properties:
+        url:
+          type: string
+          format: uri
+        method:
+          type: string
+          enum:
+          - GET
+          - POST
+          - PUT
+          - PATCH
+          - DELETE
+          - HEAD
+          - OPTIONS
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+        body:
+          type: string
+        options:
+          type: object
+          description: 'Generic options bag for backend features on terminal
+
+            RestAPI nodes. `summarize: true` opts a SendGrid /v3/mail/send
+
+            or Telegram /sendMessage node into the aggregator''s
+
+            context-memory summarizer, which composes a subject + HTML
+
+            body from the workflow''s execution context and injects them
+
+            into the outgoing request. Without this field set, the
+
+            aggregator falls back to the deterministic summarizer (no
+
+            LLM polish).
+
+            '
+          properties:
+            summarize:
+              type: boolean
+              description: 'When true on a terminal SendGrid or Telegram node,
+
+                ComposeSummarySmart runs at execution time and fills
+
+                in the empty content.value / text slot with an
+
+                AI-generated body. No-op on non-notification URLs.
+
+                '
+          additionalProperties: true
+    TriggerWorkflowRequest:
+      type: object
+      required:
+      - triggerType
+      properties:
+        triggerType:
+          $ref: '#/components/schemas/TriggerType'
+        triggerOutput:
+          description: 'Type-specific output payload (BlockTrigger.Output,
+
+            EventTrigger.Output, etc.) that simulates what the operator
+
+            would have observed. Defined alongside execution schemas.
+
+            '
+          additionalProperties: true
+        triggerInput:
+          $ref: '#/components/schemas/InputVariables'
+        isBlocking:
+          type: boolean
+          description: When true, wait for the execution to complete and return its result.
+    CustomCodeNodeConfig:
+      type: object
+      required:
+      - lang
+      - source
+      properties:
+        lang:
+          $ref: '#/components/schemas/Lang'
+        source:
+          type: string
+    MethodCall:
+      type: object
+      description: One call to a contract method (used by ContractWrite + ContractRead).
+      required:
+      - methodName
+      properties:
+        methodName:
+          type: string
+        callData:
+          $ref: '#/components/schemas/Hex'
+        applyToFields:
+          type: array
+          items:
+            type: string
+        methodParams:
+          type: array
+          items:
+            type: string
+            description: Handlebars template for method args.
+    Hex:
+      type: string
+      pattern: ^0x[a-fA-F0-9]*$
+      description: Arbitrary-length hex-encoded byte string.
+    ETHTransferNodeConfig:
+      type: object
+      required:
+      - destination
+      - amount
+      - chainId
+      properties:
+        destination:
+          $ref: '#/components/schemas/EthereumAddress'
+        amount:
+          type: string
+          description: Amount in wei (decimal string for big-int safety). Special value `max` withdraws the entire balance.
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: Chain to execute on. Required — a workflow carries no chain to inherit.
+    EventTrigger:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - event
+          config:
+            $ref: '#/components/schemas/EventTriggerConfig'
+    TriggerType:
+      type: string
+      enum:
+      - manual
+      - fixedTime
+      - cron
+      - block
+      - event
+      description: 'Discriminator field for the Trigger union. Mirrors the proto
+
+        `TriggerType` enum but without the `TRIGGER_TYPE_` prefix.
+
+        '
+    EstimateFeesRequest:
+      type: object
+      required:
+      - trigger
+      - nodes
+      - createdAt
+      - expireAt
+      - maxExecution
+      properties:
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+        trigger:
+          $ref: '#/components/schemas/Trigger'
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Node'
+        edges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Edge'
+        runner:
+          $ref: '#/components/schemas/EthereumAddress'
+          description: Smart wallet address used for gas estimation (overrides settings.runner).
+        createdAt:
+          type: integer
+          format: int64
+        expireAt:
+          type: integer
+          format: int64
+        maxExecution:
+          type: integer
+          format: int64
+        inputVariables:
+          $ref: '#/components/schemas/InputVariables'
+    EventTriggerConfig:
+      type: object
+      description: Fires when matching on-chain events are observed.
+      required:
+      - queries
+      - chainId
+      properties:
+        queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventTriggerQuery'
+          minItems: 1
+        cooldownSeconds:
+          type: integer
+          format: int32
+          minimum: 0
+          description: 'Seconds to wait after a fire before allowing the same task to
+
+            trigger again. Default 300. 0 disables cooldown.
+
+            '
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: Chain to watch events on. Required — a workflow carries no chain to inherit.
+    EstimateFeesResponse:
+      type: object
+      required:
+      - chainId
+      - executionFee
+      - cogs
+      - valueFee
+      properties:
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+        nativeToken:
+          $ref: '#/components/schemas/NativeToken'
+        executionFee:
+          $ref: '#/components/schemas/Fee'
+          description: Flat per-execution platform fee (typically USD).
+        cogs:
+          type: array
+          items:
+            $ref: '#/components/schemas/NodeCOGS'
+          description: Per-node operational costs (gas, external API).
+        valueFee:
+          $ref: '#/components/schemas/ValueFee'
+          description: Workflow-level value-capture fee (PERCENTAGE).
+        discounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeeDiscount'
+        pricingModel:
+          type: string
+          description: Pricing model label (e.g., `tiered_value_capture_v1`).
+    CronTriggerConfig:
+      type: object
+      description: Fires on one or more cron schedules.
+      required:
+      - schedules
+      properties:
+        schedules:
+          type: array
+          items:
+            type: string
+            description: Standard cron expression (e.g., `* * * * *`).
+          minItems: 1
+        timezone:
+          type: string
+          description: IANA timezone (e.g., `UTC`, `America/New_York`). Default UTC.
+    Fee:
+      type: object
+      required:
+      - amount
+      - unit
+      properties:
+        amount:
+          type: string
+          description: Decimal numeric value, encoded as a string for big-int safety.
+        unit:
+          type: string
+          enum:
+          - USD
+          - WEI
+          - PERCENTAGE
+    ETHTransferNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - ethTransfer
+          config:
+            $ref: '#/components/schemas/ETHTransferNodeConfig'
+    FeeDiscount:
+      type: object
+      properties:
+        discountType:
+          type: string
+          enum:
+          - newUser
+          - volume
+          - promotional
+          - betaProgram
+        discountName:
+          type: string
+        discount:
+          $ref: '#/components/schemas/Fee'
+        expiryDate:
+          $ref: '#/components/schemas/Timestamp'
+        terms:
+          type: string
+    BalanceNodeConfig:
+      type: object
+      required:
+      - address
+      - chain
+      properties:
+        address:
+          $ref: '#/components/schemas/EthereumAddress'
+        chain:
+          type: string
+          description: Chain name or numeric ID (e.g., `ethereum`, `base`, `1`, `8453`).
+        includeSpam:
+          type: boolean
+        includeZeroBalances:
+          type: boolean
+        minUsdValueCents:
+          type: integer
+          format: int64
+          description: Filter out tokens with USD value below this many cents.
+        tokenAddresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/EthereumAddress'
+          description: Restrict to these tokens. Empty = fetch all.
+    BlockTrigger:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - block
+          config:
+            $ref: '#/components/schemas/BlockTriggerConfig'
+    GraphQLQueryNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - graphqlQuery
+          config:
+            $ref: '#/components/schemas/GraphQLQueryNodeConfig'
+    Ulid:
+      type: string
+      pattern: ^[0-9A-HJKMNP-TV-Z]{26}$
+      description: ULID identifier (26-char Crockford base32).
+      example: 01JG2FE5MDVKBPHEG0PEYSDKAC
+    FixedTimeTrigger:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - fixedTime
+          config:
+            $ref: '#/components/schemas/FixedTimeTriggerConfig'
+    TriggerWorkflowResponse:
+      type: object
+      required:
+      - executionId
+      - status
+      properties:
+        executionId:
+          $ref: '#/components/schemas/Ulid'
+        status:
+          $ref: '#/components/schemas/ExecutionStatus'
+        startAt:
+          type: integer
+          format: int64
+        endAt:
+          type: integer
+          format: int64
+        error:
+          type: string
+    BranchNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - branch
+          config:
+            $ref: '#/components/schemas/BranchNodeConfig'
+    ExecutionStatus:
+      type: string
+      enum:
+      - pending
+      - waiting
+      - success
+      - failed
+      - error
+      description: 'Outcome of an execution. `pending` is in-flight; `waiting` is suspended
+
+        mid-workflow at an `await` node, durably parked until a signal arrives
+
+        (a human approve/reject or an operator-observed chain event) or the wait
+
+        times out — non-terminal, like `pending`, but distinguishable so a client
+
+        can show "awaiting approval"; `success` is full success; `failed` is
+
+        logical failure (e.g., a node returned an error, or a wait timed out);
+
+        `error` is a system / infrastructure failure (e.g., RPC unreachable).
+
+        '
+    Timestamp:
+      type: string
+      format: date-time
+      description: RFC 3339 timestamp.
+    LoopNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - loop
+          config:
+            $ref: '#/components/schemas/LoopNodeConfig'
+    CronTrigger:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - cron
+          config:
+            $ref: '#/components/schemas/CronTriggerConfig'
+    BranchNodeConfig:
+      type: object
+      required:
+      - conditions
+      properties:
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/BranchCondition'
+          minItems: 1
+    NodeCOGS:
+      type: object
+      required:
+      - nodeId
+      - costType
+      - fee
+      properties:
+        nodeId:
+          type: string
+        costType:
+          type: string
+          enum:
+          - gas
+          - externalApi
+          - walletCreation
+        fee:
+          $ref: '#/components/schemas/Fee'
+        gasUnits:
+          type: string
+          description: Gas units (for `gas` cost type only).
+    NodeType:
+      type: string
+      enum:
+      - ethTransfer
+      - contractWrite
+      - contractRead
+      - graphqlQuery
+      - restApi
+      - customCode
+      - branch
+      - filter
+      - loop
+      - balance
+      - await
+      description: 'Discriminator field for the Node union. Mirrors the proto
+
+        `NodeType` enum but without the `NODE_TYPE_` prefix.
+
+        '
+    ContractWriteNodeConfig:
+      type: object
+      required:
+      - contractAddress
+      - chainId
+      properties:
+        contractAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        callData:
+          $ref: '#/components/schemas/Hex'
+        contractAbi:
+          type: array
+          items:
+            additionalProperties: true
+        methodCalls:
+          type: array
+          items:
+            $ref: '#/components/schemas/MethodCall'
+        isSimulated:
+          type: boolean
+          description: When true, use Tenderly simulation instead of sending a real UserOp.
+        value:
+          type: string
+          description: ETH value to send with the call (wei, decimal string).
+        gasLimit:
+          type: string
+          description: Custom gas limit (decimal string).
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: Chain to execute on. Required — a workflow carries no chain to inherit.
+    NativeToken:
+      type: object
+      required:
+      - symbol
+      - decimals
+      properties:
+        symbol:
+          type: string
+          example: ETH
+        decimals:
+          type: integer
+          format: int32
+    ManualTriggerConfig:
+      type: object
+      description: User-initiated trigger; no chain context.
+      required:
+      - lang
+      properties:
+        data:
+          description: Arbitrary structured payload returned in the trigger output.
+          additionalProperties: true
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+          description: HTTP headers (for webhook testing).
+        pathParams:
+          type: object
+          additionalProperties:
+            type: string
+          description: Path parameters (for webhook testing).
+        lang:
+          $ref: '#/components/schemas/Lang'
+    Lang:
+      type: string
+      enum:
+      - javascript
+      - json
+      - graphql
+      - handlebars
+      description: 'Language/format of an inline payload (e.g., custom code source,
+
+        manual trigger data). Mirrors the proto `Lang` enum minus the
+
+        `LANG_` prefix. Wire values are lowercase.
+
+        '
+    FilterNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - filter
+          config:
+            $ref: '#/components/schemas/FilterNodeConfig'
+    WorkflowList:
+      type: object
+      required:
+      - data
+      - pageInfo
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Workflow'
+        pageInfo:
+          $ref: '#/components/schemas/PageInfo'
+    ContractReadNodeConfig:
+      type: object
+      required:
+      - contractAddress
+      - chainId
+      properties:
+        contractAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        contractAbi:
+          type: array
+          items:
+            additionalProperties: true
+        methodCalls:
+          type: array
+          items:
+            $ref: '#/components/schemas/MethodCall'
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: Chain to read from. Required — a workflow carries no chain to inherit.
+    AwaitNodeConfig:
+      type: object
+      description: 'Pauses the workflow until a wake arrives (durable execution). Two mutually
+
+        exclusive flavors: the external-signal flavor (human approval — set `channel`,
+
+        e.g. a Telegram approve/reject), or the chain-event flavor (cross-chain — set
+
+        `chainEvent` to pause until an operator observes that on-chain event, e.g. a
+
+        bridge arrival on another chain). Exactly one flavor must be configured.
+
+        '
+      properties:
+        channel:
+          type: string
+          description: 'External-signal flavor — signal channel: `telegram` or `api`.'
+        approvers:
+          type: array
+          items:
+            type: string
+          description: External-signal flavor — authorized approver identities. Empty = the workflow owner.
+        prompt:
+          type: string
+          description: External-signal flavor — message shown to the approver.
+        chainEvent:
+          allOf:
+          - $ref: '#/components/schemas/EventTriggerConfig'
+          description: 'Chain-event flavor — the on-chain event to wait for (a mid-workflow
+
+            EventTrigger). An operator covering `chainEvent.chainId` watches it and
+
+            resumes the execution when it fires. Mutually exclusive with `channel`.
+
+            '
+        timeoutSeconds:
+          type: integer
+          format: int64
+          description: Safety bound; 0 = server default (the wait is never unbounded).
+    Edge:
+      type: object
+      required:
+      - id
+      - source
+      - target
+      properties:
+        id:
+          type: string
+        source:
+          type: string
+          description: Node or trigger ID where this edge starts.
+        target:
+          type: string
+          description: Node ID where this edge ends.
+    Workflow:
+      type: object
+      required:
+      - id
+      - owner
+      - smartWalletAddress
+      - trigger
+      - nodes
+      - status
+      properties:
+        id:
+          $ref: '#/components/schemas/Ulid'
+        name:
+          type: string
+        owner:
+          $ref: '#/components/schemas/EthereumAddress'
+        smartWalletAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        trigger:
+          $ref: '#/components/schemas/Trigger'
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Node'
+        edges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Edge'
+        inputVariables:
+          $ref: '#/components/schemas/InputVariables'
+        status:
+          $ref: '#/components/schemas/WorkflowStatus'
+        startAt:
+          type: integer
+          format: int64
+          description: Unix-epoch milliseconds — workflow is inert before this time.
+        expiredAt:
+          type: integer
+          format: int64
+          description: Unix-epoch milliseconds — workflow is inert after this time.
+        maxExecution:
+          type: integer
+          format: int64
+          description: Cap on how many times this workflow may execute. 0 = unlimited.
+        executionCount:
+          type: integer
+          format: int64
+          description: How many times this workflow has executed so far.
+        createdAt:
+          type: integer
+          format: int64
+          description: Unix-epoch milliseconds — when the workflow was first created.
+        completedAt:
+          type: integer
+          format: int64
+          description: Unix-epoch milliseconds — when the workflow reached a terminal state.
+    AwaitNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - await
+          config:
+            $ref: '#/components/schemas/AwaitNodeConfig'
+    CreateWorkflowRequest:
+      type: object
+      required:
+      - smartWalletAddress
+      - trigger
+      - nodes
+      properties:
+        name:
+          type: string
+        smartWalletAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        trigger:
+          $ref: '#/components/schemas/Trigger'
+        nodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Node'
+        edges:
+          type: array
+          items:
+            $ref: '#/components/schemas/Edge'
+        inputVariables:
+          $ref: '#/components/schemas/InputVariables'
+        startAt:
+          type: integer
+          format: int64
+        expiredAt:
+          type: integer
+          format: int64
+        maxExecution:
+          type: integer
+          format: int64
+    RestAPINode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - restApi
+          config:
+            $ref: '#/components/schemas/RestAPINodeConfig'
+    BlockTriggerConfig:
+      type: object
+      description: Fires every N blocks on the target chain.
+      required:
+      - interval
+      - chainId
+      properties:
+        interval:
+          type: integer
+          format: int64
+          minimum: 1
+          description: Fire every N blocks.
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: Chain to watch blocks on. Required — a workflow carries no chain to inherit.
+    LoopNodeConfig:
+      type: object
+      description: 'Iterates over an input array, running an inner Node per item. The
+
+        runner node is one of the chain-aware or chain-agnostic node types;
+
+        a chain-aware runner must specify its own required `chainId` (there is
+
+        no inheritance from the loop or workflow).
+
+        '
+      required:
+      - inputVariable
+      - runner
+      properties:
+        inputVariable:
+          type: string
+          description: Template path for the iterable (e.g., `{{settings.addressList}}`).
+        iterVar:
+          type: string
+          default: value
+          description: Name of the per-iteration variable (defaults to `value`).
+        runner:
+          $ref: '#/components/schemas/Node'
+    ValueFee:
+      type: object
+      required:
+      - fee
+      - tier
+      properties:
+        fee:
+          $ref: '#/components/schemas/Fee'
+        tier:
+          $ref: '#/components/schemas/ExecutionTier'
+        valueBase:
+          type: string
+          description: What the percentage applies to (e.g., `input_token_value`).
+        classificationMethod:
+          type: string
+          enum:
+          - ruleBased
+          - llm
+        confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        reason:
+          type: string
+    Trigger:
+      type: object
+      required:
+      - type
+      - name
+      - config
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/TriggerType'
+      discriminator:
+        propertyName: type
+        mapping:
+          manual: '#/components/schemas/ManualTrigger'
+          fixedTime: '#/components/schemas/FixedTimeTrigger'
+          cron: '#/components/schemas/CronTrigger'
+          block: '#/components/schemas/BlockTrigger'
+          event: '#/components/schemas/EventTrigger'
+      oneOf:
+      - $ref: '#/components/schemas/ManualTrigger'
+      - $ref: '#/components/schemas/FixedTimeTrigger'
+      - $ref: '#/components/schemas/CronTrigger'
+      - $ref: '#/components/schemas/BlockTrigger'
+      - $ref: '#/components/schemas/EventTrigger'
+    BranchCondition:
+      type: object
+      required:
+      - id
+      - expression
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+          - if
+          - elseIf
+          - else
+        expression:
+          type: string
+          description: JavaScript-evaluated boolean expression.
+    ManualTrigger:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - manual
+          config:
+            $ref: '#/components/schemas/ManualTriggerConfig'
+    Node:
+      type: object
+      required:
+      - type
+      - id
+      - config
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/NodeType'
+      discriminator:
+        propertyName: type
+        mapping:
+          ethTransfer: '#/components/schemas/ETHTransferNode'
+          contractWrite: '#/components/schemas/ContractWriteNode'
+          contractRead: '#/components/schemas/ContractReadNode'
+          graphqlQuery: '#/components/schemas/GraphQLQueryNode'
+          restApi: '#/components/schemas/RestAPINode'
+          customCode: '#/components/schemas/CustomCodeNode'
+          branch: '#/components/schemas/BranchNode'
+          filter: '#/components/schemas/FilterNode'
+          loop: '#/components/schemas/LoopNode'
+          balance: '#/components/schemas/BalanceNode'
+          await: '#/components/schemas/AwaitNode'
+      oneOf:
+      - $ref: '#/components/schemas/ETHTransferNode'
+      - $ref: '#/components/schemas/ContractWriteNode'
+      - $ref: '#/components/schemas/ContractReadNode'
+      - $ref: '#/components/schemas/GraphQLQueryNode'
+      - $ref: '#/components/schemas/RestAPINode'
+      - $ref: '#/components/schemas/CustomCodeNode'
+      - $ref: '#/components/schemas/BranchNode'
+      - $ref: '#/components/schemas/FilterNode'
+      - $ref: '#/components/schemas/LoopNode'
+      - $ref: '#/components/schemas/BalanceNode'
+      - $ref: '#/components/schemas/AwaitNode'
+    BalanceNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - balance
+          config:
+            $ref: '#/components/schemas/BalanceNodeConfig'
+    ContractWriteNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - contractWrite
+          config:
+            $ref: '#/components/schemas/ContractWriteNodeConfig'
+    Problem:
+      type: object
+      description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
+
+        4xx/5xx response. `type` and `title` describe the error class; `detail`
+
+        is human-readable; `instance` is a per-request identifier suitable for
+
+        log correlation.
+
+        '
+      required:
+      - type
+      - title
+      - status
+      properties:
+        type:
+          type: string
+          format: uri
+          description: URI identifying the problem type.
+          example: https://docs.avaprotocol.org/errors/workflow-not-found
+        title:
+          type: string
+          description: Short, human-readable summary.
+          example: Workflow not found
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code (echoed for clients that surface only the body).
+          example: 404
+        detail:
+          type: string
+          description: Human-readable explanation specific to this occurrence.
+          example: No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...
+        instance:
+          type: string
+          description: URI / opaque ID identifying this specific occurrence (e.g., request id).
+          example: req_01JG2FE5MFKTH0754RGF2DMVY7
+        code:
+          type: string
+          description: 'Machine-readable error code. Stable across releases; clients can
+
+            switch on this for programmatic handling. Mirrors the gRPC-era
+
+            ErrorCode enum vocabulary.
+
+            '
+          example: WORKFLOW_NOT_FOUND
+    ChainId:
+      type: integer
+      format: int64
+      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
+
+        chain-aware trigger/node configs this is required and must be a
+
+        configured chain; on query/filter params it is optional.
+
+        '
+      example: 11155111
+    GraphQLQueryNodeConfig:
+      type: object
+      required:
+      - url
+      - query
+      properties:
+        url:
+          type: string
+          format: uri
+        query:
+          type: string
+        variables:
+          type: object
+          additionalProperties:
+            type: string
+    WorkflowCount:
+      type: object
+      required:
+      - total
+      properties:
+        total:
+          type: integer
+          format: int64
+    CustomCodeNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - customCode
+          config:
+            $ref: '#/components/schemas/CustomCodeNodeConfig'
+    EventMethodCall:
+      type: object
+      required:
+      - methodName
+      properties:
+        methodName:
+          type: string
+        callData:
+          $ref: '#/components/schemas/Hex'
+        applyToFields:
+          type: array
+          items:
+            type: string
+        methodParams:
+          type: array
+          items:
+            type: string
+            description: Handlebars template; resolves against decoded event data.
+    ExecutionTier:
+      type: string
+      enum:
+      - unspecified
+      - tier1
+      - tier2
+      - tier3
+      description: Pricing group for value-capture fees.
+    FixedTimeTriggerConfig:
+      type: object
+      description: Fires at one or more absolute Unix-epoch milliseconds.
+      required:
+      - epochs
+      properties:
+        epochs:
+          type: array
+          items:
+            type: integer
+            format: int64
+          minItems: 1
+  responses:
+    Unauthorized:
+      description: Missing or invalid bearer token.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Forbidden:
+      description: Authenticated but not permitted.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    BadRequest:
+      description: Request validation failed.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    RateLimited:
+      description: 'Rate limit exceeded. Inspect `X-RateLimit-Reset` for the next allowed
+
+        request time and `Retry-After` for the seconds to wait.
+
+        '
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+            description: Unix timestamp when the bucket refills.
+        Retry-After:
+          schema:
+            type: integer
+            description: Seconds to wait before retrying.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  parameters:
+    PageLimit:
+      name: limit
+      in: query
+      description: Max items to return. Default 20; server-enforced ceiling applies.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 200
+        default: 20
+    PageAfter:
+      name: after
+      in: query
+      description: Cursor — return items immediately after this position (forward pagination).
+      schema:
+        type: string
+    PageBefore:
+      name: before
+      in: query
+      description: Cursor — return items immediately before this position (backward pagination).
+      schema:
+        type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT bearer token. Obtained via `POST /auth:exchange` (wallet
+
+        signature flow) or via the operator-run `create-api-key` CLI
+
+        (long-lived, server-to-server). Send on every request as
+
+        `Authorization: Bearer <jwt>`.
+
+        '

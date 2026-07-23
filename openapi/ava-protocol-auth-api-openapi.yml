@@ -1,0 +1,220 @@
+openapi: 3.0.3
+info:
+  title: Ava Protocol AVS Auth API
+  version: 1.0.0
+  description: 'Public REST API for the Ava Protocol AVS aggregator. Exposes workflow
+
+    creation, execution monitoring, smart-wallet management, and related
+
+    operations.
+
+
+    Authentication is a single credential type — a JWT bearer token — obtained
+
+    either via the wallet-signing flow (`POST /auth:exchange`) or out-of-band
+
+    via the operator-run `create-api-key` CLI. Every request must include
+
+    `Authorization: Bearer <jwt>`.
+
+    '
+servers:
+- url: https://gateway.avaprotocol.org/api/v1
+  description: Production gateway
+- url: https://gateway-staging.avaprotocol.org/api/v1
+  description: Staging gateway
+- url: http://localhost:8080/api/v1
+  description: Local dev
+security:
+- bearerAuth: []
+tags:
+- name: Auth
+  description: Token issuance and credential management
+paths:
+  /auth:exchange:
+    post:
+      tags:
+      - Auth
+      summary: Exchange a wallet signature for a JWT bearer token
+      description: 'Verify an EIP-191 `personal_sign` signature and issue a JWT bound to
+
+        the signer''s EOA. The signed message must use the canonical template
+
+        with the EigenLayer registration chain ID (not the workflow target
+
+        chain). SDKs construct the message locally — there is no
+
+        `GetSignatureFormat` endpoint.
+
+        '
+      operationId: authExchange
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthExchangeRequest'
+      responses:
+        '200':
+          description: Authentication succeeded; token issued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthExchangeResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+components:
+  schemas:
+    AuthExchangeResponse:
+      type: object
+      required:
+      - token
+      - expiresAt
+      properties:
+        token:
+          type: string
+          description: JWT bearer token.
+        expiresAt:
+          $ref: '#/components/schemas/Timestamp'
+        subject:
+          $ref: '#/components/schemas/EthereumAddress'
+          description: The EOA the token is bound to (echoed for clients).
+    AuthExchangeRequest:
+      type: object
+      required:
+      - ownerAddress
+      - signature
+      - message
+      properties:
+        ownerAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        signature:
+          $ref: '#/components/schemas/Hex'
+          description: EIP-191 personal_sign signature of `message`.
+        message:
+          type: string
+          description: 'The plain-text message that was signed. Must use the canonical
+
+            format with the EigenLayer registration chain ID (NOT the workflow
+
+            target chain). SDKs generate this locally.
+
+            '
+    Timestamp:
+      type: string
+      format: date-time
+      description: RFC 3339 timestamp.
+    Problem:
+      type: object
+      description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
+
+        4xx/5xx response. `type` and `title` describe the error class; `detail`
+
+        is human-readable; `instance` is a per-request identifier suitable for
+
+        log correlation.
+
+        '
+      required:
+      - type
+      - title
+      - status
+      properties:
+        type:
+          type: string
+          format: uri
+          description: URI identifying the problem type.
+          example: https://docs.avaprotocol.org/errors/workflow-not-found
+        title:
+          type: string
+          description: Short, human-readable summary.
+          example: Workflow not found
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code (echoed for clients that surface only the body).
+          example: 404
+        detail:
+          type: string
+          description: Human-readable explanation specific to this occurrence.
+          example: No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...
+        instance:
+          type: string
+          description: URI / opaque ID identifying this specific occurrence (e.g., request id).
+          example: req_01JG2FE5MFKTH0754RGF2DMVY7
+        code:
+          type: string
+          description: 'Machine-readable error code. Stable across releases; clients can
+
+            switch on this for programmatic handling. Mirrors the gRPC-era
+
+            ErrorCode enum vocabulary.
+
+            '
+          example: WORKFLOW_NOT_FOUND
+    EthereumAddress:
+      type: string
+      pattern: ^0x[a-fA-F0-9]{40}$
+      description: Lowercase or checksummed hex EOA / contract address.
+      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
+    Hex:
+      type: string
+      pattern: ^0x[a-fA-F0-9]*$
+      description: Arbitrary-length hex-encoded byte string.
+  responses:
+    Unauthorized:
+      description: Missing or invalid bearer token.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    BadRequest:
+      description: Request validation failed.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    RateLimited:
+      description: 'Rate limit exceeded. Inspect `X-RateLimit-Reset` for the next allowed
+
+        request time and `Retry-After` for the seconds to wait.
+
+        '
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+            description: Unix timestamp when the bucket refills.
+        Retry-After:
+          schema:
+            type: integer
+            description: Seconds to wait before retrying.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT bearer token. Obtained via `POST /auth:exchange` (wallet
+
+        signature flow) or via the operator-run `create-api-key` CLI
+
+        (long-lived, server-to-server). Send on every request as
+
+        `Authorization: Bearer <jwt>`.
+
+        '

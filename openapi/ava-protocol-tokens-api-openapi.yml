@@ -1,0 +1,179 @@
+openapi: 3.0.3
+info:
+  title: Ava Protocol AVS Auth Tokens API
+  version: 1.0.0
+  description: 'Public REST API for the Ava Protocol AVS aggregator. Exposes workflow
+
+    creation, execution monitoring, smart-wallet management, and related
+
+    operations.
+
+
+    Authentication is a single credential type — a JWT bearer token — obtained
+
+    either via the wallet-signing flow (`POST /auth:exchange`) or out-of-band
+
+    via the operator-run `create-api-key` CLI. Every request must include
+
+    `Authorization: Bearer <jwt>`.
+
+    '
+servers:
+- url: https://gateway.avaprotocol.org/api/v1
+  description: Production gateway
+- url: https://gateway-staging.avaprotocol.org/api/v1
+  description: Staging gateway
+- url: http://localhost:8080/api/v1
+  description: Local dev
+security:
+- bearerAuth: []
+tags:
+- name: Tokens
+  description: ERC-20 metadata lookup
+paths:
+  /tokens/{address}:
+    parameters:
+    - name: address
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/EthereumAddress'
+    get:
+      tags:
+      - Tokens
+      summary: Retrieve ERC-20 token metadata
+      operationId: getToken
+      parameters:
+      - $ref: '#/components/parameters/ChainIdQuery'
+      responses:
+        '200':
+          description: 'Token metadata (`found: false` if unknown).'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenMetadataResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    TokenMetadataResponse:
+      type: object
+      required:
+      - found
+      properties:
+        found:
+          type: boolean
+        address:
+          $ref: '#/components/schemas/EthereumAddress'
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+        name:
+          type: string
+        symbol:
+          type: string
+        decimals:
+          type: integer
+          format: int32
+        source:
+          type: string
+          enum:
+          - whitelist
+          - rpc
+          - cache
+    ChainId:
+      type: integer
+      format: int64
+      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
+
+        chain-aware trigger/node configs this is required and must be a
+
+        configured chain; on query/filter params it is optional.
+
+        '
+      example: 11155111
+    Problem:
+      type: object
+      description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
+
+        4xx/5xx response. `type` and `title` describe the error class; `detail`
+
+        is human-readable; `instance` is a per-request identifier suitable for
+
+        log correlation.
+
+        '
+      required:
+      - type
+      - title
+      - status
+      properties:
+        type:
+          type: string
+          format: uri
+          description: URI identifying the problem type.
+          example: https://docs.avaprotocol.org/errors/workflow-not-found
+        title:
+          type: string
+          description: Short, human-readable summary.
+          example: Workflow not found
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code (echoed for clients that surface only the body).
+          example: 404
+        detail:
+          type: string
+          description: Human-readable explanation specific to this occurrence.
+          example: No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...
+        instance:
+          type: string
+          description: URI / opaque ID identifying this specific occurrence (e.g., request id).
+          example: req_01JG2FE5MFKTH0754RGF2DMVY7
+        code:
+          type: string
+          description: 'Machine-readable error code. Stable across releases; clients can
+
+            switch on this for programmatic handling. Mirrors the gRPC-era
+
+            ErrorCode enum vocabulary.
+
+            '
+          example: WORKFLOW_NOT_FOUND
+    EthereumAddress:
+      type: string
+      pattern: ^0x[a-fA-F0-9]{40}$
+      description: Lowercase or checksummed hex EOA / contract address.
+      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
+  responses:
+    Unauthorized:
+      description: Missing or invalid bearer token.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  parameters:
+    ChainIdQuery:
+      name: chainId
+      in: query
+      description: 'The chain to operate on (a single value). Omit to use the aggregator
+
+        default (the request''s JWT `aud` chain, then the gateway default).
+
+        '
+      schema:
+        type: integer
+        format: int64
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT bearer token. Obtained via `POST /auth:exchange` (wallet
+
+        signature flow) or via the operator-run `create-api-key` CLI
+
+        (long-lived, server-to-server). Send on every request as
+
+        `Authorization: Bearer <jwt>`.
+
+        '

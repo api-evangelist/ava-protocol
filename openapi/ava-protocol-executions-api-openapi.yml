@@ -1,0 +1,702 @@
+openapi: 3.0.3
+info:
+  title: Ava Protocol AVS Auth Executions API
+  version: 1.0.0
+  description: 'Public REST API for the Ava Protocol AVS aggregator. Exposes workflow
+
+    creation, execution monitoring, smart-wallet management, and related
+
+    operations.
+
+
+    Authentication is a single credential type — a JWT bearer token — obtained
+
+    either via the wallet-signing flow (`POST /auth:exchange`) or out-of-band
+
+    via the operator-run `create-api-key` CLI. Every request must include
+
+    `Authorization: Bearer <jwt>`.
+
+    '
+servers:
+- url: https://gateway.avaprotocol.org/api/v1
+  description: Production gateway
+- url: https://gateway-staging.avaprotocol.org/api/v1
+  description: Staging gateway
+- url: http://localhost:8080/api/v1
+  description: Local dev
+security:
+- bearerAuth: []
+tags:
+- name: Executions
+  description: Workflow execution history and status
+paths:
+  /executions:
+    get:
+      tags:
+      - Executions
+      summary: List executions
+      operationId: listExecutions
+      parameters:
+      - name: workflowId
+        in: query
+        description: Filter by workflow ID. Repeat to OR multiple workflows.
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ulid'
+      - $ref: '#/components/parameters/PageBefore'
+      - $ref: '#/components/parameters/PageAfter'
+      - $ref: '#/components/parameters/PageLimit'
+      responses:
+        '200':
+          description: Page of executions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /workflows/{id}/executions:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Ulid'
+    get:
+      tags:
+      - Executions
+      summary: List executions for a workflow (convenience nested route)
+      description: Same handler as `GET /executions?workflowId={id}`; offered as a nested route for clients that prefer it.
+      operationId: listExecutionsForWorkflow
+      parameters:
+      - $ref: '#/components/parameters/PageBefore'
+      - $ref: '#/components/parameters/PageAfter'
+      - $ref: '#/components/parameters/PageLimit'
+      responses:
+        '200':
+          description: Page of executions for the workflow.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /executions/{id}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Ulid'
+    - name: workflowId
+      in: query
+      required: true
+      description: 'Workflow id the execution belongs to. Required because executions
+
+        are scoped to their parent workflow in the engine''s storage
+
+        (`t:<chain>:<workflow_id>:<exec_id>` keys) — there is no global
+
+        execution index today. Use `GET /workflows/{id}/executions` if
+
+        you only know the workflow.
+
+        '
+      schema:
+        $ref: '#/components/schemas/Ulid'
+    get:
+      tags:
+      - Executions
+      summary: Retrieve an execution (full payload with steps)
+      operationId: getExecution
+      responses:
+        '200':
+          description: The execution.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Execution'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /executions/{id}:getStatus:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Ulid'
+    - name: workflowId
+      in: query
+      required: true
+      description: Workflow id the execution belongs to. See `getExecution`.
+      schema:
+        $ref: '#/components/schemas/Ulid'
+    get:
+      tags:
+      - Executions
+      summary: Get execution status (lightweight, no steps)
+      operationId: getExecutionStatus
+      responses:
+        '200':
+          description: Status summary.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionStatusSummary'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /executions/{id}:signal:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Ulid'
+    - name: workflowId
+      in: query
+      required: true
+      description: Workflow id the execution belongs to. See `getExecution`.
+      schema:
+        $ref: '#/components/schemas/Ulid'
+    post:
+      tags:
+      - Executions
+      summary: Deliver an approval/external signal to a waiting execution
+      description: 'Resumes a WAITING execution (durable execution). The caller must own the
+
+        workflow; the signal only counts against an actual pending wait whose kind
+
+        it matches and which has not timed out. v1 is the external-signal (human
+
+        approval) flavor — e.g. a Telegram approve/reject for a money-moving step.
+
+        '
+      operationId: signalExecution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignalExecutionRequest'
+      responses:
+        '200':
+          description: The resumed (terminal or still-waiting) execution.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Execution'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /executions/{id}:stream:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Ulid'
+    - name: workflowId
+      in: query
+      required: true
+      description: Workflow id the execution belongs to. See `getExecution`.
+      schema:
+        $ref: '#/components/schemas/Ulid'
+    get:
+      tags:
+      - Executions
+      summary: Stream execution status changes (Server-Sent Events)
+      description: 'Emits one SSE event per status change. Each event payload is an
+
+        `ExecutionStatusSummary`. The stream closes when the execution
+
+        reaches a terminal status (`success` / `failed` / `error`).
+
+        Implementation polls the DB on a short interval (default 1s);
+
+        override with `?interval=` (max enforced server-side).
+
+        '
+      operationId: streamExecution
+      parameters:
+      - name: interval
+        in: query
+        schema:
+          type: string
+          description: Poll interval as a Go-style duration (e.g., `500ms`, `2s`). Default `1s`.
+      responses:
+        '200':
+          description: SSE stream of execution status updates.
+          content:
+            text/event-stream:
+              schema:
+                type: string
+                description: Standard SSE framing; each `data:` payload is a JSON-encoded `ExecutionStatusSummary`.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /executions:count:
+    get:
+      tags:
+      - Executions
+      summary: Count executions
+      operationId: countExecutions
+      parameters:
+      - name: workflowId
+        in: query
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ulid'
+      responses:
+        '200':
+          description: Execution count.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionCount'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /executions:stats:
+    get:
+      tags:
+      - Executions
+      summary: Execution statistics (totals + averages)
+      operationId: executionStats
+      parameters:
+      - name: workflowId
+        in: query
+        schema:
+          type: array
+          items:
+            $ref: '#/components/schemas/Ulid'
+      responses:
+        '200':
+          description: Execution stats.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionStats'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  schemas:
+    PageInfo:
+      type: object
+      required:
+      - hasNextPage
+      - hasPreviousPage
+      properties:
+        hasNextPage:
+          type: boolean
+        hasPreviousPage:
+          type: boolean
+        startCursor:
+          type: string
+          description: Cursor for the first item in the current page; pass to `before` for the previous page.
+        endCursor:
+          type: string
+          description: Cursor for the last item in the current page; pass to `after` for the next page.
+    Execution:
+      type: object
+      required:
+      - id
+      - workflowId
+      - status
+      - startAt
+      properties:
+        id:
+          $ref: '#/components/schemas/Ulid'
+        workflowId:
+          $ref: '#/components/schemas/Ulid'
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+        index:
+          type: integer
+          format: int64
+          description: 0-based run counter within the workflow.
+        startAt:
+          type: integer
+          format: int64
+        endAt:
+          type: integer
+          format: int64
+        status:
+          $ref: '#/components/schemas/ExecutionStatus'
+        error:
+          type: string
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExecutionStep'
+        executionFee:
+          $ref: '#/components/schemas/Fee'
+          description: Flat platform fee charged for this execution.
+        cogs:
+          type: array
+          items:
+            $ref: '#/components/schemas/NodeCOGS'
+          description: Per-node actual costs (gas, external API).
+        valueFee:
+          $ref: '#/components/schemas/ValueFee'
+          description: Value-capture fee charged (post-paid).
+    Fee:
+      type: object
+      required:
+      - amount
+      - unit
+      properties:
+        amount:
+          type: string
+          description: Decimal numeric value, encoded as a string for big-int safety.
+        unit:
+          type: string
+          enum:
+          - USD
+          - WEI
+          - PERCENTAGE
+    Ulid:
+      type: string
+      pattern: ^[0-9A-HJKMNP-TV-Z]{26}$
+      description: ULID identifier (26-char Crockford base32).
+      example: 01JG2FE5MDVKBPHEG0PEYSDKAC
+    ExecutionStats:
+      type: object
+      required:
+      - total
+      - succeeded
+      - failed
+      properties:
+        total:
+          type: integer
+          format: int64
+        succeeded:
+          type: integer
+          format: int64
+        failed:
+          type: integer
+          format: int64
+        pending:
+          type: integer
+          format: int64
+        avgExecutionTime:
+          type: number
+          format: double
+          description: Average execution time in milliseconds.
+    ExecutionStatus:
+      type: string
+      enum:
+      - pending
+      - waiting
+      - success
+      - failed
+      - error
+      description: 'Outcome of an execution. `pending` is in-flight; `waiting` is suspended
+
+        mid-workflow at an `await` node, durably parked until a signal arrives
+
+        (a human approve/reject or an operator-observed chain event) or the wait
+
+        times out — non-terminal, like `pending`, but distinguishable so a client
+
+        can show "awaiting approval"; `success` is full success; `failed` is
+
+        logical failure (e.g., a node returned an error, or a wait timed out);
+
+        `error` is a system / infrastructure failure (e.g., RPC unreachable).
+
+        '
+    ExecutionStep:
+      type: object
+      description: 'One node (or trigger) invocation within an Execution. The `type`
+
+        field is the trigger or node type name (e.g., `cron`,
+
+        `contractWrite`); the corresponding output is in `output`.
+
+        '
+      required:
+      - id
+      - type
+      - success
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        name:
+          type: string
+        success:
+          type: boolean
+        error:
+          type: string
+        errorCode:
+          type: string
+        log:
+          type: string
+        inputs:
+          type: array
+          items:
+            type: string
+        config:
+          additionalProperties: true
+          description: Config of the trigger or node at execution time.
+        metadata:
+          additionalProperties: true
+          description: Optional structured metadata for testing/debugging.
+        executionContext:
+          additionalProperties: true
+          description: Runtime flags and extra info (e.g., `isSimulated`).
+        output:
+          additionalProperties: true
+          description: Type-specific output payload (trigger or node output).
+        gasUsed:
+          type: string
+          description: Gas units consumed (decimal string). Empty if unavailable.
+        gasPrice:
+          type: string
+          description: Gas price in wei per unit (decimal string).
+        totalGasCost:
+          type: string
+          description: gasUsed × gasPrice in wei (decimal string).
+        startAt:
+          type: integer
+          format: int64
+        endAt:
+          type: integer
+          format: int64
+    ExecutionStatusSummary:
+      type: object
+      description: Lightweight execution status (no steps payload).
+      required:
+      - id
+      - status
+      properties:
+        id:
+          $ref: '#/components/schemas/Ulid'
+        workflowId:
+          $ref: '#/components/schemas/Ulid'
+        status:
+          $ref: '#/components/schemas/ExecutionStatus'
+        startAt:
+          type: integer
+          format: int64
+        endAt:
+          type: integer
+          format: int64
+        error:
+          type: string
+    ExecutionCount:
+      type: object
+      required:
+      - total
+      properties:
+        total:
+          type: integer
+          format: int64
+    ValueFee:
+      type: object
+      required:
+      - fee
+      - tier
+      properties:
+        fee:
+          $ref: '#/components/schemas/Fee'
+        tier:
+          $ref: '#/components/schemas/ExecutionTier'
+        valueBase:
+          type: string
+          description: What the percentage applies to (e.g., `input_token_value`).
+        classificationMethod:
+          type: string
+          enum:
+          - ruleBased
+          - llm
+        confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        reason:
+          type: string
+    Problem:
+      type: object
+      description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
+
+        4xx/5xx response. `type` and `title` describe the error class; `detail`
+
+        is human-readable; `instance` is a per-request identifier suitable for
+
+        log correlation.
+
+        '
+      required:
+      - type
+      - title
+      - status
+      properties:
+        type:
+          type: string
+          format: uri
+          description: URI identifying the problem type.
+          example: https://docs.avaprotocol.org/errors/workflow-not-found
+        title:
+          type: string
+          description: Short, human-readable summary.
+          example: Workflow not found
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code (echoed for clients that surface only the body).
+          example: 404
+        detail:
+          type: string
+          description: Human-readable explanation specific to this occurrence.
+          example: No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...
+        instance:
+          type: string
+          description: URI / opaque ID identifying this specific occurrence (e.g., request id).
+          example: req_01JG2FE5MFKTH0754RGF2DMVY7
+        code:
+          type: string
+          description: 'Machine-readable error code. Stable across releases; clients can
+
+            switch on this for programmatic handling. Mirrors the gRPC-era
+
+            ErrorCode enum vocabulary.
+
+            '
+          example: WORKFLOW_NOT_FOUND
+    ChainId:
+      type: integer
+      format: int64
+      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
+
+        chain-aware trigger/node configs this is required and must be a
+
+        configured chain; on query/filter params it is optional.
+
+        '
+      example: 11155111
+    SignalExecutionRequest:
+      type: object
+      required:
+      - decision
+      properties:
+        decision:
+          type: string
+          enum:
+          - approve
+          - reject
+          description: The approver's decision.
+        payload:
+          type: object
+          additionalProperties: true
+          description: Optional structured data delivered as the await step's output.
+    ExecutionList:
+      type: object
+      required:
+      - data
+      - pageInfo
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Execution'
+        pageInfo:
+          $ref: '#/components/schemas/PageInfo'
+    NodeCOGS:
+      type: object
+      required:
+      - nodeId
+      - costType
+      - fee
+      properties:
+        nodeId:
+          type: string
+        costType:
+          type: string
+          enum:
+          - gas
+          - externalApi
+          - walletCreation
+        fee:
+          $ref: '#/components/schemas/Fee'
+        gasUnits:
+          type: string
+          description: Gas units (for `gas` cost type only).
+    ExecutionTier:
+      type: string
+      enum:
+      - unspecified
+      - tier1
+      - tier2
+      - tier3
+      description: Pricing group for value-capture fees.
+  responses:
+    Unauthorized:
+      description: Missing or invalid bearer token.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    BadRequest:
+      description: Request validation failed.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  parameters:
+    PageLimit:
+      name: limit
+      in: query
+      description: Max items to return. Default 20; server-enforced ceiling applies.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 200
+        default: 20
+    PageAfter:
+      name: after
+      in: query
+      description: Cursor — return items immediately after this position (forward pagination).
+      schema:
+        type: string
+    PageBefore:
+      name: before
+      in: query
+      description: Cursor — return items immediately before this position (backward pagination).
+      schema:
+        type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT bearer token. Obtained via `POST /auth:exchange` (wallet
+
+        signature flow) or via the operator-run `create-api-key` CLI
+
+        (long-lived, server-to-server). Send on every request as
+
+        `Authorization: Bearer <jwt>`.
+
+        '

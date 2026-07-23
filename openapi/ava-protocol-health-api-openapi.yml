@@ -1,0 +1,110 @@
+openapi: 3.0.3
+info:
+  title: Ava Protocol AVS Auth Health API
+  version: 1.0.0
+  description: 'Public REST API for the Ava Protocol AVS aggregator. Exposes workflow
+
+    creation, execution monitoring, smart-wallet management, and related
+
+    operations.
+
+
+    Authentication is a single credential type — a JWT bearer token — obtained
+
+    either via the wallet-signing flow (`POST /auth:exchange`) or out-of-band
+
+    via the operator-run `create-api-key` CLI. Every request must include
+
+    `Authorization: Bearer <jwt>`.
+
+    '
+servers:
+- url: https://gateway.avaprotocol.org/api/v1
+  description: Production gateway
+- url: https://gateway-staging.avaprotocol.org/api/v1
+  description: Staging gateway
+- url: http://localhost:8080/api/v1
+  description: Local dev
+security:
+- bearerAuth: []
+tags:
+- name: Health
+  description: Liveness / readiness probes
+paths:
+  /health:
+    get:
+      tags:
+      - Health
+      summary: Liveness probe
+      description: 'Returns the aggregator''s current health. Used by load balancers, k8s
+
+        liveness/readiness probes, and external uptime monitoring.
+
+        '
+      security: []
+      responses:
+        '200':
+          description: Aggregator is up.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+        '503':
+          description: Aggregator is starting or degraded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+components:
+  schemas:
+    ChainId:
+      type: integer
+      format: int64
+      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
+
+        chain-aware trigger/node configs this is required and must be a
+
+        configured chain; on query/filter params it is optional.
+
+        '
+      example: 11155111
+    HealthStatus:
+      type: object
+      required:
+      - status
+      - version
+      properties:
+        status:
+          type: string
+          enum:
+          - ok
+          - degraded
+          - starting
+        version:
+          type: string
+          description: 'Aggregator binary version (e.g., `v3.2.0`). Always set —
+
+            SDK clients use this to stamp the canonical EIP-191 auth
+
+            message so the signed `Version` field reflects the
+
+            gateway the user actually authenticated against.
+
+            '
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: EigenLayer registration chain ID.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'JWT bearer token. Obtained via `POST /auth:exchange` (wallet
+
+        signature flow) or via the operator-run `create-api-key` CLI
+
+        (long-lived, server-to-server). Send on every request as
+
+        `Authorization: Bearer <jwt>`.
+
+        '

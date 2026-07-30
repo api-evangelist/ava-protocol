@@ -1,25 +1,218 @@
 aid: ava-protocol
 name: Ava Protocol
-description: 'Ava Protocol is a company surfaced as a portfolio company of greylock and added to the API
-  Evangelist network as a stub for enrichment. Sector: fintech. This profile is a lead awaiting the enrichment
-  pipeline.'
+description: >-
+  Ava Protocol is an AI-powered onchain automation platform for Ethereum and L2s
+  (Base, Soneium), and the evolution of the OAK Network Substrate automation
+  parachain. Users create "workflows" that connect triggers (scheduled time, price
+  conditions, onchain events, or manual) to actions (swaps, transfers, contract
+  calls, notifications) and run them non-custodially from scoped smart wallets —
+  the user always approves before execution. Verifiable execution is provided by an
+  EigenLayer AVS (Actively Validated Service). Developers integrate through a public
+  REST API (the AVS aggregator gateway) and a TypeScript SDK, authenticating with a
+  JWT bearer token obtained via wallet signature (EIP-191) or an operator-minted key.
 url: https://raw.githubusercontent.com/api-evangelist/ava-protocol/refs/heads/main/apis.yml
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://avaprotocol.org/image/open-graph/index.jpg
 x-type: company
 x-source: greylock-portfolio
-x-tier: stub
+x-tier: enriched
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-18'
 tags:
 - Company
 - Fintech
-apis: []
+- Blockchain
+- DeFi
+- Automation
+- Web3
+- Ethereum
+- Smart Wallets
+- Workflows
+- AI Agents
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+apis:
+- aid: ava-protocol:ava-protocol-auth-api
+  name: Ava Protocol Auth API
+  description: Token issuance and credential management
+  humanURL: https://avaprotocol.org/docs/ava-sdk-js/rest-api
+  baseURL: https://gateway.avaprotocol.org/api/v1
+  tags:
+  - Auth
+  properties:
+  - type: OpenAPI
+    url: openapi/ava-protocol-auth-api-openapi.yml
+- aid: ava-protocol:ava-protocol-executions-api
+  name: Ava Protocol Executions API
+  description: Workflow execution history and status
+  humanURL: https://avaprotocol.org/docs/ava-sdk-js/rest-api
+  baseURL: https://gateway.avaprotocol.org/api/v1
+  tags:
+  - Executions
+  properties:
+  - type: OpenAPI
+    url: openapi/ava-protocol-executions-api-openapi.yml
+- aid: ava-protocol:ava-protocol-health-api
+  name: Ava Protocol Health API
+  description: Liveness / readiness probes
+  humanURL: https://avaprotocol.org/docs/ava-sdk-js/rest-api
+  baseURL: https://gateway.avaprotocol.org/api/v1
+  tags:
+  - Health
+  properties:
+  - type: OpenAPI
+    url: openapi/ava-protocol-health-api-openapi.yml
+- aid: ava-protocol:ava-protocol-nodes-api
+  name: Ava Protocol Nodes API
+  description: Stand-alone node execution
+  humanURL: https://avaprotocol.org/docs/ava-sdk-js/rest-api
+  baseURL: https://gateway.avaprotocol.org/api/v1
+  tags:
+  - Nodes
+  properties:
+  - type: OpenAPI
+    url: openapi/ava-protocol-nodes-api-openapi.yml
+- aid: ava-protocol:ava-protocol-operators-api
+  name: Ava Protocol Operators API
+  description: Connected operator status (read-only)
+  humanURL: https://avaprotocol.org/docs/ava-sdk-js/rest-api
+  baseURL: https://gateway.avaprotocol.org/api/v1
+  tags:
+  - Operators
+  properties:
+  - type: OpenAPI
+    url: openapi/ava-protocol-operators-api-openapi.yml
+- aid: ava-protocol:ava-protocol-secrets-api
+  name: Ava Protocol Secrets API
+  description: User/workflow/org secret storage
+  humanURL: https://avaprotocol.org/docs/ava-sdk-js/rest-api
+  baseURL: https://gateway.avaprotocol.org/api/v1
+  tags:
+  - Secrets
+  properties:
+  - type: OpenAPI
+    url: openapi/ava-protocol-secrets-api-openapi.yml
+- aid: ava-protocol:ava-protocol-tokens-api
+  name: Ava Protocol Tokens API
+  description: ERC-20 metadata lookup
+  humanURL: https://avaprotocol.org/docs/ava-sdk-js/rest-api
+  baseURL: https://gateway.avaprotocol.org/api/v1
+  tags:
+  - Tokens
+  properties:
+  - type: OpenAPI
+    url: openapi/ava-protocol-tokens-api-openapi.yml
+- aid: ava-protocol:ava-protocol-triggers-api
+  name: Ava Protocol Triggers API
+  description: Stand-alone trigger evaluation
+  humanURL: https://avaprotocol.org/docs/ava-sdk-js/rest-api
+  baseURL: https://gateway.avaprotocol.org/api/v1
+  tags:
+  - Triggers
+  properties:
+  - type: OpenAPI
+    url: openapi/ava-protocol-triggers-api-openapi.yml
+- aid: ava-protocol:ava-protocol-wallets-api
+  name: Ava Protocol Wallets API
+  description: Smart-wallet derivation and operations
+  humanURL: https://avaprotocol.org/docs/ava-sdk-js/rest-api
+  baseURL: https://gateway.avaprotocol.org/api/v1
+  tags:
+  - Wallets
+  properties:
+  - type: OpenAPI
+    url: openapi/ava-protocol-wallets-api-openapi.yml
+- aid: ava-protocol:ava-protocol-workflows-api
+  name: Ava Protocol Workflows API
+  description: Workflow CRUD and lifecycle actions
+  humanURL: https://avaprotocol.org/docs/ava-sdk-js/rest-api
+  baseURL: https://gateway.avaprotocol.org/api/v1
+  tags:
+  - Workflows
+  properties:
+  - type: OpenAPI
+    url: openapi/ava-protocol-workflows-api-openapi.yml
 common:
+- type: AgenticAccess
+  url: agentic-access/ava-protocol-agentic-access.yml
+- type: Authentication
+  url: authentication/ava-protocol-authentication.yml
+- type: DomainSecurity
+  url: security/ava-protocol-domain-security.yml
+- type: Packages
+  url: packages/ava-protocol-packages.yml
+- type: SDKs
+  url: packages/ava-protocol-packages.yml
+- type: MCPServer
+  url: mcp/ava-protocol-mcp.yml
+- type: LLMsTxt
+  url: llms/ava-protocol-llms.txt
+- type: Protobuf
+  url: grpc/ava-protocol-avs.proto
+- type: ErrorCatalog
+  url: errors/ava-protocol-problem-types.yml
+- type: Conventions
+  url: conventions/ava-protocol-conventions.yml
+- type: Idempotency
+  url: conventions/ava-protocol-conventions.yml
+- type: Conformance
+  url: conformance/ava-protocol-conformance.yml
+- type: Lifecycle
+  url: lifecycle/ava-protocol-lifecycle.yml
+- type: DataModel
+  url: data-model/ava-protocol-data-model.yml
+- type: Sandbox
+  url: sandbox/ava-protocol-sandbox.yml
+- type: CLI
+  url: cli/ava-protocol-cli.yml
+- type: AgentSkill
+  url: skills/_index.yml
 - type: Website
   url: https://avaprotocol.org/
+- type: DeveloperPortal
+  url: https://avaprotocol.org/docs/ava-sdk-js/getting-started
+- type: Documentation
+  url: https://avaprotocol.org/docs/ava-sdk-js/getting-started
+- type: APIReference
+  url: https://avaprotocol.org/docs/ava-sdk-js/rest-api
+- type: GettingStarted
+  url: https://avaprotocol.org/docs/ava-sdk-js/getting-started
+- type: Authentication
+  url: https://avaprotocol.org/docs/ava-sdk-js/authentication
+- type: GitHubOrganization
+  url: https://github.com/AvaProtocol
+- type: Blog
+  url: https://avaprotocol.org/blog
+- type: SignUp
+  url: https://app.avaprotocol.org
+- type: Support
+  url: https://avaprotocol.org/contact-us
+- type: TermsOfService
+  url: https://avaprotocol.org/legal/discord-bot-terms
+- type: PrivacyPolicy
+  url: https://avaprotocol.org/legal/discord-bot-privacy
+- type: Twitter
+  url: https://x.com/ava_protocol
+- type: Discord
+  url: https://discord.gg/7W9UDvsbwh
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

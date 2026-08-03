@@ -1,0 +1,30 @@
+generated: '2026-07-18'
+method: searched
+source: https://avaprotocol.org/docs/ava-sdk-js/authentication
+name: ap
+description: >-
+  `ap` is Ava Protocol's operator/aggregator command-line tool (from the
+  EigenLayer-AVS Go codebase). It runs and administers the AVS aggregator and,
+  relevant to API developers, mints the long-lived server-to-server JWT bearer
+  keys used for background jobs and webhooks.
+distribution:
+  language: go
+  repository: https://github.com/AvaProtocol/EigenLayer-AVS
+  install: build from source (Go); operator setup at https://github.com/AvaProtocol/ap-operator-setup
+commands:
+  - name: create-api-key
+    summary: Mint a long-lived admin JWT bearer token for server-to-server API access.
+    example: ./ap create-api-key --config=gateway.yaml --role=admin --subject=<EOA> --chain-id=<ID>
+    flags:
+      - --config: path to the gateway config (gateway.yaml)
+      - --role: token role (e.g. admin)
+      - --subject: owner EOA (externally owned account) address
+      - --chain-id: EigenLayer registration chain id
+    note: >-
+      Minted tokens expire after ~10 years and are treated as deploy-time
+      secrets. Use the wallet-signing flow (POST /auth:exchange) for browser/user
+      contexts instead.
+note: >-
+  This is an operator/infrastructure CLI rather than a full developer resource
+  CLI; only the API-credential surface is documented here. Additional operator
+  subcommands exist in the EigenLayer-AVS repo.

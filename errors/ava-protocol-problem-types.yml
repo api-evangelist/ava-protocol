@@ -1,0 +1,67 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/ava-protocol-avs-openapi-original.yml
+enriched_from: https://avaprotocol.org/docs/ava-sdk-js/error-reference
+format: rfc7807
+envelope:
+  media_type: application/problem+json
+  fields: [type, title, status, detail, instance, code]
+  note: >-
+    Every 4xx/5xx response is RFC 7807 problem+json. `type` is a URI under
+    https://docs.avaprotocol.org/errors/; `code` is a stable machine-readable
+    string that mirrors the gRPC-era ErrorCode enum vocabulary; `instance` is a
+    per-request id (e.g. req_01JG2...) suitable for log correlation.
+problems:
+  - status: 400
+    code: VALIDATION_FAILED
+    title: Bad request
+    detail: Request body or parameters failed validation.
+    source: components.responses.BadRequest
+  - status: 401
+    code: AUTH_REQUIRED
+    title: Authentication required
+    detail: >-
+      Missing or expired JWT bearer token. The SDK throws AuthRequiredError;
+      re-authenticate via POST /auth:exchange rather than retrying with the
+      stale token.
+    source: components.responses.Unauthorized
+    remediation: Re-run the wallet-signing auth exchange and retry once with the fresh JWT.
+  - status: 401
+    code: AUTH_INVALID_TOKEN
+    title: Invalid token
+    detail: Bearer token is malformed, invalid, or expired.
+    remediation: Re-authenticate and retry once.
+  - status: 403
+    code: FORBIDDEN
+    title: Forbidden
+    detail: The authenticated owner is not permitted to access this resource.
+    source: components.responses.Forbidden
+  - status: 404
+    code: WORKFLOW_NOT_FOUND
+    title: Workflow not found
+    detail: No workflow with the given id exists for the authenticated owner.
+    source: components.responses.NotFound
+    remediation: Return null or surface "not found" to the caller.
+  - status: 404
+    code: NOT_FOUND
+    title: Resource not found
+    detail: The requested resource (execution, wallet, secret, token) does not exist.
+    source: components.responses.NotFound
+  - status: 409
+    code: CONFLICT
+    title: Conflict
+    detail: The request conflicts with current resource state.
+    source: components.responses.Conflict
+  - status: 429
+    code: RATE_LIMITED
+    title: Too many requests
+    detail: >-
+      Rate limit exceeded. Inspect X-RateLimit-Reset for the next allowed
+      request time and Retry-After for the seconds to wait.
+    source: components.responses.RateLimited
+    remediation: Back off for Retry-After seconds, then retry.
+  - status: 500
+    code: INTERNAL
+    title: Internal server error
+    detail: An unexpected error occurred in the aggregator.
+    source: components.responses.ServerError

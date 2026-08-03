@@ -1,0 +1,187 @@
+syntax = "proto3";
+package aggregator;
+
+option go_package = "./avsproto";
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+import "avs.proto";
+
+message Checkin {
+  string id = 1;
+  string address = 2;
+  string signature = 3;
+
+  message Status {
+    int64 uptime = 1;
+    int64 queueDepth = 2;
+    google.protobuf.Timestamp last_heartbeat = 3;
+  }
+
+  Status status = 4;
+
+  string version = 5;
+  int32 metricsPort = 6;
+  string remoteIP = 7;
+  int64 block_number = 8;
+  int64 event_count = 9;
+
+  // Chain IDs this operator is currently able to monitor — same field
+  // as SyncMessagesReq.supported_chain_ids but re-advertised on every
+  // Ping so a stalled subscription (chain in config but no new heads
+  // in the watermark window) can be dropped without forcing a full
+  // SyncMessages reconnect. The aggregator updates its per-operator
+  // capability snapshot from this value on each ping.
+  repeated int64 supported_chain_ids = 10;
+}
+
+message CheckinResp {
+  google.protobuf.Timestamp updated_at = 1;
+}
+
+message SyncMessagesReq {
+  string id = 1;
+  string address = 2;
+  bytes  signature = 3;
+  int64  monotonic_clock = 4;
+
+  // Operator capabilities - what trigger types this operator supports
+  message Capabilities {
+    bool event_monitoring = 1;    // Supports event trigger monitoring
+    bool block_monitoring = 2;    // Supports block trigger monitoring
+    bool time_monitoring = 3;     // Supports time/cron trigger monitoring
+  }
+
+  Capabilities capabilities = 5;
+
+  // Chain IDs this operator is configured to monitor. The aggregator/gateway
+  // uses this to route per-chain tasks only to operators that can handle
+  // them. Empty means "single-chain operator on the aggregator's default
+  // chain" (backward-compatible with pre-multi-chain operators).
+  repeated int64 supported_chain_ids = 6;
+}
+
+enum MessageOp {
+  Unset              = 0;
+  MonitorTaskTrigger = 1;
+  DisableTask        = 2;
+  DeleteTask         = 3;
+  CompletedTask      = 4;
+  ImmediateTrigger   = 5;
+}
+
+message SyncMessagesResp {
+  // message id is used to support dedup
+  string id = 1;
+  MessageOp op = 2;
+
+  message TaskMetadata {
+    string task_id = 1;
+    // how many time this task can run
+    int64 remain = 2;
+    int64 expired_at = 3;
+    TaskTrigger trigger = 4;
+    // task won't be checked before this (timestamp in milliseconds)
+    int64 start_at = 5;
+    // Target chain for this task's triggers (e.g., 11155111 for Sepolia).
+    // Operators use this to route the task to the correct chain trigger engine.
+    int64 chain_id = 6;
+  };
+
+  TaskMetadata task_metadata = 3;
+}
+
+message AckMessageReq {
+  string id = 1;
+}
+
+message NotifyTriggersReq {
+  string address = 1;
+  string signature = 2;
+
+  string task_id = 3;
+
+  // Flattened from TriggerReason: Use the top-level TriggerType enum for consistency
+  TriggerType trigger_type = 4;
+
+  // Flattened from TriggerReason: trigger output data based on type
+  oneof trigger_output {
+    BlockTrigger.Output block_trigger = 5;
+    FixedTimeTrigger.Output fixed_time_trigger = 6;
+    CronTrigger.Output cron_trigger = 7;
+    EventTrigger.Output event_trigger = 8;
+    ManualTrigger.Output manual_trigger = 9;
+  }
+
+  // Unique identifier for this trigger event, used for deduplication.
+  // General format: "task_id:<marker>". The <marker> depends on trigger_type:
+  //   - Time / cron triggers: millisecond timestamp of the scheduled fire time.
+  //   - Block triggers: block number.
+  //   - Event triggers: "<tx_hash>:<log_index>" identifying the specific log.
+  // The same logical trigger event must produce the same ID so duplicate
+  // notifications can be safely collapsed on the aggregator.
+  string trigger_request_id = 10;
+
+  // Chain where the trigger was detected (e.g., 11155111 for Sepolia).
+  // 0 means the operator's default/only chain (backward compatible).
+  int64 chain_id = 11;
+}
+
+message NotifyTriggersResp {
+  google.protobuf.Timestamp updated_at = 1;
+  
+  // Task execution state information
+  int64 remaining_executions = 2;      // How many executions are left for this task
+  bool task_still_enabled = 3;         // Whether the task is still enabled and should be monitored
+  string status = 4;                   // Task status: "enabled", "exhausted", "disabled", "expired", etc.
+  string message = 5;                  // Optional message for debugging/logging
+}
+
+// ============================================================================
+// INTERNAL OPERATOR SAFETY MESSAGES
+// ============================================================================
+
+// EventOverloadAlert is sent by operators to aggregator when event query processing 
+// exceeds safety limits, triggering task cancellation and Sentry alerts
+message EventOverloadAlert {
+  string task_id = 1;           // Task ID that triggered the overload
+  string operator_address = 2;  // Address of the operator reporting the overload
+  uint64 block_number = 3;      // Block number where overload was detected
+  uint32 events_detected = 4;   // Number of events that triggered the alert
+  uint32 safety_limit = 5;      // The safety limit that was exceeded
+  string query_index = 6;       // Index/identifier of the specific query that overloaded
+  uint64 timestamp = 7;         // Timestamp when overload was detected (milliseconds)
+  string details = 8;           // Additional context about the overload
+}
+
+// EventOverloadResponse is the aggregator's response to an overload alert
+message EventOverloadResponse {
+  bool task_cancelled = 1;      // Whether the task was cancelled due to overload
+  string message = 2;           // Response message/reason
+  uint64 timestamp = 3;         // Response timestamp (milliseconds)
+}
+
+// HealthCheck messages for connection testing
+message HealthCheckRequest {
+  string operator_address = 1;  // Optional: operator address for logging
+}
+
+message HealthCheckResponse {
+  string status = 1;             // Status: "OK", "STARTING", etc.
+  string message = 2;            // Optional message
+  uint64 timestamp = 3;          // Response timestamp (milliseconds)
+}
+
+service Node {
+  // Connection testing endpoint - doesn't store any data
+  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse) {};
+  
+  // Operator endpoint
+  rpc Ping(Checkin) returns (CheckinResp) {};
+  rpc SyncMessages(SyncMessagesReq) returns (stream SyncMessagesResp) {};
+  rpc Ack(AckMessageReq) returns (google.protobuf.BoolValue) {};
+  rpc NotifyTriggers(NotifyTriggersReq) returns (NotifyTriggersResp) {};
+  
+  // Internal operator safety reporting  
+  rpc ReportEventOverload(EventOverloadAlert) returns (EventOverloadResponse);
+}

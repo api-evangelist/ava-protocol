@@ -1,0 +1,40 @@
+generated: '2026-07-18'
+method: searched
+source: https://www.npmjs.com/org/avaprotocol + https://github.com/AvaProtocol
+packages:
+  - language: typescript
+    registry: npm
+    name: "@avaprotocol/sdk-js"
+    version: 4.3.0
+    url: https://www.npmjs.com/package/@avaprotocol/sdk-js
+    install: npm install @avaprotocol/sdk-js
+    description: TypeScript SDK for Ava Protocol's AVS REST API. Resource-grouped sub-clients over the gateway wire protocol.
+    repository: https://github.com/AvaProtocol/ava-sdk-js
+    official: true
+  - language: typescript
+    registry: npm
+    name: "@avaprotocol/types"
+    version: 4.1.0
+    url: https://www.npmjs.com/package/@avaprotocol/types
+    install: npm install @avaprotocol/types
+    description: Type definitions for Ava Protocol's AVS REST API (v4) — generated from the OpenAPI spec.
+    repository: https://github.com/AvaProtocol/ava-sdk-js
+    official: true
+  - language: typescript
+    registry: npm
+    name: "@oak-network/sdk"
+    version: 0.2.4
+    url: https://www.npmjs.com/package/@oak-network/sdk
+    install: npm install @oak-network/sdk
+    description: Legacy OAK Network (predecessor) SDK for the Substrate/Polkadot automation parachain.
+    repository: https://github.com/AvaProtocol/oak.js
+    official: true
+  - language: typescript
+    registry: npm
+    name: "@oak-network/api-augment"
+    version: 2.1.2
+    url: https://www.npmjs.com/package/@oak-network/api-augment
+    install: npm install @oak-network/api-augment
+    description: Legacy OAK Network polkadot.js API augmentation (types + RPC decorations).
+    repository: https://github.com/AvaProtocol/oak.js
+    official: true

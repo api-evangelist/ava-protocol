@@ -1,0 +1,20 @@
+generated: '2026-07-18'
+method: generated
+source: openapi/ava-protocol-avs-openapi-original.yml
+note: >-
+  Agent Skills generated from the Ava Protocol AVS OpenAPI. Every step is grounded
+  in a real operationId verified against the spec. No provider-published skills /
+  AGENTS.md were found at this pass.
+skills:
+  - file: ava-protocol-authenticate.md
+    name: Authenticate to the Ava Protocol AVS API
+    api: openapi/ava-protocol-avs-openapi-original.yml
+    operations: [authExchange]
+  - file: ava-protocol-create-and-monitor-workflow.md
+    name: Create and monitor an onchain automation workflow
+    api: openapi/ava-protocol-avs-openapi-original.yml
+    operations: [simulateWorkflow, estimateWorkflowFees, createWorkflow, getWorkflow, listExecutionsForWorkflow, getExecution, streamExecution]
+  - file: ava-protocol-manage-smart-wallet.md
+    name: Manage an Ava Protocol smart wallet
+    api: openapi/ava-protocol-avs-openapi-original.yml
+    operations: [listWallets, createWallet, getWalletNonce, updateWallet, withdrawWallet]

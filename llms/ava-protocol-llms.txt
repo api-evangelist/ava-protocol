@@ -1,0 +1,53 @@
+# Ava Protocol
+
+> Automate onchain actions with AI. Move, protect, and manage capital without giving up control.
+
+Ava Protocol is an AI-powered onchain automation platform for Ethereum and L2s (Base, Soneium). Users create and run workflows through a chat interface or templates to automate actions like swaps, transfers, notifications, and contract execution — without giving up control of their assets. The platform focuses on automating capital movement, risk management, and execution across onchain environments.
+
+## Core concepts
+
+- **Workflows**: automation flows connecting triggers (scheduled time, price conditions, onchain events, manual) to actions (swap, transfer, contract call, notification).
+- **AI agents**: assist users in building, editing, and managing workflows through natural language.
+- **Smart wallets**: segmented accounts with scoped permissions so automations can move capital under guardrails the user defines.
+- **Templates**: ready-made workflows for common use cases (DCA, stop-loss, payment splits, notifications).
+- **Execution checkout**: a flow where users authorize automations non-custodially before execution.
+
+## Website
+
+- [Home](https://avaprotocol.org/): product overview, how workflows automate onchain capital movement, and how to get started.
+- [Ethereum solution](https://avaprotocol.org/solutions/ethereum): automate Ethereum and EVM transactions with verifiable AVS infrastructure.
+- [Soneium solution](https://avaprotocol.org/solutions/soneium): automate smart contracts and web3 transactions for creative enterprises on Soneium.
+- [Templates](https://avaprotocol.org/templates): browse and use automation templates for common onchain actions.
+- [News](https://avaprotocol.org/news): press releases and media coverage.
+- [Team](https://avaprotocol.org/team): the people building Ava Protocol.
+- [Contact](https://avaprotocol.org/contact-us): reach out for inquiries, support, and partnerships.
+
+## Use cases
+
+- [DeFi](https://avaprotocol.org/usecases/defi): limit orders, payment streams, yield compounding, and stop-loss automation.
+- [Developer](https://avaprotocol.org/usecases/developer): smart contract automation, backend DevOps, and transaction management.
+- [GameFi](https://avaprotocol.org/usecases/gamefi): in-game transactions, rewards, and NFT drops.
+- [NFT](https://avaprotocol.org/usecases/nft): event-based minting and dynamic updates.
+- [RWA](https://avaprotocol.org/usecases/rwa): automation for real-world asset management onchain.
+- [AI agents](https://avaprotocol.org/usecases/agentic-workflows): build and run agent-driven workflows that observe, decide, and act onchain.
+- [AI agent crypto](https://avaprotocol.org/usecases/ai-agent-crypto): automate DeFi trades, airdrops, and transfers with AI agents.
+- [Web3 agents](https://avaprotocol.org/usecases/web3-agents): deploy agents that observe, decide, and act onchain.
+
+## Documentation
+
+- [Docs](https://avaprotocol.org/docs): developer documentation for EigenLayer AVS, operator setup, API reference, and integration guides.
+- [Blog](https://avaprotocol.org/blog): engineering posts, product updates, and deep dives on onchain automation.
+- [Learn](https://avaprotocol.org/learn): developer labs, grant programs, and community resources.
+
+## Product
+
+- [App](https://app.avaprotocol.org/): AI chat interface to build, edit, and run onchain workflows.
+- [Workflows](https://app.avaprotocol.org/workflows): monitor every automated onchain action in real time; review executions and audit historical runs.
+- [Wallets](https://app.avaprotocol.org/wallets): deploy segmented smart wallets with scoped permissions and automated guardrails.
+- [Templates](https://app.avaprotocol.org/templates): proven templates to automate onchain actions and move, protect, and manage capital.
+
+## Links
+
+- Website: https://avaprotocol.org
+- App: https://app.avaprotocol.org
+- X (Twitter): https://twitter.com/ava_protocol

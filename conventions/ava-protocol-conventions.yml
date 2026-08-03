@@ -1,0 +1,58 @@
+generated: '2026-07-18'
+method: searched
+source: https://avaprotocol.org/docs/ava-sdk-js/rest-api
+derived_from: openapi/ava-protocol-avs-openapi-original.yml
+authentication:
+  style: bearer-jwt
+  header: 'Authorization: Bearer <jwt>'
+  obtain:
+    - wallet-signing (EIP-191) via POST /auth:exchange
+    - operator-minted long-lived key via the `ap create-api-key` CLI
+  token_ttl: browser-signed JWT 24h; CLI-minted admin JWT up to 10y
+  ref: authentication/ava-protocol-authentication.yml
+idempotency:
+  supported: true
+  mechanism: semantic
+  note: >-
+    Several operations are documented as idempotent by design rather than via an
+    Idempotency-Key header. PUT /secrets/{name} is create-or-replace idempotent;
+    POST /wallets is an idempotent "ensure exists" that returns the deterministic
+    CREATE2-derived address; POST /workflows/{id}:pause and :resume are idempotent
+    state transitions. There is no Idempotency-Key request header for POST creates
+    (createWorkflow is not replay-safe) — see errors/ for the conflict envelope.
+pagination:
+  style: cursor
+  params: [before, after, first, last]
+  response_envelope: '{ data, pageInfo }'
+  page_info_fields: [hasNextPage, hasPreviousPage, startCursor, endCursor]
+  note: Opaque cursors; pass endCursor to `after` for the next page, startCursor to `before` for the previous.
+naming:
+  case: camelCase
+  note: All field names (request bodies, response bodies, query params, template variables) are camelCase.
+resource_style:
+  nouns: plural
+  ids_in_path: true
+  custom_actions: colon-suffix routes per Google AIP-136 (e.g. POST /workflows/{id}:pause, POST /workflows:simulate, POST /auth:exchange)
+errors:
+  format: rfc7807
+  media_type: application/problem+json
+  machine_code_field: code
+  ref: errors/ava-protocol-problem-types.yml
+rate_limiting:
+  signaled: true
+  headers: [X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Retry-After]
+  status: 429
+request_tracing:
+  field: instance
+  note: The RFC 7807 `instance` field carries a per-request id (e.g. req_01JG2...) for log correlation.
+versioning:
+  scheme: uri-path
+  current: v1
+  base_path: /api/v1
+  ref: lifecycle/ava-protocol-lifecycle.yml
+streaming:
+  server_sent_events: true
+  operation: streamExecution (GET /executions/{id}:stream)
+identifiers:
+  workflow_execution_ids: ULID
+  addresses: EIP-55 checksummed Ethereum addresses

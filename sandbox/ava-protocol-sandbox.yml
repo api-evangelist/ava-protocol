@@ -1,0 +1,31 @@
+generated: '2026-07-18'
+method: searched
+source: openapi/ava-protocol-avs-openapi-original.yml + https://avaprotocol.org/docs
+environments:
+  - name: production
+    base_url: https://gateway.avaprotocol.org/api/v1
+  - name: staging
+    base_url: https://gateway-staging.avaprotocol.org/api/v1
+    note: Public staging aggregator — use for integration testing before production.
+  - name: local
+    base_url: http://localhost:8080/api/v1
+    note: Local aggregator for development.
+dry_run:
+  supported: true
+  operations:
+    - simulateWorkflow (POST /workflows:simulate) — run a workflow definition without persisting it.
+    - estimateWorkflowFees (POST /workflows:estimateFees) — preview per-execution fees.
+    - runNode (POST /nodes:run) — execute a single node with inline input variables.
+    - runTrigger (POST /triggers:run) — evaluate a trigger definition with inline input.
+read_only_mode:
+  supported: true
+  note: >-
+    The product supports a non-custodial read-only starting mode (monitor a
+    wallet without granting transaction permissions); actions require explicit
+    user approval before execution.
+test_values:
+  note: >-
+    No published magic/test credential values (test cards, test tokens) — this is
+    onchain automation infra, not a card acquirer. Testing is done against the
+    staging aggregator and via the simulate/estimate/run dry-run operations above,
+    typically on EVM testnets. No test values are invented here.

@@ -1,0 +1,70 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/ava-protocol-avs-openapi-original.yml
+entities:
+  - name: Workflow
+    id: id (ULID)
+    key_fields: [owner, smartWalletAddress, trigger, nodes, edges, status, executionCount]
+  - name: Execution
+    id: id (ULID)
+    key_fields: [workflowId, status, startAt, endAt, steps, valueFee]
+  - name: SmartWallet
+    id: address (EthereumAddress)
+    key_fields: [salt, factoryAddress, totalWorkflowCount, enabledWorkflowCount]
+  - name: Secret
+    id: name
+    key_fields: [scope]
+  - name: Trigger
+    id: (embedded in Workflow)
+    key_fields: [type]
+    variants: [manual, fixedTime, cron, block, event]
+  - name: Node
+    id: (embedded in Workflow)
+    key_fields: [type]
+    variants: [ethTransfer, contractWrite, contractRead, graphqlQuery, restApi, customCode, branch, filter, loop, balance, await]
+  - name: Edge
+    id: (embedded in Workflow)
+    key_fields: [source, target]
+  - name: Operator
+    id: address
+    key_fields: [status]
+relationships:
+  - from: Execution
+    to: Workflow
+    type: belongs_to
+    via: workflowId
+  - from: Workflow
+    to: Execution
+    type: has_many
+    via: workflowId
+  - from: Workflow
+    to: SmartWallet
+    type: belongs_to
+    via: smartWalletAddress
+  - from: SmartWallet
+    to: Workflow
+    type: has_many
+    via: smartWalletAddress
+  - from: Workflow
+    to: Trigger
+    type: has_one
+    via: trigger
+  - from: Workflow
+    to: Node
+    type: has_many
+    via: nodes
+  - from: Workflow
+    to: Edge
+    type: has_many
+    via: edges
+  - from: Secret
+    to: Workflow
+    type: belongs_to
+    via: scope (workflow-scoped secrets)
+id_prefixes:
+  - entity: Workflow / Execution
+    format: ULID (e.g. 01JG2FE5MDVKBPHEG0PEYSDKAC)
+  - entity: request instance
+    format: req_<ULID>
+  - entity: SmartWallet / owner
+    format: EIP-55 checksummed Ethereum address (0x...)

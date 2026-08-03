@@ -1,0 +1,29 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Ava Protocol AVS API
+  version: 1.0.0
+extends: openapi/ava-protocol-avs-openapi-original.yml
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-enriched: '2026-07-18'
+      x-apievangelist-provider: ava-protocol
+      x-apievangelist-conventions: conventions/ava-protocol-conventions.yml
+      x-apievangelist-errors: errors/ava-protocol-problem-types.yml
+      x-apievangelist-authentication: authentication/ava-protocol-authentication.yml
+      x-apievangelist-data-model: data-model/ava-protocol-data-model.yml
+  - target: $.info
+    update:
+      x-error-format: rfc7807
+      x-pagination-style: cursor
+      x-custom-action-convention: aip-136-colon-suffix
+      x-rate-limit-headers:
+        - X-RateLimit-Limit
+        - X-RateLimit-Remaining
+        - X-RateLimit-Reset
+        - Retry-After
+  - target: $.info
+    update:
+      x-agent-ready: true
+      x-agentic-access: agentic-access/ava-protocol-agentic-access.yml
+      x-skills: skills/_index.yml

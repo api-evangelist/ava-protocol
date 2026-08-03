@@ -1,0 +1,30 @@
+generated: '2026-07-18'
+method: derived
+source: openapi/ava-protocol-avs-openapi-original.yml
+searched: https://avaprotocol.org/docs
+versioning:
+  scheme: uri-path
+  current: v1
+  base_path: /api/v1
+  sdk_major: 4
+  note: >-
+    REST surface is versioned in the URI path (/api/v1). The SDK/types packages
+    track a major version (v4). The aggregator binary reports its own version via
+    GET /health (e.g. v3.2.0), which SDK clients use to stamp the canonical
+    EIP-191 auth message.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: No published deprecation/Sunset (RFC 8594) policy was found in the docs at this pass.
+sla:
+  url: null
+  uptime_target: null
+status_page: null
+deprecated_operations: []
+health_endpoint: GET /api/v1/health
+predecessor:
+  name: OAK Network (Turing Network)
+  note: >-
+    Ava Protocol is the evolution of the OAK Network Substrate/Polkadot automation
+    parachain; the current product is an Ethereum/L2 automation AVS built on
+    EigenLayer. Legacy OAK SDKs remain published (@oak-network/*).

@@ -1,0 +1,32 @@
+{
+  "provider": "ava-protocol",
+  "sources": [
+    "ava-protocol-auth-api-openapi.yml",
+    "ava-protocol-executions-api-openapi.yml",
+    "ava-protocol-health-api-openapi.yml",
+    "ava-protocol-nodes-api-openapi.yml",
+    "ava-protocol-operators-api-openapi.yml",
+    "ava-protocol-secrets-api-openapi.yml",
+    "ava-protocol-tokens-api-openapi.yml",
+    "ava-protocol-triggers-api-openapi.yml",
+    "ava-protocol-wallets-api-openapi.yml",
+    "ava-protocol-workflows-api-openapi.yml"
+  ],
+  "outputs": [
+    "ava-protocol-auth-api-openapi.yml",
+    "ava-protocol-executions-api-openapi.yml",
+    "ava-protocol-health-api-openapi.yml",
+    "ava-protocol-nodes-api-openapi.yml",
+    "ava-protocol-operators-api-openapi.yml",
+    "ava-protocol-secrets-api-openapi.yml",
+    "ava-protocol-tokens-api-openapi.yml",
+    "ava-protocol-triggers-api-openapi.yml",
+    "ava-protocol-wallets-api-openapi.yml",
+    "ava-protocol-workflows-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}

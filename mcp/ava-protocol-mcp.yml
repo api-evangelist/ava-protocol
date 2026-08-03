@@ -1,0 +1,108 @@
+generated: '2026-07-18'
+method: derived
+status: candidate
+source: openapi/ava-protocol-avs-openapi-original.yml
+note: >-
+  No official hosted/remote MCP server was found for Ava Protocol as of this
+  pass (searched docs at avaprotocol.org/docs, the AvaProtocol GitHub org, and
+  the npm @modelcontextprotocol scope). This is a DERIVED candidate tool list —
+  one tool per OpenAPI operation on the AVS aggregator REST API — provided as a
+  starting point for an MCP server, not a published server.
+server:
+  name: ava-protocol
+  transport: http
+  base_url: https://gateway.avaprotocol.org/api/v1
+tools:
+  - name: exchange_auth
+    description: Exchange a wallet signature (EIP-191) for a JWT bearer token.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#authExchange
+  - name: create_workflow
+    description: Create an onchain automation workflow (trigger + nodes + edges).
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#createWorkflow
+  - name: list_workflows
+    description: List workflows for the authenticated owner.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#listWorkflows
+  - name: get_workflow
+    description: Retrieve a single workflow by id.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#getWorkflow
+  - name: cancel_workflow
+    description: Cancel (terminate) a workflow.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#cancelWorkflow
+  - name: pause_workflow
+    description: Pause a workflow (enabled -> disabled).
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#pauseWorkflow
+  - name: resume_workflow
+    description: Resume a workflow (disabled -> enabled).
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#resumeWorkflow
+  - name: trigger_workflow
+    description: Manually trigger a workflow execution.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#triggerWorkflow
+  - name: simulate_workflow
+    description: Simulate a workflow without persisting it.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#simulateWorkflow
+  - name: estimate_workflow_fees
+    description: Estimate per-execution fees for a workflow definition.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#estimateWorkflowFees
+  - name: count_workflows
+    description: Count workflows.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#countWorkflows
+  - name: list_executions
+    description: List executions across workflows.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#listExecutions
+  - name: list_executions_for_workflow
+    description: List executions for a specific workflow.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#listExecutionsForWorkflow
+  - name: get_execution
+    description: Retrieve a full execution payload with steps.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#getExecution
+  - name: get_execution_status
+    description: Get lightweight execution status (no steps).
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#getExecutionStatus
+  - name: signal_execution
+    description: Deliver an approval/external signal to a waiting execution.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#signalExecution
+  - name: stream_execution
+    description: Stream execution status changes via Server-Sent Events.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#streamExecution
+  - name: count_executions
+    description: Count executions.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#countExecutions
+  - name: execution_stats
+    description: Execution statistics (totals + averages).
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#executionStats
+  - name: list_wallets
+    description: List the authenticated user's smart wallets.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#listWallets
+  - name: create_wallet
+    description: Derive and persist a smart-wallet address from (owner, salt, factory).
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#createWallet
+  - name: update_wallet
+    description: Update smart-wallet properties.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#updateWallet
+  - name: withdraw_wallet
+    description: Withdraw funds from a smart wallet.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#withdrawWallet
+  - name: get_wallet_nonce
+    description: Get the smart wallet's current nonce.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#getWalletNonce
+  - name: list_secrets
+    description: List secrets (metadata only — values are never echoed).
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#listSecrets
+  - name: put_secret
+    description: Create or replace a secret (idempotent).
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#putSecret
+  - name: delete_secret
+    description: Delete a secret.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#deleteSecret
+  - name: get_token
+    description: Retrieve ERC-20 token metadata.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#getToken
+  - name: run_node
+    description: Execute a single node with inline input variables.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#runNode
+  - name: run_trigger
+    description: Evaluate a trigger definition with inline input.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#runTrigger
+  - name: list_operators
+    description: List connected AVS operators.
+    source_operation: openapi/ava-protocol-avs-openapi-original.yml#listOperators

@@ -149,6 +149,8 @@ apis:
   - type: OpenAPI
     url: openapi/ava-protocol-workflows-api-openapi.yml
 common:
+- type: Overlay
+  url: overlays/ava-protocol-avs-overlay.yaml
 - type: AgenticAccess
   url: agentic-access/ava-protocol-agentic-access.yml
 - type: Authentication

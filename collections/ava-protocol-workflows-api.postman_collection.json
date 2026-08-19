@@ -1,0 +1,2449 @@
+{
+  "item": [
+    {
+      "id": "2643aee6-a2f7-452a-9a9d-3a348d8366e2",
+      "name": "Workflows",
+      "description": {
+        "content": "Workflow CRUD and lifecycle actions",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8e7c52b5-3cd2-4154-a4fb-44a1cd2252bd",
+          "name": "Create a workflow",
+          "request": {
+            "name": "Create a workflow",
+            "description": {
+              "content": "Persist a new workflow definition. Each chain-aware trigger and node\ncarries its own required `chainId` (there is no workflow-level chain);\nthe server validates those chains and ensures the smart wallet belongs\nto the authenticated user. Returns the persisted Workflow with its\nserver-assigned `id` and `createdAt`.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "workflows"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"smartWalletAddress\": \"<string>\",\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": 1181.9506770032363\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\",\n        \"key_2\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"name\": \"<string>\",\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ],\n  \"inputVariables\": {\n    \"key_0\": 9181.048360158113,\n    \"key_1\": 723.69511271553\n  },\n  \"startAt\": \"<long>\",\n  \"expiredAt\": \"<long>\",\n  \"maxExecution\": \"<long>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "3cce5d26-cc7e-4620-b637-eb9d6a5c3343",
+              "name": "Workflow created.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"smartWalletAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": 2575,\n        \"key_1\": 5385,\n        \"key_2\": 6698.219165893741,\n        \"key_3\": 4132,\n        \"key_4\": 2495\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"name\": \"<string>\",\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ],\n  \"inputVariables\": {\n    \"key_0\": 8532\n  },\n  \"startAt\": \"<long>\",\n  \"expiredAt\": \"<long>\",\n  \"maxExecution\": \"<long>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n  \"owner\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"smartWalletAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": false,\n        \"key_1\": 777\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"status\": \"enabled\",\n  \"name\": \"string\",\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ],\n  \"inputVariables\": {\n    \"key_0\": \"string\"\n  },\n  \"startAt\": 3425,\n  \"expiredAt\": 8852,\n  \"maxExecution\": 1576,\n  \"executionCount\": 2697,\n  \"createdAt\": 3748,\n  \"completedAt\": 6128\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5d9472c1-10ab-4b17-83f5-10ce1c1d3b47",
+              "name": "Request validation failed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"smartWalletAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": 2575,\n        \"key_1\": 5385,\n        \"key_2\": 6698.219165893741,\n        \"key_3\": 4132,\n        \"key_4\": 2495\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"name\": \"<string>\",\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ],\n  \"inputVariables\": {\n    \"key_0\": 8532\n  },\n  \"startAt\": \"<long>\",\n  \"expiredAt\": \"<long>\",\n  \"maxExecution\": \"<long>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "806daa8d-7530-4abd-9d03-e909ddc20326",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"smartWalletAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": 2575,\n        \"key_1\": 5385,\n        \"key_2\": 6698.219165893741,\n        \"key_3\": 4132,\n        \"key_4\": 2495\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"name\": \"<string>\",\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ],\n  \"inputVariables\": {\n    \"key_0\": 8532\n  },\n  \"startAt\": \"<long>\",\n  \"expiredAt\": \"<long>\",\n  \"maxExecution\": \"<long>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ba9ced43-f840-48c4-a07b-1ee04c14dd5c",
+              "name": "Authenticated but not permitted.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"smartWalletAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": 2575,\n        \"key_1\": 5385,\n        \"key_2\": 6698.219165893741,\n        \"key_3\": 4132,\n        \"key_4\": 2495\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"name\": \"<string>\",\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ],\n  \"inputVariables\": {\n    \"key_0\": 8532\n  },\n  \"startAt\": \"<long>\",\n  \"expiredAt\": \"<long>\",\n  \"maxExecution\": \"<long>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "10c7c75a-f71a-40e7-a506-8905d2ae74f7",
+              "name": "Rate limit exceeded. Inspect `X-RateLimit-Reset` for the next allowed\nrequest time and `Retry-After` for the seconds to wait.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"smartWalletAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": 2575,\n        \"key_1\": 5385,\n        \"key_2\": 6698.219165893741,\n        \"key_3\": 4132,\n        \"key_4\": 2495\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"name\": \"<string>\",\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ],\n  \"inputVariables\": {\n    \"key_0\": 8532\n  },\n  \"startAt\": \"<long>\",\n  \"expiredAt\": \"<long>\",\n  \"maxExecution\": \"<long>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "X-RateLimit-Limit",
+                  "value": "531",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "X-RateLimit-Remaining",
+                  "value": "531",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "X-RateLimit-Reset",
+                  "value": "6673",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Retry-After",
+                  "value": "4046",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "97ded95b-bf3e-4d88-93c1-542e300d562c",
+          "name": "List workflows",
+          "request": {
+            "name": "List workflows",
+            "description": {},
+            "url": {
+              "path": [
+                "workflows"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "smartWalletAddress",
+                  "value": "<string>",
+                  "description": "Filter by smart wallet address. Repeat to OR multiple addresses."
+                },
+                {
+                  "disabled": false,
+                  "key": "smartWalletAddress",
+                  "value": "<string>",
+                  "description": "Filter by smart wallet address. Repeat to OR multiple addresses."
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Filter by status. Repeat to OR multiple statuses."
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>",
+                  "description": "Filter by status. Repeat to OR multiple statuses."
+                },
+                {
+                  "disabled": false,
+                  "key": "before",
+                  "value": "<string>",
+                  "description": "Cursor — return items immediately before this position (backward pagination)."
+                },
+                {
+                  "disabled": false,
+                  "key": "after",
+                  "value": "<string>",
+                  "description": "Cursor — return items immediately after this position (forward pagination)."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Max items to return. Default 20; server-enforced ceiling applies."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "db9f77a4-cf80-41c1-bfdc-b71e5151ab51",
+              "name": "Page of workflows.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "smartWalletAddress",
+                      "value": "0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB"
+                    },
+                    {
+                      "key": "smartWalletAddress",
+                      "value": "0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "before",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n      \"owner\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"smartWalletAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"trigger\": {\n        \"type\": \"<string>\",\n        \"config\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"nodes\": [\n        {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"config\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"config\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"status\": \"<string>\",\n      \"name\": \"string\",\n      \"edges\": [\n        {\n          \"id\": \"<string>\",\n          \"source\": \"<string>\",\n          \"target\": \"<string>\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"source\": \"<string>\",\n          \"target\": \"<string>\"\n        }\n      ],\n      \"inputVariables\": {\n        \"key_0\": 8943,\n        \"key_1\": true\n      },\n      \"startAt\": 4031,\n      \"expiredAt\": 2719,\n      \"maxExecution\": 9862,\n      \"executionCount\": 5218,\n      \"createdAt\": 6666,\n      \"completedAt\": 2612\n    },\n    {\n      \"id\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n      \"owner\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"smartWalletAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"trigger\": {\n        \"type\": \"<string>\",\n        \"config\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      },\n      \"nodes\": [\n        {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"config\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        },\n        {\n          \"type\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          },\n          \"config\": {\n            \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n          }\n        }\n      ],\n      \"status\": \"<string>\",\n      \"name\": \"string\",\n      \"edges\": [\n        {\n          \"id\": \"<string>\",\n          \"source\": \"<string>\",\n          \"target\": \"<string>\"\n        },\n        {\n          \"id\": \"<string>\",\n          \"source\": \"<string>\",\n          \"target\": \"<string>\"\n        }\n      ],\n      \"inputVariables\": {\n        \"key_0\": 5347,\n        \"key_1\": 6044,\n        \"key_2\": \"string\"\n      },\n      \"startAt\": 3035,\n      \"expiredAt\": 4441,\n      \"maxExecution\": 399,\n      \"executionCount\": 3232,\n      \"createdAt\": 4744,\n      \"completedAt\": 8549\n    }\n  ],\n  \"pageInfo\": {\n    \"hasNextPage\": false,\n    \"hasPreviousPage\": false,\n    \"startCursor\": \"string\",\n    \"endCursor\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "52ab7408-f24b-403b-85d1-55387858b88d",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "smartWalletAddress",
+                      "value": "0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB"
+                    },
+                    {
+                      "key": "smartWalletAddress",
+                      "value": "0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "before",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fb414894-6c2f-4e0f-8d60-fdb9100789bf",
+              "name": "Rate limit exceeded. Inspect `X-RateLimit-Reset` for the next allowed\nrequest time and `Retry-After` for the seconds to wait.\n",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "smartWalletAddress",
+                      "value": "0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB"
+                    },
+                    {
+                      "key": "smartWalletAddress",
+                      "value": "0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "before",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "disabled": false,
+                  "key": "X-RateLimit-Limit",
+                  "value": "531",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "X-RateLimit-Remaining",
+                  "value": "531",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "X-RateLimit-Reset",
+                  "value": "6673",
+                  "description": ""
+                },
+                {
+                  "disabled": false,
+                  "key": "Retry-After",
+                  "value": "4046",
+                  "description": ""
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f9bb4697-9e04-40eb-9a70-faf342b0ec99",
+          "name": "Retrieve a workflow",
+          "request": {
+            "name": "Retrieve a workflow",
+            "description": {},
+            "url": {
+              "path": [
+                "workflows",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "89181d15-1a71-47ef-b482-8ed50703aa4a",
+              "name": "The workflow.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n  \"owner\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"smartWalletAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": 4889.21029956225\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"status\": \"<string>\",\n  \"name\": \"string\",\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ],\n  \"inputVariables\": {\n    \"key_0\": \"string\",\n    \"key_1\": 6407.184532475461,\n    \"key_2\": 6193.196525115483,\n    \"key_3\": false\n  },\n  \"startAt\": 841,\n  \"expiredAt\": 3257,\n  \"maxExecution\": 1442,\n  \"executionCount\": 1772,\n  \"createdAt\": 1291,\n  \"completedAt\": 4238\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4a01bc39-3c83-4656-9c2d-80ecd04edbd4",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "7a76e2e7-c862-4cc9-80ed-235917617641",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "81c6ca69-2c58-4bdc-a082-03228ca4e046",
+          "name": "Cancel a workflow",
+          "request": {
+            "name": "Cancel a workflow",
+            "description": {
+              "content": "Permanently cancels and removes the workflow. SDK method is\n`cancel(id)` to align with Stripe-style vocabulary.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "workflows",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/problem+json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "d53c6545-0b1a-4131-9278-3a8b2b098b15",
+              "name": "Workflow cancelled.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "45ef2d00-f413-48ae-90a5-9eb62c8120a1",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "28dc2e49-016a-4e77-a4ff-aa0e7f1cee6e",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "00a94ab0-35a6-4138-95fc-1b15d97f4a3c",
+          "name": "Pause a workflow",
+          "request": {
+            "name": "Pause a workflow",
+            "description": {
+              "content": "Transition from `enabled` to `disabled`. Idempotent.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "workflows",
+                "{{id}}:pause"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "01936b1c-629a-4eb8-a489-a775605050e7",
+              "name": "Workflow paused.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    "{{id}}:pause"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n  \"owner\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"smartWalletAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": 4889.21029956225\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"status\": \"<string>\",\n  \"name\": \"string\",\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ],\n  \"inputVariables\": {\n    \"key_0\": \"string\",\n    \"key_1\": 6407.184532475461,\n    \"key_2\": 6193.196525115483,\n    \"key_3\": false\n  },\n  \"startAt\": 841,\n  \"expiredAt\": 3257,\n  \"maxExecution\": 1442,\n  \"executionCount\": 1772,\n  \"createdAt\": 1291,\n  \"completedAt\": 4238\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "6ea90359-866c-43c7-990f-c83f43d41235",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    "{{id}}:pause"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "dc13e526-9440-4264-9f93-77f8b2afab7f",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    "{{id}}:pause"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "280cce4b-4f5c-44ab-8fb6-5f09f5365d8a",
+              "name": "Workflow is in a terminal state and cannot be paused.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    "{{id}}:pause"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "25783a8f-1192-4e0c-be09-9119f1284a0e",
+          "name": "Resume a workflow",
+          "request": {
+            "name": "Resume a workflow",
+            "description": {
+              "content": "Transition from `disabled` to `enabled`. Idempotent.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "workflows",
+                "{{id}}:resume"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8e2cd307-2577-4505-91f2-1b118828e441",
+              "name": "Workflow resumed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    "{{id}}:resume"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n  \"owner\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"smartWalletAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": 4889.21029956225\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"status\": \"<string>\",\n  \"name\": \"string\",\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ],\n  \"inputVariables\": {\n    \"key_0\": \"string\",\n    \"key_1\": 6407.184532475461,\n    \"key_2\": 6193.196525115483,\n    \"key_3\": false\n  },\n  \"startAt\": 841,\n  \"expiredAt\": 3257,\n  \"maxExecution\": 1442,\n  \"executionCount\": 1772,\n  \"createdAt\": 1291,\n  \"completedAt\": 4238\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a603ae84-f04b-4bb6-8a04-be2a51126d1c",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    "{{id}}:resume"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d1750098-d863-4574-b143-21de9e26852d",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    "{{id}}:resume"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9fc2c518-a846-42d1-9ca9-bd5f781107f4",
+              "name": "Workflow is in a terminal state and cannot be resumed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    "{{id}}:resume"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {}
+              },
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "9b4c6407-596a-452c-aa3e-833f48ef8642",
+          "name": "Manually trigger a workflow",
+          "request": {
+            "name": "Manually trigger a workflow",
+            "description": {
+              "content": "Simulate an operator-detected trigger fire. The server enqueues an\nexecution; when `isBlocking=true`, the response waits for the\nexecution to complete.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "workflows",
+                "{{id}}:trigger"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"triggerType\": \"<string>\",\n  \"triggerOutput\": {\n    \"key_0\": 7507\n  },\n  \"triggerInput\": {\n    \"key_0\": \"string\"\n  },\n  \"isBlocking\": \"<boolean>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "57bc58c9-2d90-4774-a77c-0308da4ef823",
+              "name": "Execution completed (blocking). Returned when isBlocking=true.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    "{{id}}:trigger"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"triggerType\": \"<string>\",\n  \"triggerOutput\": {\n    \"key_0\": 6950.3485968578825,\n    \"key_1\": true,\n    \"key_2\": 5162,\n    \"key_3\": 2190,\n    \"key_4\": 7773\n  },\n  \"triggerInput\": {\n    \"key_0\": \"string\",\n    \"key_1\": true\n  },\n  \"isBlocking\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"executionId\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n  \"status\": \"success\",\n  \"startAt\": 6082,\n  \"endAt\": 5304,\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "daa4f9ba-1223-4231-8c5d-b7a9e2471924",
+              "name": "Execution enqueued (async). Returned when isBlocking=false.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    "{{id}}:trigger"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"triggerType\": \"<string>\",\n  \"triggerOutput\": {\n    \"key_0\": 6950.3485968578825,\n    \"key_1\": true,\n    \"key_2\": 5162,\n    \"key_3\": 2190,\n    \"key_4\": 7773\n  },\n  \"triggerInput\": {\n    \"key_0\": \"string\",\n    \"key_1\": true\n  },\n  \"isBlocking\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Accepted",
+              "code": 202,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"executionId\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n  \"status\": \"success\",\n  \"startAt\": 6082,\n  \"endAt\": 5304,\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1fe2f057-e307-4310-af87-072d2ed0d8ba",
+              "name": "Request validation failed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    "{{id}}:trigger"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"triggerType\": \"<string>\",\n  \"triggerOutput\": {\n    \"key_0\": 6950.3485968578825,\n    \"key_1\": true,\n    \"key_2\": 5162,\n    \"key_3\": 2190,\n    \"key_4\": 7773\n  },\n  \"triggerInput\": {\n    \"key_0\": \"string\",\n    \"key_1\": true\n  },\n  \"isBlocking\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "088fdaa4-1f19-4171-bbad-43328ac9b340",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    "{{id}}:trigger"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"triggerType\": \"<string>\",\n  \"triggerOutput\": {\n    \"key_0\": 6950.3485968578825,\n    \"key_1\": true,\n    \"key_2\": 5162,\n    \"key_3\": 2190,\n    \"key_4\": 7773\n  },\n  \"triggerInput\": {\n    \"key_0\": \"string\",\n    \"key_1\": true\n  },\n  \"isBlocking\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "237b90a9-4813-48cd-89a1-1ee3eed5d77a",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    "{{id}}:trigger"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"triggerType\": \"<string>\",\n  \"triggerOutput\": {\n    \"key_0\": 6950.3485968578825,\n    \"key_1\": true,\n    \"key_2\": 5162,\n    \"key_3\": 2190,\n    \"key_4\": 7773\n  },\n  \"triggerInput\": {\n    \"key_0\": \"string\",\n    \"key_1\": true\n  },\n  \"isBlocking\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "56b6a5fb-93b1-4a13-ba19-e9f673642359",
+              "name": "Workflow is disabled or has reached its max execution count.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    "{{id}}:trigger"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"triggerType\": \"<string>\",\n  \"triggerOutput\": {\n    \"key_0\": 6950.3485968578825,\n    \"key_1\": true,\n    \"key_2\": 5162,\n    \"key_3\": 2190,\n    \"key_4\": 7773\n  },\n  \"triggerInput\": {\n    \"key_0\": \"string\",\n    \"key_1\": true\n  },\n  \"isBlocking\": \"<boolean>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Precondition Failed",
+              "code": 412,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "196446f9-0cb8-4543-ba8d-d973f5508b11",
+          "name": "Simulate a workflow without persisting it",
+          "request": {
+            "name": "Simulate a workflow without persisting it",
+            "description": {
+              "content": "Run a workflow definition end-to-end against the engine (Tenderly\nsimulation for chain-writing nodes) and return the full Execution.\nNothing is persisted.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "workflows:simulate"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": true\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\",\n        \"key_2\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"inputVariables\": {\n    \"key_0\": true\n  },\n  \"chainId\": \"<long>\",\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "74790d34-37bd-47c9-ad49-1d2e6a3ca3b5",
+              "name": "Simulated execution.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows:simulate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": \"string\",\n        \"key_1\": 4677.268664417384\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\",\n        \"key_2\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"inputVariables\": {\n    \"key_0\": \"string\"\n  },\n  \"chainId\": 11155111,\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"key_0\": false,\n  \"key_1\": 5820\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "77a1fec3-deaa-4d4e-9cbd-1b0b220d9061",
+              "name": "Request validation failed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows:simulate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": \"string\",\n        \"key_1\": 4677.268664417384\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\",\n        \"key_2\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"inputVariables\": {\n    \"key_0\": \"string\"\n  },\n  \"chainId\": 11155111,\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5ebd5a6e-810f-445f-9aff-1e3e5b61949a",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows:simulate"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": \"string\",\n        \"key_1\": 4677.268664417384\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\",\n        \"key_2\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"inputVariables\": {\n    \"key_0\": \"string\"\n  },\n  \"chainId\": 11155111,\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "530c5d0d-908c-4555-afe1-27f0ba37d60a",
+          "name": "Estimate per-execution fees for a workflow definition",
+          "request": {
+            "name": "Estimate per-execution fees for a workflow definition",
+            "description": {
+              "content": "Returns the platform execution fee, per-node COGS (gas, external\nAPI costs), and the workflow-level value-capture fee tier.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "workflows:estimateFees"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": 8275\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\",\n        \"key_2\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"createdAt\": \"<long>\",\n  \"expireAt\": \"<long>\",\n  \"maxExecution\": \"<long>\",\n  \"chainId\": \"<long>\",\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ],\n  \"runner\": \"<string>\",\n  \"inputVariables\": {\n    \"key_0\": 7807.004189016502,\n    \"key_1\": 2851\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "248ffce4-fcdb-4e09-a2ef-95ff23096157",
+              "name": "Fee estimate.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows:estimateFees"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": \"string\",\n        \"key_1\": 1482,\n        \"key_2\": 5100\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"createdAt\": \"<long>\",\n  \"expireAt\": \"<long>\",\n  \"maxExecution\": \"<long>\",\n  \"chainId\": 11155111,\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ],\n  \"runner\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"inputVariables\": {\n    \"key_0\": \"string\",\n    \"key_1\": 7030.050111983741\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"chainId\": 11155111,\n  \"executionFee\": {\n    \"amount\": \"string\",\n    \"unit\": \"USD\"\n  },\n  \"cogs\": [\n    {\n      \"nodeId\": \"string\",\n      \"costType\": \"gas\",\n      \"fee\": {\n        \"amount\": \"string\",\n        \"unit\": \"USD\"\n      },\n      \"gasUnits\": \"string\"\n    },\n    {\n      \"nodeId\": \"string\",\n      \"costType\": \"externalApi\",\n      \"fee\": {\n        \"amount\": \"string\",\n        \"unit\": \"USD\"\n      },\n      \"gasUnits\": \"string\"\n    }\n  ],\n  \"valueFee\": {\n    \"fee\": {\n      \"amount\": \"string\",\n      \"unit\": \"WEI\"\n    },\n    \"tier\": \"tier3\",\n    \"valueBase\": \"string\",\n    \"classificationMethod\": \"llm\",\n    \"confidence\": 0.774462833745376,\n    \"reason\": \"string\"\n  },\n  \"nativeToken\": {\n    \"symbol\": \"ETH\",\n    \"decimals\": 4375\n  },\n  \"discounts\": [\n    {\n      \"discountType\": \"volume\",\n      \"discountName\": \"string\",\n      \"discount\": {\n        \"amount\": \"string\",\n        \"unit\": \"PERCENTAGE\"\n      },\n      \"expiryDate\": \"1951-07-23T02:50:47.177Z\",\n      \"terms\": \"string\"\n    },\n    {\n      \"discountType\": \"newUser\",\n      \"discountName\": \"string\",\n      \"discount\": {\n        \"amount\": \"string\",\n        \"unit\": \"PERCENTAGE\"\n      },\n      \"expiryDate\": \"1963-06-16T05:52:07.682Z\",\n      \"terms\": \"string\"\n    }\n  ],\n  \"pricingModel\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5dc5b858-5d7f-4b09-bcc5-0c52cdcfd648",
+              "name": "Request validation failed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows:estimateFees"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": \"string\",\n        \"key_1\": 1482,\n        \"key_2\": 5100\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"createdAt\": \"<long>\",\n  \"expireAt\": \"<long>\",\n  \"maxExecution\": \"<long>\",\n  \"chainId\": 11155111,\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ],\n  \"runner\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"inputVariables\": {\n    \"key_0\": \"string\",\n    \"key_1\": 7030.050111983741\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "75934195-a1c1-484e-84bf-705fddb78803",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows:estimateFees"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"trigger\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"lang\": \"<string>\",\n      \"data\": {\n        \"key_0\": \"string\",\n        \"key_1\": 1482,\n        \"key_2\": 5100\n      },\n      \"headers\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      },\n      \"pathParams\": {\n        \"key_0\": \"<string>\",\n        \"key_1\": \"<string>\"\n      }\n    }\n  },\n  \"nodes\": [\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    },\n    {\n      \"type\": \"<string>\",\n      \"config\": {\n        \"destination\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        },\n        \"amount\": \"<string>\",\n        \"chainId\": {\n          \"value\": \"<Error: Too many levels of nesting to fake this schema>\"\n        }\n      }\n    }\n  ],\n  \"createdAt\": \"<long>\",\n  \"expireAt\": \"<long>\",\n  \"maxExecution\": \"<long>\",\n  \"chainId\": 11155111,\n  \"edges\": [\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    },\n    {\n      \"id\": \"<string>\",\n      \"source\": \"<string>\",\n      \"target\": \"<string>\"\n    }\n  ],\n  \"runner\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"inputVariables\": {\n    \"key_0\": \"string\",\n    \"key_1\": 7030.050111983741\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2138aca9-ecdc-422a-a8b7-c6756cfbc915",
+          "name": "Count workflows",
+          "request": {
+            "name": "Count workflows",
+            "description": {
+              "content": "Cheap aggregation over the same filter set as `GET /workflows`.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "workflows:count"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "smartWalletAddress",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "smartWalletAddress",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "status",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5c4d320d-147a-41cd-98e1-c1029d4ec959",
+              "name": "Workflow count for the filter set.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows:count"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "smartWalletAddress",
+                      "value": "0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB"
+                    },
+                    {
+                      "key": "smartWalletAddress",
+                      "value": "0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"total\": 8444\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4b7c2ebc-44fc-42f0-89e5-81b89b38e8ec",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows:count"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "smartWalletAddress",
+                      "value": "0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB"
+                    },
+                    {
+                      "key": "smartWalletAddress",
+                      "value": "0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "status",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://gateway.avaprotocol.org/api/v1",
+      "key": "baseUrl"
+    },
+    {
+      "disabled": false,
+      "description": {
+        "content": "(Required) ",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "<string>",
+      "key": "id"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "ec83fcd3-22b5-4c50-a4c8-fe8a9f39a556",
+    "name": "Ava Protocol AVS Auth Workflows API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public REST API for the Ava Protocol AVS aggregator. Exposes workflow\ncreation, execution monitoring, smart-wallet management, and related\noperations.\n\nAuthentication is a single credential type — a JWT bearer token — obtained\neither via the wallet-signing flow (`POST /auth:exchange`) or out-of-band\nvia the operator-run `create-api-key` CLI. Every request must include\n`Authorization: Bearer <jwt>`.\n",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,242 @@
+{
+  "item": [
+    {
+      "id": "4588ebaf-6526-4bfe-9e41-358fb070ca35",
+      "name": "Nodes",
+      "description": {
+        "content": "Stand-alone node execution",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "64f56142-ced8-4def-99d3-288fa7f8e70d",
+          "name": "Execute a single node with inline input variables",
+          "request": {
+            "name": "Execute a single node with inline input variables",
+            "description": {
+              "content": "Useful for SDK testing flows — run a node definition against\nprovided input variables without persisting a workflow. Honors\n`node.config.chainId` (overrides body `chainId`).\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "nodes:run"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"node\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"destination\": \"<string>\",\n      \"amount\": \"<string>\",\n      \"chainId\": \"<long>\"\n    }\n  },\n  \"inputVariables\": {\n    \"key_0\": 6874,\n    \"key_1\": 104.25746193672313,\n    \"key_2\": false\n  },\n  \"chainId\": \"<long>\",\n  \"erc20Overrides\": [\n    {\n      \"tokenAddress\": \"<string>\",\n      \"ownerAddress\": \"<string>\",\n      \"spenderAddress\": \"<string>\",\n      \"balance\": \"<string>\",\n      \"allowance\": \"<string>\",\n      \"balanceSlot\": \"<long>\",\n      \"allowanceSlot\": \"<long>\"\n    },\n    {\n      \"tokenAddress\": \"<string>\",\n      \"ownerAddress\": \"<string>\",\n      \"spenderAddress\": \"<string>\",\n      \"balance\": \"<string>\",\n      \"allowance\": \"<string>\",\n      \"balanceSlot\": \"<long>\",\n      \"allowanceSlot\": \"<long>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "864d9ada-4887-44ba-ace3-2c87b65f47b4",
+              "name": "Node execution result.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "nodes:run"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"node\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"destination\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"amount\": \"<string>\",\n      \"chainId\": 11155111\n    }\n  },\n  \"inputVariables\": {\n    \"key_0\": false,\n    \"key_1\": false,\n    \"key_2\": 4356.789841442591,\n    \"key_3\": 1811.0325979746178,\n    \"key_4\": 5423\n  },\n  \"chainId\": 11155111,\n  \"erc20Overrides\": [\n    {\n      \"tokenAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"ownerAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"spenderAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"balance\": \"<string>\",\n      \"allowance\": \"<string>\",\n      \"balanceSlot\": \"<long>\",\n      \"allowanceSlot\": \"<long>\"\n    },\n    {\n      \"tokenAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"ownerAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"spenderAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"balance\": \"<string>\",\n      \"allowance\": \"<string>\",\n      \"balanceSlot\": \"<long>\",\n      \"allowanceSlot\": \"<long>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"error\": \"string\",\n  \"errorCode\": \"string\",\n  \"output\": {\n    \"key_0\": 339\n  },\n  \"metadata\": {\n    \"key_0\": \"string\",\n    \"key_1\": 4312.991787767431\n  },\n  \"executionContext\": {\n    \"key_0\": \"string\",\n    \"key_1\": 9827,\n    \"key_2\": \"string\",\n    \"key_3\": 5442,\n    \"key_4\": 9492.195325514622\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "cd153053-b907-42e3-86c2-c15915b29a32",
+              "name": "Request validation failed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "nodes:run"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"node\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"destination\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"amount\": \"<string>\",\n      \"chainId\": 11155111\n    }\n  },\n  \"inputVariables\": {\n    \"key_0\": false,\n    \"key_1\": false,\n    \"key_2\": 4356.789841442591,\n    \"key_3\": 1811.0325979746178,\n    \"key_4\": 5423\n  },\n  \"chainId\": 11155111,\n  \"erc20Overrides\": [\n    {\n      \"tokenAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"ownerAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"spenderAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"balance\": \"<string>\",\n      \"allowance\": \"<string>\",\n      \"balanceSlot\": \"<long>\",\n      \"allowanceSlot\": \"<long>\"\n    },\n    {\n      \"tokenAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"ownerAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"spenderAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"balance\": \"<string>\",\n      \"allowance\": \"<string>\",\n      \"balanceSlot\": \"<long>\",\n      \"allowanceSlot\": \"<long>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "bbdb2f3e-3321-4be8-ad56-22d4714ddb90",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "nodes:run"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"node\": {\n    \"type\": \"<string>\",\n    \"config\": {\n      \"destination\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"amount\": \"<string>\",\n      \"chainId\": 11155111\n    }\n  },\n  \"inputVariables\": {\n    \"key_0\": false,\n    \"key_1\": false,\n    \"key_2\": 4356.789841442591,\n    \"key_3\": 1811.0325979746178,\n    \"key_4\": 5423\n  },\n  \"chainId\": 11155111,\n  \"erc20Overrides\": [\n    {\n      \"tokenAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"ownerAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"spenderAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"balance\": \"<string>\",\n      \"allowance\": \"<string>\",\n      \"balanceSlot\": \"<long>\",\n      \"allowanceSlot\": \"<long>\"\n    },\n    {\n      \"tokenAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"ownerAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"spenderAddress\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"balance\": \"<string>\",\n      \"allowance\": \"<string>\",\n      \"balanceSlot\": \"<long>\",\n      \"allowanceSlot\": \"<long>\"\n    }\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://gateway.avaprotocol.org/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "1937c662-3852-423c-a10e-049de7f1f256",
+    "name": "Ava Protocol AVS Auth Nodes API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public REST API for the Ava Protocol AVS aggregator. Exposes workflow\ncreation, execution monitoring, smart-wallet management, and related\noperations.\n\nAuthentication is a single credential type — a JWT bearer token — obtained\neither via the wallet-signing flow (`POST /auth:exchange`) or out-of-band\nvia the operator-run `create-api-key` CLI. Every request must include\n`Authorization: Bearer <jwt>`.\n",
+      "type": "text/plain"
+    }
+  }
+}

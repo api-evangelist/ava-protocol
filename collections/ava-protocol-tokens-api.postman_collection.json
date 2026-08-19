@@ -1,0 +1,203 @@
+{
+  "item": [
+    {
+      "id": "e19bf707-ca85-46c2-8fa8-6a6069b92aad",
+      "name": "Tokens",
+      "description": {
+        "content": "ERC-20 metadata lookup",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "8b5e3df4-d576-474a-affe-7caad6797f7e",
+          "name": "Retrieve ERC-20 token metadata",
+          "request": {
+            "name": "Retrieve ERC-20 token metadata",
+            "description": {},
+            "url": {
+              "path": [
+                "tokens",
+                ":address"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "chainId",
+                  "value": "<long>",
+                  "description": "The chain to operate on (a single value). Omit to use the aggregator\ndefault (the request's JWT `aud` chain, then the gateway default).\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "address",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "5d529243-fd25-4d47-925c-c6ed2d39100d",
+              "name": "Token metadata (`found: false` if unknown).",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tokens",
+                    ":address"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "chainId",
+                      "value": "<long>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "address",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"found\": true,\n  \"address\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n  \"chainId\": 11155111,\n  \"name\": \"string\",\n  \"symbol\": \"string\",\n  \"decimals\": 4283,\n  \"source\": \"whitelist\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "88a91b2a-b15f-4c8c-939c-c2ce0b3638af",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "tokens",
+                    ":address"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "chainId",
+                      "value": "<long>"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "address",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://gateway.avaprotocol.org/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "b7f7f639-c4e0-4be0-aef7-ee385f1569d0",
+    "name": "Ava Protocol AVS Auth Tokens API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public REST API for the Ava Protocol AVS aggregator. Exposes workflow\ncreation, execution monitoring, smart-wallet management, and related\noperations.\n\nAuthentication is a single credential type — a JWT bearer token — obtained\neither via the wallet-signing flow (`POST /auth:exchange`) or out-of-band\nvia the operator-run `create-api-key` CLI. Every request must include\n`Authorization: Bearer <jwt>`.\n",
+      "type": "text/plain"
+    }
+  }
+}

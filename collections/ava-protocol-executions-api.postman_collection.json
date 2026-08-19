@@ -1,0 +1,1695 @@
+{
+  "item": [
+    {
+      "id": "0c58f2f2-7f16-465d-a050-c2c0a754b567",
+      "name": "Executions",
+      "description": {
+        "content": "Workflow execution history and status",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "3457085d-3c39-4c06-a83c-f19ca50d4e31",
+          "name": "List executions",
+          "request": {
+            "name": "List executions",
+            "description": {},
+            "url": {
+              "path": [
+                "executions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "workflowId",
+                  "value": "<string>",
+                  "description": "Filter by workflow ID. Repeat to OR multiple workflows."
+                },
+                {
+                  "disabled": false,
+                  "key": "workflowId",
+                  "value": "<string>",
+                  "description": "Filter by workflow ID. Repeat to OR multiple workflows."
+                },
+                {
+                  "disabled": false,
+                  "key": "before",
+                  "value": "<string>",
+                  "description": "Cursor — return items immediately before this position (backward pagination)."
+                },
+                {
+                  "disabled": false,
+                  "key": "after",
+                  "value": "<string>",
+                  "description": "Cursor — return items immediately after this position (forward pagination)."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Max items to return. Default 20; server-enforced ceiling applies."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "34b07863-8a98-415c-ab68-f4699f6db9e5",
+              "name": "Page of executions.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    },
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    },
+                    {
+                      "key": "before",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n      \"workflowId\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n      \"status\": \"error\",\n      \"startAt\": 8249,\n      \"chainId\": 11155111,\n      \"index\": 3788,\n      \"endAt\": 3335,\n      \"error\": \"string\",\n      \"steps\": [\n        {\n          \"id\": \"string\",\n          \"type\": \"string\",\n          \"success\": false,\n          \"name\": \"string\",\n          \"error\": \"string\",\n          \"errorCode\": \"string\",\n          \"log\": \"string\",\n          \"inputs\": [\n            \"string\",\n            \"string\"\n          ],\n          \"config\": {\n            \"key_0\": false,\n            \"key_1\": 9045\n          },\n          \"metadata\": {\n            \"key_0\": true,\n            \"key_1\": \"string\"\n          },\n          \"executionContext\": {\n            \"key_0\": 3765,\n            \"key_1\": 2021,\n            \"key_2\": 3185,\n            \"key_3\": 4509.554195302382\n          },\n          \"output\": {\n            \"key_0\": \"string\",\n            \"key_1\": 2946.4469823151285,\n            \"key_2\": false\n          },\n          \"gasUsed\": \"string\",\n          \"gasPrice\": \"string\",\n          \"totalGasCost\": \"string\",\n          \"startAt\": 2423,\n          \"endAt\": 8278\n        },\n        {\n          \"id\": \"string\",\n          \"type\": \"string\",\n          \"success\": false,\n          \"name\": \"string\",\n          \"error\": \"string\",\n          \"errorCode\": \"string\",\n          \"log\": \"string\",\n          \"inputs\": [\n            \"string\",\n            \"string\"\n          ],\n          \"config\": {\n            \"key_0\": 508.9835357823147\n          },\n          \"metadata\": {\n            \"key_0\": \"string\"\n          },\n          \"executionContext\": {\n            \"key_0\": true,\n            \"key_1\": 949\n          },\n          \"output\": {\n            \"key_0\": false,\n            \"key_1\": 3029,\n            \"key_2\": 4593.197599374255\n          },\n          \"gasUsed\": \"string\",\n          \"gasPrice\": \"string\",\n          \"totalGasCost\": \"string\",\n          \"startAt\": 1221,\n          \"endAt\": 5892\n        }\n      ],\n      \"executionFee\": {\n        \"amount\": \"string\",\n        \"unit\": \"PERCENTAGE\"\n      },\n      \"cogs\": [\n        {\n          \"nodeId\": \"string\",\n          \"costType\": \"externalApi\",\n          \"fee\": {\n            \"amount\": \"string\",\n            \"unit\": \"USD\"\n          },\n          \"gasUnits\": \"string\"\n        },\n        {\n          \"nodeId\": \"string\",\n          \"costType\": \"gas\",\n          \"fee\": {\n            \"amount\": \"string\",\n            \"unit\": \"WEI\"\n          },\n          \"gasUnits\": \"string\"\n        }\n      ],\n      \"valueFee\": {\n        \"fee\": {\n          \"amount\": \"string\",\n          \"unit\": \"USD\"\n        },\n        \"tier\": \"tier1\",\n        \"valueBase\": \"string\",\n        \"classificationMethod\": \"llm\",\n        \"confidence\": 0.9017489015219857,\n        \"reason\": \"string\"\n      }\n    },\n    {\n      \"id\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n      \"workflowId\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n      \"status\": \"error\",\n      \"startAt\": 7819,\n      \"chainId\": 11155111,\n      \"index\": 2765,\n      \"endAt\": 5740,\n      \"error\": \"string\",\n      \"steps\": [\n        {\n          \"id\": \"string\",\n          \"type\": \"string\",\n          \"success\": false,\n          \"name\": \"string\",\n          \"error\": \"string\",\n          \"errorCode\": \"string\",\n          \"log\": \"string\",\n          \"inputs\": [\n            \"string\",\n            \"string\"\n          ],\n          \"config\": {\n            \"key_0\": 8938.121666107596,\n            \"key_1\": \"string\",\n            \"key_2\": \"string\"\n          },\n          \"metadata\": {\n            \"key_0\": false,\n            \"key_1\": \"string\"\n          },\n          \"executionContext\": {\n            \"key_0\": 3854,\n            \"key_1\": false\n          },\n          \"output\": {\n            \"key_0\": \"string\"\n          },\n          \"gasUsed\": \"string\",\n          \"gasPrice\": \"string\",\n          \"totalGasCost\": \"string\",\n          \"startAt\": 6275,\n          \"endAt\": 8620\n        },\n        {\n          \"id\": \"string\",\n          \"type\": \"string\",\n          \"success\": false,\n          \"name\": \"string\",\n          \"error\": \"string\",\n          \"errorCode\": \"string\",\n          \"log\": \"string\",\n          \"inputs\": [\n            \"string\",\n            \"string\"\n          ],\n          \"config\": {\n            \"key_0\": true,\n            \"key_1\": 6120.741561351215,\n            \"key_2\": 6106.355385285179\n          },\n          \"metadata\": {\n            \"key_0\": 6664,\n            \"key_1\": true,\n            \"key_2\": 6058\n          },\n          \"executionContext\": {\n            \"key_0\": 2557.128773179258\n          },\n          \"output\": {\n            \"key_0\": 8961\n          },\n          \"gasUsed\": \"string\",\n          \"gasPrice\": \"string\",\n          \"totalGasCost\": \"string\",\n          \"startAt\": 4091,\n          \"endAt\": 8821\n        }\n      ],\n      \"executionFee\": {\n        \"amount\": \"string\",\n        \"unit\": \"USD\"\n      },\n      \"cogs\": [\n        {\n          \"nodeId\": \"string\",\n          \"costType\": \"gas\",\n          \"fee\": {\n            \"amount\": \"string\",\n            \"unit\": \"USD\"\n          },\n          \"gasUnits\": \"string\"\n        },\n        {\n          \"nodeId\": \"string\",\n          \"costType\": \"gas\",\n          \"fee\": {\n            \"amount\": \"string\",\n            \"unit\": \"PERCENTAGE\"\n          },\n          \"gasUnits\": \"string\"\n        }\n      ],\n      \"valueFee\": {\n        \"fee\": {\n          \"amount\": \"string\",\n          \"unit\": \"USD\"\n        },\n        \"tier\": \"tier1\",\n        \"valueBase\": \"string\",\n        \"classificationMethod\": \"llm\",\n        \"confidence\": 0.06290958387931067,\n        \"reason\": \"string\"\n      }\n    }\n  ],\n  \"pageInfo\": {\n    \"hasNextPage\": false,\n    \"hasPreviousPage\": false,\n    \"startCursor\": \"string\",\n    \"endCursor\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b3706a2c-24a8-4108-abe6-26ec46e8d70f",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    },
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    },
+                    {
+                      "key": "before",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "3b44dad8-b674-46ec-80b4-4d8851628328",
+          "name": "List executions for a workflow (convenience nested route)",
+          "request": {
+            "name": "List executions for a workflow (convenience nested route)",
+            "description": {
+              "content": "Same handler as `GET /executions?workflowId={id}`; offered as a nested route for clients that prefer it.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "workflows",
+                ":id",
+                "executions"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "before",
+                  "value": "<string>",
+                  "description": "Cursor — return items immediately before this position (backward pagination)."
+                },
+                {
+                  "disabled": false,
+                  "key": "after",
+                  "value": "<string>",
+                  "description": "Cursor — return items immediately after this position (forward pagination)."
+                },
+                {
+                  "disabled": false,
+                  "key": "limit",
+                  "value": "20",
+                  "description": "Max items to return. Default 20; server-enforced ceiling applies."
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "04886a61-e8bd-46c1-9ae3-e7686b347c94",
+              "name": "Page of executions for the workflow.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    ":id",
+                    "executions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "before",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n      \"workflowId\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n      \"status\": \"success\",\n      \"startAt\": 4051,\n      \"chainId\": 11155111,\n      \"index\": 684,\n      \"endAt\": 760,\n      \"error\": \"string\",\n      \"steps\": [\n        {\n          \"id\": \"string\",\n          \"type\": \"string\",\n          \"success\": true,\n          \"name\": \"string\",\n          \"error\": \"string\",\n          \"errorCode\": \"string\",\n          \"log\": \"string\",\n          \"inputs\": [\n            \"string\",\n            \"string\"\n          ],\n          \"config\": {\n            \"key_0\": true\n          },\n          \"metadata\": {\n            \"key_0\": 4909.851255657375,\n            \"key_1\": false\n          },\n          \"executionContext\": {\n            \"key_0\": false,\n            \"key_1\": 2085.1209900241197,\n            \"key_2\": 2769\n          },\n          \"output\": {\n            \"key_0\": \"string\",\n            \"key_1\": \"string\",\n            \"key_2\": 6303\n          },\n          \"gasUsed\": \"string\",\n          \"gasPrice\": \"string\",\n          \"totalGasCost\": \"string\",\n          \"startAt\": 2372,\n          \"endAt\": 7139\n        },\n        {\n          \"id\": \"string\",\n          \"type\": \"string\",\n          \"success\": true,\n          \"name\": \"string\",\n          \"error\": \"string\",\n          \"errorCode\": \"string\",\n          \"log\": \"string\",\n          \"inputs\": [\n            \"string\",\n            \"string\"\n          ],\n          \"config\": {\n            \"key_0\": 7808.427676222746,\n            \"key_1\": 6621.025737608485,\n            \"key_2\": 53.562835358376134\n          },\n          \"metadata\": {\n            \"key_0\": 3877.546050648225\n          },\n          \"executionContext\": {\n            \"key_0\": 219,\n            \"key_1\": \"string\",\n            \"key_2\": 3481\n          },\n          \"output\": {\n            \"key_0\": 8233.84008981109,\n            \"key_1\": \"string\"\n          },\n          \"gasUsed\": \"string\",\n          \"gasPrice\": \"string\",\n          \"totalGasCost\": \"string\",\n          \"startAt\": 7333,\n          \"endAt\": 7889\n        }\n      ],\n      \"executionFee\": {\n        \"amount\": \"string\",\n        \"unit\": \"USD\"\n      },\n      \"cogs\": [\n        {\n          \"nodeId\": \"string\",\n          \"costType\": \"walletCreation\",\n          \"fee\": {\n            \"amount\": \"string\",\n            \"unit\": \"USD\"\n          },\n          \"gasUnits\": \"string\"\n        },\n        {\n          \"nodeId\": \"string\",\n          \"costType\": \"gas\",\n          \"fee\": {\n            \"amount\": \"string\",\n            \"unit\": \"WEI\"\n          },\n          \"gasUnits\": \"string\"\n        }\n      ],\n      \"valueFee\": {\n        \"fee\": {\n          \"amount\": \"string\",\n          \"unit\": \"WEI\"\n        },\n        \"tier\": \"tier3\",\n        \"valueBase\": \"string\",\n        \"classificationMethod\": \"ruleBased\",\n        \"confidence\": 0.3638702864786001,\n        \"reason\": \"string\"\n      }\n    },\n    {\n      \"id\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n      \"workflowId\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n      \"status\": \"waiting\",\n      \"startAt\": 1468,\n      \"chainId\": 11155111,\n      \"index\": 1903,\n      \"endAt\": 4596,\n      \"error\": \"string\",\n      \"steps\": [\n        {\n          \"id\": \"string\",\n          \"type\": \"string\",\n          \"success\": false,\n          \"name\": \"string\",\n          \"error\": \"string\",\n          \"errorCode\": \"string\",\n          \"log\": \"string\",\n          \"inputs\": [\n            \"string\",\n            \"string\"\n          ],\n          \"config\": {\n            \"key_0\": 4571.182489025858\n          },\n          \"metadata\": {\n            \"key_0\": 1952.195060066627\n          },\n          \"executionContext\": {\n            \"key_0\": true,\n            \"key_1\": true,\n            \"key_2\": 5119.546354122889\n          },\n          \"output\": {\n            \"key_0\": \"string\"\n          },\n          \"gasUsed\": \"string\",\n          \"gasPrice\": \"string\",\n          \"totalGasCost\": \"string\",\n          \"startAt\": 3738,\n          \"endAt\": 1177\n        },\n        {\n          \"id\": \"string\",\n          \"type\": \"string\",\n          \"success\": false,\n          \"name\": \"string\",\n          \"error\": \"string\",\n          \"errorCode\": \"string\",\n          \"log\": \"string\",\n          \"inputs\": [\n            \"string\",\n            \"string\"\n          ],\n          \"config\": {\n            \"key_0\": false\n          },\n          \"metadata\": {\n            \"key_0\": false,\n            \"key_1\": \"string\",\n            \"key_2\": \"string\"\n          },\n          \"executionContext\": {\n            \"key_0\": 1708,\n            \"key_1\": 9219\n          },\n          \"output\": {\n            \"key_0\": 3253\n          },\n          \"gasUsed\": \"string\",\n          \"gasPrice\": \"string\",\n          \"totalGasCost\": \"string\",\n          \"startAt\": 1555,\n          \"endAt\": 380\n        }\n      ],\n      \"executionFee\": {\n        \"amount\": \"string\",\n        \"unit\": \"PERCENTAGE\"\n      },\n      \"cogs\": [\n        {\n          \"nodeId\": \"string\",\n          \"costType\": \"walletCreation\",\n          \"fee\": {\n            \"amount\": \"string\",\n            \"unit\": \"USD\"\n          },\n          \"gasUnits\": \"string\"\n        },\n        {\n          \"nodeId\": \"string\",\n          \"costType\": \"walletCreation\",\n          \"fee\": {\n            \"amount\": \"string\",\n            \"unit\": \"PERCENTAGE\"\n          },\n          \"gasUnits\": \"string\"\n        }\n      ],\n      \"valueFee\": {\n        \"fee\": {\n          \"amount\": \"string\",\n          \"unit\": \"USD\"\n        },\n        \"tier\": \"tier3\",\n        \"valueBase\": \"string\",\n        \"classificationMethod\": \"ruleBased\",\n        \"confidence\": 0.3210419246290245,\n        \"reason\": \"string\"\n      }\n    }\n  ],\n  \"pageInfo\": {\n    \"hasNextPage\": false,\n    \"hasPreviousPage\": true,\n    \"startCursor\": \"string\",\n    \"endCursor\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a1db2f9b-720a-4476-b812-e3af47e6e381",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    ":id",
+                    "executions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "before",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fedf8bbc-9b34-41b1-9483-504f7a764fe4",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workflows",
+                    ":id",
+                    "executions"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "before",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "after",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "20"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "d42e04a3-e28f-47d6-b773-acc1e20d23f1",
+          "name": "Retrieve an execution (full payload with steps)",
+          "request": {
+            "name": "Retrieve an execution (full payload with steps)",
+            "description": {},
+            "url": {
+              "path": [
+                "executions",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "workflowId",
+                  "value": "<string>",
+                  "description": "(Required) Workflow id the execution belongs to. Required because executions\nare scoped to their parent workflow in the engine's storage\n(`t:<chain>:<workflow_id>:<exec_id>` keys) — there is no global\nexecution index today. Use `GET /workflows/{id}/executions` if\nyou only know the workflow.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "id",
+                  "description": "(Required) "
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "e4af1800-8ab9-449f-b346-620aa0a260dd",
+              "name": "The execution.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n  \"workflowId\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n  \"status\": \"waiting\",\n  \"startAt\": 4890,\n  \"chainId\": 11155111,\n  \"index\": 1361,\n  \"endAt\": 725,\n  \"error\": \"string\",\n  \"steps\": [\n    {\n      \"id\": \"string\",\n      \"type\": \"string\",\n      \"success\": false,\n      \"name\": \"string\",\n      \"error\": \"string\",\n      \"errorCode\": \"string\",\n      \"log\": \"string\",\n      \"inputs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"config\": {\n        \"key_0\": \"string\"\n      },\n      \"metadata\": {\n        \"key_0\": \"string\",\n        \"key_1\": 7073\n      },\n      \"executionContext\": {\n        \"key_0\": \"string\"\n      },\n      \"output\": {\n        \"key_0\": 4605.492478229747,\n        \"key_1\": 2951,\n        \"key_2\": 50,\n        \"key_3\": 4418.461571951141\n      },\n      \"gasUsed\": \"string\",\n      \"gasPrice\": \"string\",\n      \"totalGasCost\": \"string\",\n      \"startAt\": 9901,\n      \"endAt\": 1474\n    },\n    {\n      \"id\": \"string\",\n      \"type\": \"string\",\n      \"success\": true,\n      \"name\": \"string\",\n      \"error\": \"string\",\n      \"errorCode\": \"string\",\n      \"log\": \"string\",\n      \"inputs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"config\": {\n        \"key_0\": 4008.933046929267,\n        \"key_1\": true,\n        \"key_2\": false,\n        \"key_3\": \"string\",\n        \"key_4\": false\n      },\n      \"metadata\": {\n        \"key_0\": true,\n        \"key_1\": 5135.199183028757,\n        \"key_2\": \"string\"\n      },\n      \"executionContext\": {\n        \"key_0\": false,\n        \"key_1\": 9298,\n        \"key_2\": 3548.409225989344\n      },\n      \"output\": {\n        \"key_0\": \"string\"\n      },\n      \"gasUsed\": \"string\",\n      \"gasPrice\": \"string\",\n      \"totalGasCost\": \"string\",\n      \"startAt\": 8256,\n      \"endAt\": 5860\n    }\n  ],\n  \"executionFee\": {\n    \"amount\": \"string\",\n    \"unit\": \"WEI\"\n  },\n  \"cogs\": [\n    {\n      \"nodeId\": \"string\",\n      \"costType\": \"gas\",\n      \"fee\": {\n        \"amount\": \"string\",\n        \"unit\": \"WEI\"\n      },\n      \"gasUnits\": \"string\"\n    },\n    {\n      \"nodeId\": \"string\",\n      \"costType\": \"externalApi\",\n      \"fee\": {\n        \"amount\": \"string\",\n        \"unit\": \"USD\"\n      },\n      \"gasUnits\": \"string\"\n    }\n  ],\n  \"valueFee\": {\n    \"fee\": {\n      \"amount\": \"string\",\n      \"unit\": \"WEI\"\n    },\n    \"tier\": \"tier3\",\n    \"valueBase\": \"string\",\n    \"classificationMethod\": \"ruleBased\",\n    \"confidence\": 0.8869410542851439,\n    \"reason\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "104fadb4-431b-4b9d-941a-1debe000bbd3",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b861e56b-c078-40d9-b686-adfe4667b23f",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "id",
+                      "description": "(Required) "
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e8593e13-1fd1-4633-abbd-074ac9e53916",
+          "name": "Get execution status (lightweight, no steps)",
+          "request": {
+            "name": "Get execution status (lightweight, no steps)",
+            "description": {},
+            "url": {
+              "path": [
+                "executions",
+                "{{id}}:getStatus"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "workflowId",
+                  "value": "<string>",
+                  "description": "(Required) Workflow id the execution belongs to. See `getExecution`."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1f25e9b8-d810-4dd4-a0da-ee1486a391df",
+              "name": "Status summary.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions",
+                    "{{id}}:getStatus"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n  \"status\": \"error\",\n  \"workflowId\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n  \"startAt\": 9319,\n  \"endAt\": 3584,\n  \"error\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "262d74e2-2c06-4e98-aecb-d00d147ceb6b",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions",
+                    "{{id}}:getStatus"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d693b827-c5c5-44a3-914a-51c1de9c2778",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions",
+                    "{{id}}:getStatus"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "953fdfb0-a574-4676-947c-7267c5bfac77",
+          "name": "Deliver an approval/external signal to a waiting execution",
+          "request": {
+            "name": "Deliver an approval/external signal to a waiting execution",
+            "description": {
+              "content": "Resumes a WAITING execution (durable execution). The caller must own the\nworkflow; the signal only counts against an actual pending wait whose kind\nit matches and which has not timed out. v1 is the external-signal (human\napproval) flavor — e.g. a Telegram approve/reject for a money-moving step.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "executions",
+                "{{id}}:signal"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "workflowId",
+                  "value": "<string>",
+                  "description": "(Required) Workflow id the execution belongs to. See `getExecution`."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"decision\": \"<string>\",\n  \"payload\": {\n    \"key_0\": 3942,\n    \"key_1\": 6628,\n    \"key_2\": 3868,\n    \"key_3\": 9588.373340645394\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "ecebf14f-bc97-48ed-a064-a37c059b6c9e",
+              "name": "The resumed (terminal or still-waiting) execution.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions",
+                    "{{id}}:signal"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"decision\": \"<string>\",\n  \"payload\": {\n    \"key_0\": 6069,\n    \"key_1\": 4376.621569751776\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n  \"workflowId\": \"01JG2FE5MDVKBPHEG0PEYSDKAC\",\n  \"status\": \"waiting\",\n  \"startAt\": 4890,\n  \"chainId\": 11155111,\n  \"index\": 1361,\n  \"endAt\": 725,\n  \"error\": \"string\",\n  \"steps\": [\n    {\n      \"id\": \"string\",\n      \"type\": \"string\",\n      \"success\": false,\n      \"name\": \"string\",\n      \"error\": \"string\",\n      \"errorCode\": \"string\",\n      \"log\": \"string\",\n      \"inputs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"config\": {\n        \"key_0\": \"string\"\n      },\n      \"metadata\": {\n        \"key_0\": \"string\",\n        \"key_1\": 7073\n      },\n      \"executionContext\": {\n        \"key_0\": \"string\"\n      },\n      \"output\": {\n        \"key_0\": 4605.492478229747,\n        \"key_1\": 2951,\n        \"key_2\": 50,\n        \"key_3\": 4418.461571951141\n      },\n      \"gasUsed\": \"string\",\n      \"gasPrice\": \"string\",\n      \"totalGasCost\": \"string\",\n      \"startAt\": 9901,\n      \"endAt\": 1474\n    },\n    {\n      \"id\": \"string\",\n      \"type\": \"string\",\n      \"success\": true,\n      \"name\": \"string\",\n      \"error\": \"string\",\n      \"errorCode\": \"string\",\n      \"log\": \"string\",\n      \"inputs\": [\n        \"string\",\n        \"string\"\n      ],\n      \"config\": {\n        \"key_0\": 4008.933046929267,\n        \"key_1\": true,\n        \"key_2\": false,\n        \"key_3\": \"string\",\n        \"key_4\": false\n      },\n      \"metadata\": {\n        \"key_0\": true,\n        \"key_1\": 5135.199183028757,\n        \"key_2\": \"string\"\n      },\n      \"executionContext\": {\n        \"key_0\": false,\n        \"key_1\": 9298,\n        \"key_2\": 3548.409225989344\n      },\n      \"output\": {\n        \"key_0\": \"string\"\n      },\n      \"gasUsed\": \"string\",\n      \"gasPrice\": \"string\",\n      \"totalGasCost\": \"string\",\n      \"startAt\": 8256,\n      \"endAt\": 5860\n    }\n  ],\n  \"executionFee\": {\n    \"amount\": \"string\",\n    \"unit\": \"WEI\"\n  },\n  \"cogs\": [\n    {\n      \"nodeId\": \"string\",\n      \"costType\": \"gas\",\n      \"fee\": {\n        \"amount\": \"string\",\n        \"unit\": \"WEI\"\n      },\n      \"gasUnits\": \"string\"\n    },\n    {\n      \"nodeId\": \"string\",\n      \"costType\": \"externalApi\",\n      \"fee\": {\n        \"amount\": \"string\",\n        \"unit\": \"USD\"\n      },\n      \"gasUnits\": \"string\"\n    }\n  ],\n  \"valueFee\": {\n    \"fee\": {\n      \"amount\": \"string\",\n      \"unit\": \"WEI\"\n    },\n    \"tier\": \"tier3\",\n    \"valueBase\": \"string\",\n    \"classificationMethod\": \"ruleBased\",\n    \"confidence\": 0.8869410542851439,\n    \"reason\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "9ce75511-7cee-4a38-ad79-6539d55a96a8",
+              "name": "Request validation failed.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions",
+                    "{{id}}:signal"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"decision\": \"<string>\",\n  \"payload\": {\n    \"key_0\": 6069,\n    \"key_1\": 4376.621569751776\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "8470741e-8624-4dd1-9367-eadea8467a74",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions",
+                    "{{id}}:signal"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"decision\": \"<string>\",\n  \"payload\": {\n    \"key_0\": 6069,\n    \"key_1\": 4376.621569751776\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b449cee8-43be-4a89-b58f-f235c6f94629",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions",
+                    "{{id}}:signal"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"decision\": \"<string>\",\n  \"payload\": {\n    \"key_0\": 6069,\n    \"key_1\": 4376.621569751776\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f9d5efe7-e569-4b94-92cf-569d81ff5f61",
+          "name": "Stream execution status changes (Server-Sent Events)",
+          "request": {
+            "name": "Stream execution status changes (Server-Sent Events)",
+            "description": {
+              "content": "Emits one SSE event per status change. Each event payload is an\n`ExecutionStatusSummary`. The stream closes when the execution\nreaches a terminal status (`success` / `failed` / `error`).\nImplementation polls the DB on a short interval (default 1s);\noverride with `?interval=` (max enforced server-side).\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "executions",
+                "{{id}}:stream"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "interval",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "workflowId",
+                  "value": "<string>",
+                  "description": "(Required) Workflow id the execution belongs to. See `getExecution`."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/event-stream"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "22c68628-37dc-4bb4-8020-f4cc305ef9e0",
+              "name": "SSE stream of execution status updates.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions",
+                    "{{id}}:stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "interval",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "text/event-stream"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/event-stream"
+                }
+              ],
+              "body": "string",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "7e140366-ee09-4d7f-806d-2debb23243c1",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions",
+                    "{{id}}:stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "interval",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ebca2510-cfa5-4c3a-b634-0ec78a35e0ea",
+              "name": "Resource not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions",
+                    "{{id}}:stream"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "interval",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "ef6369d9-1f3b-4804-9ccd-90fd52c7ff86",
+          "name": "Count executions",
+          "request": {
+            "name": "Count executions",
+            "description": {},
+            "url": {
+              "path": [
+                "executions:count"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "workflowId",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "workflowId",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "684c938c-903c-4fd9-9724-f25b98e9d924",
+              "name": "Execution count.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions:count"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    },
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"total\": 3443\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "5cbf9da3-54c6-4a45-a11e-22040c932bf9",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions:count"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    },
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "33b87b8e-d118-4b59-ab22-e73447722ab3",
+          "name": "Execution statistics (totals + averages)",
+          "request": {
+            "name": "Execution statistics (totals + averages)",
+            "description": {},
+            "url": {
+              "path": [
+                "executions:stats"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "workflowId",
+                  "value": "<string>"
+                },
+                {
+                  "disabled": false,
+                  "key": "workflowId",
+                  "value": "<string>"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "c3c4cece-405e-496f-9458-a041035acee5",
+              "name": "Execution stats.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions:stats"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    },
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"total\": 4390,\n  \"succeeded\": 3333,\n  \"failed\": 8187,\n  \"pending\": 2139,\n  \"avgExecutionTime\": 633.769806616371\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c8039373-603d-4faa-bd86-9083800856f7",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "executions:stats"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    },
+                    {
+                      "key": "workflowId",
+                      "value": "01JG2FE5MDVKBPHEG0PEYSDKAC"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://gateway.avaprotocol.org/api/v1",
+      "key": "baseUrl"
+    },
+    {
+      "disabled": false,
+      "description": {
+        "content": "(Required) ",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "<string>",
+      "key": "id"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "36bbc7cf-8a64-43e7-bcd0-0ace420c1520",
+    "name": "Ava Protocol AVS Auth Executions API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public REST API for the Ava Protocol AVS aggregator. Exposes workflow\ncreation, execution monitoring, smart-wallet management, and related\noperations.\n\nAuthentication is a single credential type — a JWT bearer token — obtained\neither via the wallet-signing flow (`POST /auth:exchange`) or out-of-band\nvia the operator-run `create-api-key` CLI. Every request must include\n`Authorization: Bearer <jwt>`.\n",
+      "type": "text/plain"
+    }
+  }
+}

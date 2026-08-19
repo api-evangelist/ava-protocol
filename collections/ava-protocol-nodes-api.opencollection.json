@@ -1,0 +1,39 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ava Protocol AVS Auth Nodes API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Nodes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Execute a single node with inline input variables",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.avaprotocol.org/api/v1/nodes:run",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Useful for SDK testing flows — run a node definition against\nprovided input variables without persisting a workflow. Honors\n`node.config.chainId` (overrides body `chainId`).\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,35 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ava Protocol AVS Auth Health API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Health",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Liveness probe",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.avaprotocol.org/api/v1/health"
+          },
+          "docs": "Returns the aggregator's current health. Used by load balancers, k8s\nliveness/readiness probes, and external uptime monitoring.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

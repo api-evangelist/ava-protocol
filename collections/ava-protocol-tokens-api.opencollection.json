@@ -1,0 +1,48 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ava Protocol AVS Auth Tokens API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Tokens",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve ERC-20 token metadata",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.avaprotocol.org/api/v1/tokens/:address",
+            "params": [
+              {
+                "name": "address",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "chainId",
+                "value": "",
+                "type": "query",
+                "description": "The chain to operate on (a single value). Omit to use the aggregator\ndefault (the request's JWT `aud` chain, then the gateway default).\n"
+              }
+            ]
+          },
+          "docs": "Retrieve ERC-20 token metadata"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

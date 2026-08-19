@@ -1,0 +1,39 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ava Protocol AVS Auth Triggers API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Triggers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Evaluate a trigger definition with inline input",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.avaprotocol.org/api/v1/triggers:run",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Evaluate a trigger definition with inline input"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

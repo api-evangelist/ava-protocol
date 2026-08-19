@@ -1,0 +1,162 @@
+{
+  "item": [
+    {
+      "id": "0e8c474f-394a-4cde-91e0-728f76b4a118",
+      "name": "Operators",
+      "description": {
+        "content": "Connected operator status (read-only)",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "285402ce-0f05-4c5a-afec-03efa88c2335",
+          "name": "List connected operators",
+          "request": {
+            "name": "List connected operators",
+            "description": {
+              "content": "Read-only monitoring endpoint. Returns each operator's\n`supportedChainIds`, `capabilities`, `lastSeen`, and `version`.\nUseful for dashboards and debugging multi-chain task routing.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "operators"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0c3bdb35-e756-4de3-ab9d-0dd6985af14e",
+              "name": "Connected operators.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "operators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"address\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"supportedChainIds\": [\n        11155111,\n        11155111\n      ],\n      \"capabilities\": {\n        \"eventMonitoring\": false,\n        \"blockMonitoring\": false,\n        \"timeMonitoring\": true\n      },\n      \"version\": \"string\",\n      \"lastSeen\": \"1955-03-04T22:26:18.203Z\",\n      \"blockNumber\": 8043,\n      \"eventCount\": 7565\n    },\n    {\n      \"address\": \"0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB\",\n      \"supportedChainIds\": [\n        11155111,\n        11155111\n      ],\n      \"capabilities\": {\n        \"eventMonitoring\": false,\n        \"blockMonitoring\": true,\n        \"timeMonitoring\": false\n      },\n      \"version\": \"string\",\n      \"lastSeen\": \"2026-08-06T03:40:34.861Z\",\n      \"blockNumber\": 2456,\n      \"eventCount\": 3419\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d970e266-df76-4278-91af-f9393e328e55",
+              "name": "Missing or invalid bearer token.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "operators"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/problem+json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/problem+json"
+                }
+              ],
+              "body": "{\n  \"type\": \"https://docs.avaprotocol.org/errors/workflow-not-found\",\n  \"title\": \"Workflow not found\",\n  \"status\": 404,\n  \"detail\": \"No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...\",\n  \"instance\": \"req_01JG2FE5MFKTH0754RGF2DMVY7\",\n  \"code\": \"WORKFLOW_NOT_FOUND\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://gateway.avaprotocol.org/api/v1",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "18c28bac-23d9-45de-b5d6-9ba65e5f233c",
+    "name": "Ava Protocol AVS Auth Operators API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Public REST API for the Ava Protocol AVS aggregator. Exposes workflow\ncreation, execution monitoring, smart-wallet management, and related\noperations.\n\nAuthentication is a single credential type — a JWT bearer token — obtained\neither via the wallet-signing flow (`POST /auth:exchange`) or out-of-band\nvia the operator-run `create-api-key` CLI. Every request must include\n`Authorization: Bearer <jwt>`.\n",
+      "type": "text/plain"
+    }
+  }
+}

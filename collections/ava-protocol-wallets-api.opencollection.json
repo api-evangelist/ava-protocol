@@ -1,0 +1,118 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ava Protocol AVS Auth Wallets API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Wallets",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List the authenticated user's smart wallets",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.avaprotocol.org/api/v1/wallets"
+          },
+          "docs": "List the authenticated user's smart wallets"
+        },
+        {
+          "info": {
+            "name": "Derive (and persist) a smart wallet address from (owner, salt, factory)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.avaprotocol.org/api/v1/wallets",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Idempotent \"ensure exists\". Returns the deterministic CREATE2-derived\naddress. POST (not GET) because it persists a wallet record server-side\nas a side effect of the derivation.\n"
+        },
+        {
+          "info": {
+            "name": "Update wallet properties",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "https://gateway.avaprotocol.org/api/v1/wallets/:address",
+            "params": [
+              {
+                "name": "address",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Partial update; only fields present in the body are changed (e.g., `isHidden`)."
+        },
+        {
+          "info": {
+            "name": "Withdraw funds from a smart wallet",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.avaprotocol.org/api/v1/wallets/:address:withdraw",
+            "params": [
+              {
+                "name": "address",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Withdraw funds from a smart wallet"
+        },
+        {
+          "info": {
+            "name": "Get the smart wallet's current nonce",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.avaprotocol.org/api/v1/wallets/:address:getNonce",
+            "params": [
+              {
+                "name": "address",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "chainId",
+                "value": "",
+                "type": "query",
+                "description": "The chain to operate on (a single value). Omit to use the aggregator\ndefault (the request's JWT `aud` chain, then the gateway default).\n"
+              }
+            ]
+          },
+          "docs": "Get the smart wallet's current nonce"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

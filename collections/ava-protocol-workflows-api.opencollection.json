@@ -1,0 +1,229 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ava Protocol AVS Auth Workflows API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Workflows",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List workflows",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.avaprotocol.org/api/v1/workflows",
+            "params": [
+              {
+                "name": "smartWalletAddress",
+                "value": "",
+                "type": "query",
+                "description": "Filter by smart wallet address. Repeat to OR multiple addresses."
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query",
+                "description": "Filter by status. Repeat to OR multiple statuses."
+              },
+              {
+                "name": "before",
+                "value": "",
+                "type": "query",
+                "description": "Cursor — return items immediately before this position (backward pagination)."
+              },
+              {
+                "name": "after",
+                "value": "",
+                "type": "query",
+                "description": "Cursor — return items immediately after this position (forward pagination)."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Max items to return. Default 20; server-enforced ceiling applies."
+              }
+            ]
+          },
+          "docs": "List workflows"
+        },
+        {
+          "info": {
+            "name": "Create a workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.avaprotocol.org/api/v1/workflows",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Persist a new workflow definition. Each chain-aware trigger and node\ncarries its own required `chainId` (there is no workflow-level chain);\nthe server validates those chains and ensures the smart wallet belongs\nto the authenticated user. Returns the persisted Workflow with its\nserver-assigned `id` and `createdAt`.\n"
+        },
+        {
+          "info": {
+            "name": "Retrieve a workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.avaprotocol.org/api/v1/workflows/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Retrieve a workflow"
+        },
+        {
+          "info": {
+            "name": "Cancel a workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://gateway.avaprotocol.org/api/v1/workflows/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Permanently cancels and removes the workflow. SDK method is\n`cancel(id)` to align with Stripe-style vocabulary.\n"
+        },
+        {
+          "info": {
+            "name": "Pause a workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.avaprotocol.org/api/v1/workflows/:id:pause",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Transition from `enabled` to `disabled`. Idempotent."
+        },
+        {
+          "info": {
+            "name": "Resume a workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.avaprotocol.org/api/v1/workflows/:id:resume",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Transition from `disabled` to `enabled`. Idempotent."
+        },
+        {
+          "info": {
+            "name": "Manually trigger a workflow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.avaprotocol.org/api/v1/workflows/:id:trigger",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Simulate an operator-detected trigger fire. The server enqueues an\nexecution; when `isBlocking=true`, the response waits for the\nexecution to complete.\n"
+        },
+        {
+          "info": {
+            "name": "Simulate a workflow without persisting it",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.avaprotocol.org/api/v1/workflows:simulate",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Run a workflow definition end-to-end against the engine (Tenderly\nsimulation for chain-writing nodes) and return the full Execution.\nNothing is persisted.\n"
+        },
+        {
+          "info": {
+            "name": "Estimate per-execution fees for a workflow definition",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.avaprotocol.org/api/v1/workflows:estimateFees",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns the platform execution fee, per-node COGS (gas, external\nAPI costs), and the workflow-level value-capture fee tier.\n"
+        },
+        {
+          "info": {
+            "name": "Count workflows",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.avaprotocol.org/api/v1/workflows:count",
+            "params": [
+              {
+                "name": "smartWalletAddress",
+                "value": "",
+                "type": "query"
+              },
+              {
+                "name": "status",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Cheap aggregation over the same filter set as `GET /workflows`."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

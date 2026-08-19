@@ -1,0 +1,238 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ava Protocol AVS Auth Executions API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Executions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List executions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.avaprotocol.org/api/v1/executions",
+            "params": [
+              {
+                "name": "workflowId",
+                "value": "",
+                "type": "query",
+                "description": "Filter by workflow ID. Repeat to OR multiple workflows."
+              },
+              {
+                "name": "before",
+                "value": "",
+                "type": "query",
+                "description": "Cursor — return items immediately before this position (backward pagination)."
+              },
+              {
+                "name": "after",
+                "value": "",
+                "type": "query",
+                "description": "Cursor — return items immediately after this position (forward pagination)."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Max items to return. Default 20; server-enforced ceiling applies."
+              }
+            ]
+          },
+          "docs": "List executions"
+        },
+        {
+          "info": {
+            "name": "List executions for a workflow (convenience nested route)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.avaprotocol.org/api/v1/workflows/:id/executions",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "before",
+                "value": "",
+                "type": "query",
+                "description": "Cursor — return items immediately before this position (backward pagination)."
+              },
+              {
+                "name": "after",
+                "value": "",
+                "type": "query",
+                "description": "Cursor — return items immediately after this position (forward pagination)."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Max items to return. Default 20; server-enforced ceiling applies."
+              }
+            ]
+          },
+          "docs": "Same handler as `GET /executions?workflowId={id}`; offered as a nested route for clients that prefer it."
+        },
+        {
+          "info": {
+            "name": "Retrieve an execution (full payload with steps)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.avaprotocol.org/api/v1/executions/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "workflowId",
+                "value": "",
+                "type": "query",
+                "description": "Workflow id the execution belongs to. Required because executions\nare scoped to their parent workflow in the engine's storage\n(`t:<chain>:<workflow_id>:<exec_id>` keys) — there is no global\nexecution index today. Use `GET /workflows/{id}/executions` if\nyou only know the workflow.\n"
+              }
+            ]
+          },
+          "docs": "Retrieve an execution (full payload with steps)"
+        },
+        {
+          "info": {
+            "name": "Get execution status (lightweight, no steps)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.avaprotocol.org/api/v1/executions/:id:getStatus",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "workflowId",
+                "value": "",
+                "type": "query",
+                "description": "Workflow id the execution belongs to. See `getExecution`."
+              }
+            ]
+          },
+          "docs": "Get execution status (lightweight, no steps)"
+        },
+        {
+          "info": {
+            "name": "Deliver an approval/external signal to a waiting execution",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://gateway.avaprotocol.org/api/v1/executions/:id:signal",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "workflowId",
+                "value": "",
+                "type": "query",
+                "description": "Workflow id the execution belongs to. See `getExecution`."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Resumes a WAITING execution (durable execution). The caller must own the\nworkflow; the signal only counts against an actual pending wait whose kind\nit matches and which has not timed out. v1 is the external-signal (human\napproval) flavor — e.g. a Telegram approve/reject for a money-moving step.\n"
+        },
+        {
+          "info": {
+            "name": "Stream execution status changes (Server-Sent Events)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.avaprotocol.org/api/v1/executions/:id:stream",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path"
+              },
+              {
+                "name": "workflowId",
+                "value": "",
+                "type": "query",
+                "description": "Workflow id the execution belongs to. See `getExecution`."
+              },
+              {
+                "name": "interval",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Emits one SSE event per status change. Each event payload is an\n`ExecutionStatusSummary`. The stream closes when the execution\nreaches a terminal status (`success` / `failed` / `error`).\nImplementation polls the DB on a short interval (default 1s);\noverride with `?interval=` (max enforced server-side).\n"
+        },
+        {
+          "info": {
+            "name": "Count executions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.avaprotocol.org/api/v1/executions:count",
+            "params": [
+              {
+                "name": "workflowId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Count executions"
+        },
+        {
+          "info": {
+            "name": "Execution statistics (totals + averages)",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.avaprotocol.org/api/v1/executions:stats",
+            "params": [
+              {
+                "name": "workflowId",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Execution statistics (totals + averages)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

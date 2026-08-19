@@ -1,0 +1,35 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Ava Protocol AVS Auth Operators API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Operators",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List connected operators",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://gateway.avaprotocol.org/api/v1/operators"
+          },
+          "docs": "Read-only monitoring endpoint. Returns each operator's\n`supportedChainIds`, `capabilities`, `lastSeen`, and `version`.\nUseful for dashboards and debugging multi-chain task routing.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

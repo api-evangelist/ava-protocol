@@ -54,6 +54,8 @@ apis:
   humanURL: https://avaprotocol.org/docs/ava-sdk-js/rest-api
   baseURL: https://gateway.avaprotocol.org/api/v1
   tags:
+  - Authentication
+  tags_raw:
   - Auth
   properties:
   - type: OpenAPI
@@ -64,6 +66,8 @@ apis:
   humanURL: https://avaprotocol.org/docs/ava-sdk-js/rest-api
   baseURL: https://gateway.avaprotocol.org/api/v1
   tags:
+  - Execution
+  tags_raw:
   - Executions
   properties:
   - type: OpenAPI

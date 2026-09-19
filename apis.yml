@@ -102,6 +102,8 @@ apis:
   humanURL: https://avaprotocol.org/docs/ava-sdk-js/rest-api
   baseURL: https://gateway.avaprotocol.org/api/v1
   tags:
+  - Node
+  tags_raw:
   - Nodes
   properties:
   - type: OpenAPI
@@ -112,6 +114,8 @@ apis:
   humanURL: https://avaprotocol.org/docs/ava-sdk-js/rest-api
   baseURL: https://gateway.avaprotocol.org/api/v1
   tags:
+  - Operator
+  tags_raw:
   - Operators
   properties:
   - type: OpenAPI

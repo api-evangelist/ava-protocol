@@ -1,6 +1,6 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Ava Protocol AVS Auth Wallets API
+  title: Ava Protocol AVS Wallets API
   version: 1.0.0
   description: 'Public REST API for the Ava Protocol AVS aggregator. Exposes workflow
 
@@ -15,9 +15,7 @@ info:
 
     via the operator-run `create-api-key` CLI. Every request must include
 
-    `Authorization: Bearer <jwt>`.
-
-    '
+    `Authorization: Bearer `.'
 servers:
 - url: https://gateway.avaprotocol.org/api/v1
   description: Production gateway
@@ -54,9 +52,7 @@ paths:
 
         address. POST (not GET) because it persists a wallet record server-side
 
-        as a side effect of the derivation.
-
-        '
+        as a side effect of the derivation.'
       operationId: createWallet
       requestBody:
         required: true
@@ -205,34 +201,24 @@ components:
         disabledWorkflowCount:
           type: integer
           format: int64
-    WithdrawResponse:
+    WithdrawRequest:
       type: object
       required:
-      - status
+      - recipientAddress
+      - amount
+      - token
       properties:
-        status:
-          type: string
-          enum:
-          - pending
-          - confirmed
-          - failed
-        message:
-          type: string
-        userOpHash:
-          $ref: '#/components/schemas/Hex'
-        transactionHash:
-          $ref: '#/components/schemas/Hex'
-        submittedAt:
-          type: integer
-          format: int64
-        smartWalletAddress:
-          $ref: '#/components/schemas/EthereumAddress'
         recipientAddress:
           $ref: '#/components/schemas/EthereumAddress'
         amount:
           type: string
+          description: Amount in wei (decimal string) or `max` for the full balance.
         token:
           type: string
+          description: '`ETH` for native token, or an ERC-20 contract address.'
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: Chain to execute the withdrawal on. 0 = aggregator default.
     NonceResponse:
       type: object
       required:
@@ -246,6 +232,61 @@ components:
       properties:
         isHidden:
           type: boolean
+    EthereumAddress:
+      type: string
+      pattern: ^0x[a-fA-F0-9]{40}$
+      description: Lowercase or checksummed hex EOA / contract address.
+      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
+    ChainId:
+      type: integer
+      format: int64
+      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
+
+        chain-aware trigger/node configs this is required and must be a
+
+        configured chain; on query/filter params it is optional.
+
+        '
+      example: 11155111
+    WalletList:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Wallet'
+    CreateWalletRequest:
+      type: object
+      required:
+      - salt
+      properties:
+        salt:
+          type: string
+          description: Salt as a decimal string (big-int). Determines the derived address together with the factory.
+        factoryAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+          description: Optional factory override. Defaults to the aggregator's configured factory.
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: 'Chain to derive the wallet on. Optional override — when
+
+            omitted, the gateway defaults to the JWT `aud` chain (i.e.
+
+            the chain the caller signed the auth message for). Set
+
+            this when minting a wallet for a chain different from the
+
+            one the JWT was issued against; the JWT proves EOA
+
+            ownership, which is chain-independent.
+
+            '
+    Hex:
+      type: string
+      pattern: ^0x[a-fA-F0-9]*$
+      description: Arbitrary-length hex-encoded byte string.
     Problem:
       type: object
       description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
@@ -294,88 +335,43 @@ components:
 
             '
           example: WORKFLOW_NOT_FOUND
-    ChainId:
-      type: integer
-      format: int64
-      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
-
-        chain-aware trigger/node configs this is required and must be a
-
-        configured chain; on query/filter params it is optional.
-
-        '
-      example: 11155111
-    EthereumAddress:
-      type: string
-      pattern: ^0x[a-fA-F0-9]{40}$
-      description: Lowercase or checksummed hex EOA / contract address.
-      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
-    CreateWalletRequest:
+    WithdrawResponse:
       type: object
       required:
-      - salt
+      - status
       properties:
-        salt:
+        status:
           type: string
-          description: Salt as a decimal string (big-int). Determines the derived address together with the factory.
-        factoryAddress:
+          enum:
+          - pending
+          - confirmed
+          - failed
+        message:
+          type: string
+        userOpHash:
+          $ref: '#/components/schemas/Hex'
+        transactionHash:
+          $ref: '#/components/schemas/Hex'
+        submittedAt:
+          type: integer
+          format: int64
+        smartWalletAddress:
           $ref: '#/components/schemas/EthereumAddress'
-          description: Optional factory override. Defaults to the aggregator's configured factory.
-        chainId:
-          $ref: '#/components/schemas/ChainId'
-          description: 'Chain to derive the wallet on. Optional override — when
-
-            omitted, the gateway defaults to the JWT `aud` chain (i.e.
-
-            the chain the caller signed the auth message for). Set
-
-            this when minting a wallet for a chain different from the
-
-            one the JWT was issued against; the JWT proves EOA
-
-            ownership, which is chain-independent.
-
-            '
-    WithdrawRequest:
-      type: object
-      required:
-      - recipientAddress
-      - amount
-      - token
-      properties:
         recipientAddress:
           $ref: '#/components/schemas/EthereumAddress'
         amount:
           type: string
-          description: Amount in wei (decimal string) or `max` for the full balance.
         token:
           type: string
-          description: '`ETH` for native token, or an ERC-20 contract address.'
-        chainId:
-          $ref: '#/components/schemas/ChainId'
-          description: Chain to execute the withdrawal on. 0 = aggregator default.
-    WalletList:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Wallet'
-    Hex:
-      type: string
-      pattern: ^0x[a-fA-F0-9]*$
-      description: Arbitrary-length hex-encoded byte string.
   responses:
-    Unauthorized:
-      description: Missing or invalid bearer token.
+    NotFound:
+      description: Resource not found.
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
-    NotFound:
-      description: Resource not found.
+    Unauthorized:
+      description: Missing or invalid bearer token.
       content:
         application/problem+json:
           schema:

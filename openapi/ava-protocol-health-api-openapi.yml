@@ -1,6 +1,6 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Ava Protocol AVS Auth Health API
+  title: Ava Protocol AVS Health API
   version: 1.0.0
   description: 'Public REST API for the Ava Protocol AVS aggregator. Exposes workflow
 
@@ -15,9 +15,7 @@ info:
 
     via the operator-run `create-api-key` CLI. Every request must include
 
-    `Authorization: Bearer <jwt>`.
-
-    '
+    `Authorization: Bearer `.'
 servers:
 - url: https://gateway.avaprotocol.org/api/v1
   description: Production gateway
@@ -38,9 +36,7 @@ paths:
       summary: Liveness probe
       description: 'Returns the aggregator''s current health. Used by load balancers, k8s
 
-        liveness/readiness probes, and external uptime monitoring.
-
-        '
+        liveness/readiness probes, and external uptime monitoring.'
       security: []
       responses:
         '200':
@@ -55,19 +51,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HealthStatus'
+      operationId: getHealth
+      x-operation-id-source: derived
 components:
   schemas:
-    ChainId:
-      type: integer
-      format: int64
-      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
-
-        chain-aware trigger/node configs this is required and must be a
-
-        configured chain; on query/filter params it is optional.
-
-        '
-      example: 11155111
     HealthStatus:
       type: object
       required:
@@ -94,6 +81,17 @@ components:
         chainId:
           $ref: '#/components/schemas/ChainId'
           description: EigenLayer registration chain ID.
+    ChainId:
+      type: integer
+      format: int64
+      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
+
+        chain-aware trigger/node configs this is required and must be a
+
+        configured chain; on query/filter params it is optional.
+
+        '
+      example: 11155111
   securitySchemes:
     bearerAuth:
       type: http

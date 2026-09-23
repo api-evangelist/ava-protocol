@@ -1,0 +1,26 @@
+# Front Door AI Index — ava-protocol — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: ava-protocol
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: avaprotocol.org
+  final_host: avaprotocol.org
+  ownership: own
+  owner: ava-protocol
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 3
+  host_score: 3
+  density: 3.53
+  words: 850
+  tiers:
+    agentic: 0
+    core: 3
+    model: 0
+  ambiguous: 3
+  top_terms:
+    AI: 3
+    automation: 3

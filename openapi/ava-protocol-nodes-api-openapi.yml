@@ -1,6 +1,6 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Ava Protocol AVS Auth Nodes API
+  title: Ava Protocol AVS Nodes API
   version: 1.0.0
   description: 'Public REST API for the Ava Protocol AVS aggregator. Exposes workflow
 
@@ -15,9 +15,7 @@ info:
 
     via the operator-run `create-api-key` CLI. Every request must include
 
-    `Authorization: Bearer <jwt>`.
-
-    '
+    `Authorization: Bearer `.'
 servers:
 - url: https://gateway.avaprotocol.org/api/v1
   description: Production gateway
@@ -40,9 +38,7 @@ paths:
 
         provided input variables without persisting a workflow. Honors
 
-        `node.config.chainId` (overrides body `chainId`).
-
-        '
+        `node.config.chainId` (overrides body `chainId`).'
       operationId: runNode
       requestBody:
         required: true
@@ -63,6 +59,295 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    RunNodeResponse:
+      type: object
+      required:
+      - success
+      properties:
+        success:
+          type: boolean
+        error:
+          type: string
+        errorCode:
+          type: string
+        output:
+          additionalProperties: true
+        metadata:
+          additionalProperties: true
+        executionContext:
+          additionalProperties: true
+    CustomCodeNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - customCode
+          config:
+            $ref: '#/components/schemas/CustomCodeNodeConfig'
+    ETHTransferNodeConfig:
+      type: object
+      required:
+      - destination
+      - amount
+      - chainId
+      properties:
+        destination:
+          $ref: '#/components/schemas/EthereumAddress'
+        amount:
+          type: string
+          description: Amount in wei (decimal string for big-int safety). Special value `max` withdraws the entire balance.
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: Chain to execute on. Required — a workflow carries no chain to inherit.
+    EventTriggerConfig:
+      type: object
+      description: Fires when matching on-chain events are observed.
+      required:
+      - queries
+      - chainId
+      properties:
+        queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventTriggerQuery'
+          minItems: 1
+        cooldownSeconds:
+          type: integer
+          format: int32
+          minimum: 0
+          description: 'Seconds to wait after a fire before allowing the same task to
+
+            trigger again. Default 300. 0 disables cooldown.
+
+            '
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: Chain to watch events on. Required — a workflow carries no chain to inherit.
+    ContractReadNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - contractRead
+          config:
+            $ref: '#/components/schemas/ContractReadNodeConfig'
+    LoopNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - loop
+          config:
+            $ref: '#/components/schemas/LoopNodeConfig'
+    ContractReadNodeConfig:
+      type: object
+      required:
+      - contractAddress
+      - chainId
+      properties:
+        contractAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        contractAbi:
+          type: array
+          items:
+            additionalProperties: true
+        methodCalls:
+          type: array
+          items:
+            $ref: '#/components/schemas/MethodCall'
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: Chain to read from. Required — a workflow carries no chain to inherit.
+    GraphQLQueryNodeConfig:
+      type: object
+      required:
+      - url
+      - query
+      properties:
+        url:
+          type: string
+          format: uri
+        query:
+          type: string
+        variables:
+          type: object
+          additionalProperties:
+            type: string
+    EthereumAddress:
+      type: string
+      pattern: ^0x[a-fA-F0-9]{40}$
+      description: Lowercase or checksummed hex EOA / contract address.
+      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
+    RunNodeRequest:
+      type: object
+      required:
+      - node
+      properties:
+        node:
+          $ref: '#/components/schemas/Node'
+        inputVariables:
+          $ref: '#/components/schemas/InputVariables'
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+        erc20Overrides:
+          type: array
+          description: 'Optional ERC20 balance/allowance state overrides applied only during this isolated node simulation. Lets callers seed token balances and approvals so contract-write simulations (e.g. Uniswap swaps) don''t revert with "transfer amount exceeds allowance/balance" before the approval/funding transactions have been run. Simulation-only: a real-execution request (isSimulated=false) that sets these is rejected with an error, never silently ignored.
+
+            '
+          items:
+            $ref: '#/components/schemas/ERC20StateOverride'
+    AwaitNodeConfig:
+      type: object
+      description: 'Pauses the workflow until a wake arrives (durable execution). Two mutually
+
+        exclusive flavors: the external-signal flavor (human approval — set `channel`,
+
+        e.g. a Telegram approve/reject), or the chain-event flavor (cross-chain — set
+
+        `chainEvent` to pause until an operator observes that on-chain event, e.g. a
+
+        bridge arrival on another chain). Exactly one flavor must be configured.
+
+        '
+      properties:
+        channel:
+          type: string
+          description: 'External-signal flavor — signal channel: `telegram` or `api`.'
+        approvers:
+          type: array
+          items:
+            type: string
+          description: External-signal flavor — authorized approver identities. Empty = the workflow owner.
+        prompt:
+          type: string
+          description: External-signal flavor — message shown to the approver.
+        chainEvent:
+          allOf:
+          - $ref: '#/components/schemas/EventTriggerConfig'
+          description: 'Chain-event flavor — the on-chain event to wait for (a mid-workflow
+
+            EventTrigger). An operator covering `chainEvent.chainId` watches it and
+
+            resumes the execution when it fires. Mutually exclusive with `channel`.
+
+            '
+        timeoutSeconds:
+          type: integer
+          format: int64
+          description: Safety bound; 0 = server default (the wait is never unbounded).
+    BranchNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - branch
+          config:
+            $ref: '#/components/schemas/BranchNodeConfig'
+    BalanceNodeConfig:
+      type: object
+      required:
+      - address
+      - chain
+      properties:
+        address:
+          $ref: '#/components/schemas/EthereumAddress'
+        chain:
+          type: string
+          description: Chain name or numeric ID (e.g., `ethereum`, `base`, `1`, `8453`).
+        includeSpam:
+          type: boolean
+        includeZeroBalances:
+          type: boolean
+        minUsdValueCents:
+          type: integer
+          format: int64
+          description: Filter out tokens with USD value below this many cents.
+        tokenAddresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/EthereumAddress'
+          description: Restrict to these tokens. Empty = fetch all.
+    Hex:
+      type: string
+      pattern: ^0x[a-fA-F0-9]*$
+      description: Arbitrary-length hex-encoded byte string.
+    EventMethodCall:
+      type: object
+      required:
+      - methodName
+      properties:
+        methodName:
+          type: string
+        callData:
+          $ref: '#/components/schemas/Hex'
+        applyToFields:
+          type: array
+          items:
+            type: string
+        methodParams:
+          type: array
+          items:
+            type: string
+            description: Handlebars template; resolves against decoded event data.
+    ChainId:
+      type: integer
+      format: int64
+      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
+
+        chain-aware trigger/node configs this is required and must be a
+
+        configured chain; on query/filter params it is optional.
+
+        '
+      example: 11155111
+    ContractWriteNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - contractWrite
+          config:
+            $ref: '#/components/schemas/ContractWriteNodeConfig'
+    RestAPINode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - restApi
+          config:
+            $ref: '#/components/schemas/RestAPINodeConfig'
+    ETHTransferNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - ethTransfer
+          config:
+            $ref: '#/components/schemas/ETHTransferNodeConfig'
+    BranchNodeConfig:
+      type: object
+      required:
+      - conditions
+      properties:
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/BranchCondition'
+          minItems: 1
     EventTriggerQuery:
       type: object
       description: Single ethereum.FilterQuery — one subscription per query.
@@ -75,8 +360,9 @@ components:
         topics:
           type: array
           items:
-            type: string
-            nullable: true
+            type:
+            - string
+            - 'null'
           description: 'Topic filters (`topics[0]` is the event signature, `topics[1..]`
 
             are indexed parameter values). `null` means wildcard at that
@@ -103,6 +389,131 @@ components:
           items:
             $ref: '#/components/schemas/EventMethodCall'
           description: Method calls used to enrich decoded event data (e.g., `decimals`).
+    CustomCodeNodeConfig:
+      type: object
+      required:
+      - lang
+      - source
+      properties:
+        lang:
+          $ref: '#/components/schemas/Lang'
+        source:
+          type: string
+    NodeType:
+      type: string
+      enum:
+      - ethTransfer
+      - contractWrite
+      - contractRead
+      - graphqlQuery
+      - restApi
+      - customCode
+      - branch
+      - filter
+      - loop
+      - balance
+      - await
+      description: 'Discriminator field for the Node union. Mirrors the proto
+
+        `NodeType` enum but without the `NODE_TYPE_` prefix.
+
+        '
+    Lang:
+      type: string
+      enum:
+      - javascript
+      - json
+      - graphql
+      - handlebars
+      description: 'Language/format of an inline payload (e.g., custom code source,
+
+        manual trigger data). Mirrors the proto `Lang` enum minus the
+
+        `LANG_` prefix. Wire values are lowercase.
+
+        '
+    Node:
+      type: object
+      required:
+      - type
+      - id
+      - config
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/NodeType'
+      discriminator:
+        propertyName: type
+        mapping:
+          ethTransfer: '#/components/schemas/ETHTransferNode'
+          contractWrite: '#/components/schemas/ContractWriteNode'
+          contractRead: '#/components/schemas/ContractReadNode'
+          graphqlQuery: '#/components/schemas/GraphQLQueryNode'
+          restApi: '#/components/schemas/RestAPINode'
+          customCode: '#/components/schemas/CustomCodeNode'
+          branch: '#/components/schemas/BranchNode'
+          filter: '#/components/schemas/FilterNode'
+          loop: '#/components/schemas/LoopNode'
+          balance: '#/components/schemas/BalanceNode'
+          await: '#/components/schemas/AwaitNode'
+      oneOf:
+      - $ref: '#/components/schemas/ETHTransferNode'
+      - $ref: '#/components/schemas/ContractWriteNode'
+      - $ref: '#/components/schemas/ContractReadNode'
+      - $ref: '#/components/schemas/GraphQLQueryNode'
+      - $ref: '#/components/schemas/RestAPINode'
+      - $ref: '#/components/schemas/CustomCodeNode'
+      - $ref: '#/components/schemas/BranchNode'
+      - $ref: '#/components/schemas/FilterNode'
+      - $ref: '#/components/schemas/LoopNode'
+      - $ref: '#/components/schemas/BalanceNode'
+      - $ref: '#/components/schemas/AwaitNode'
+    MethodCall:
+      type: object
+      description: One call to a contract method (used by ContractWrite + ContractRead).
+      required:
+      - methodName
+      properties:
+        methodName:
+          type: string
+        callData:
+          $ref: '#/components/schemas/Hex'
+        applyToFields:
+          type: array
+          items:
+            type: string
+        methodParams:
+          type: array
+          items:
+            type: string
+            description: Handlebars template for method args.
+    BalanceNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - balance
+          config:
+            $ref: '#/components/schemas/BalanceNodeConfig'
+    InputVariables:
+      type: object
+      additionalProperties: true
+      description: 'Free-form key-value bag of values used to resolve `{{variable.path}}`
+
+        template references inside trigger and node configs. Conventional
+
+        well-known keys: `settings.runner` (smart wallet address),
+
+        `settings.chainId` (chain id). camelCase keys; back-compat support
+
+        for snake_case keys exists during the migration window.
+
+        '
     EventCondition:
       type: object
       description: Predicate evaluated against decoded event data.
@@ -138,47 +549,30 @@ components:
             '
         fieldType:
           type: string
-    FilterNodeConfig:
+    LoopNodeConfig:
       type: object
+      description: 'Iterates over an input array, running an inner Node per item. The
+
+        runner node is one of the chain-aware or chain-agnostic node types;
+
+        a chain-aware runner must specify its own required `chainId` (there is
+
+        no inheritance from the loop or workflow).
+
+        '
       required:
       - inputVariable
-      - expression
+      - runner
       properties:
         inputVariable:
           type: string
-          description: Template path for the source array (e.g., `{{custom_code1.data}}`).
-        expression:
+          description: Template path for the iterable (e.g., `{{settings.addressList}}`).
+        iterVar:
           type: string
-          description: JavaScript predicate evaluated per item.
-    ContractReadNode:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - contractRead
-          config:
-            $ref: '#/components/schemas/ContractReadNodeConfig'
-    EthereumAddress:
-      type: string
-      pattern: ^0x[a-fA-F0-9]{40}$
-      description: Lowercase or checksummed hex EOA / contract address.
-      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
-    InputVariables:
-      type: object
-      additionalProperties: true
-      description: 'Free-form key-value bag of values used to resolve `{{variable.path}}`
-
-        template references inside trigger and node configs. Conventional
-
-        well-known keys: `settings.runner` (smart wallet address),
-
-        `settings.chainId` (chain id). camelCase keys; back-compat support
-
-        for snake_case keys exists during the migration window.
-
-        '
+          default: value
+          description: Name of the per-iteration variable (defaults to `value`).
+        runner:
+          $ref: '#/components/schemas/Node'
     RestAPINodeConfig:
       type: object
       required:
@@ -236,171 +630,6 @@ components:
 
                 '
           additionalProperties: true
-    CustomCodeNodeConfig:
-      type: object
-      required:
-      - lang
-      - source
-      properties:
-        lang:
-          $ref: '#/components/schemas/Lang'
-        source:
-          type: string
-    MethodCall:
-      type: object
-      description: One call to a contract method (used by ContractWrite + ContractRead).
-      required:
-      - methodName
-      properties:
-        methodName:
-          type: string
-        callData:
-          $ref: '#/components/schemas/Hex'
-        applyToFields:
-          type: array
-          items:
-            type: string
-        methodParams:
-          type: array
-          items:
-            type: string
-            description: Handlebars template for method args.
-    Hex:
-      type: string
-      pattern: ^0x[a-fA-F0-9]*$
-      description: Arbitrary-length hex-encoded byte string.
-    ETHTransferNodeConfig:
-      type: object
-      required:
-      - destination
-      - amount
-      - chainId
-      properties:
-        destination:
-          $ref: '#/components/schemas/EthereumAddress'
-        amount:
-          type: string
-          description: Amount in wei (decimal string for big-int safety). Special value `max` withdraws the entire balance.
-        chainId:
-          $ref: '#/components/schemas/ChainId'
-          description: Chain to execute on. Required — a workflow carries no chain to inherit.
-    EventTriggerConfig:
-      type: object
-      description: Fires when matching on-chain events are observed.
-      required:
-      - queries
-      - chainId
-      properties:
-        queries:
-          type: array
-          items:
-            $ref: '#/components/schemas/EventTriggerQuery'
-          minItems: 1
-        cooldownSeconds:
-          type: integer
-          format: int32
-          minimum: 0
-          description: 'Seconds to wait after a fire before allowing the same task to
-
-            trigger again. Default 300. 0 disables cooldown.
-
-            '
-        chainId:
-          $ref: '#/components/schemas/ChainId'
-          description: Chain to watch events on. Required — a workflow carries no chain to inherit.
-    ETHTransferNode:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - ethTransfer
-          config:
-            $ref: '#/components/schemas/ETHTransferNodeConfig'
-    BalanceNodeConfig:
-      type: object
-      required:
-      - address
-      - chain
-      properties:
-        address:
-          $ref: '#/components/schemas/EthereumAddress'
-        chain:
-          type: string
-          description: Chain name or numeric ID (e.g., `ethereum`, `base`, `1`, `8453`).
-        includeSpam:
-          type: boolean
-        includeZeroBalances:
-          type: boolean
-        minUsdValueCents:
-          type: integer
-          format: int64
-          description: Filter out tokens with USD value below this many cents.
-        tokenAddresses:
-          type: array
-          items:
-            $ref: '#/components/schemas/EthereumAddress'
-          description: Restrict to these tokens. Empty = fetch all.
-    GraphQLQueryNode:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - graphqlQuery
-          config:
-            $ref: '#/components/schemas/GraphQLQueryNodeConfig'
-    BranchNode:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - branch
-          config:
-            $ref: '#/components/schemas/BranchNodeConfig'
-    LoopNode:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - loop
-          config:
-            $ref: '#/components/schemas/LoopNodeConfig'
-    BranchNodeConfig:
-      type: object
-      required:
-      - conditions
-      properties:
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/BranchCondition'
-          minItems: 1
-    NodeType:
-      type: string
-      enum:
-      - ethTransfer
-      - contractWrite
-      - contractRead
-      - graphqlQuery
-      - restApi
-      - customCode
-      - branch
-      - filter
-      - loop
-      - balance
-      - await
-      description: 'Discriminator field for the Node union. Mirrors the proto
-
-        `NodeType` enum but without the `NODE_TYPE_` prefix.
-
-        '
     ContractWriteNodeConfig:
       type: object
       required:
@@ -431,20 +660,16 @@ components:
         chainId:
           $ref: '#/components/schemas/ChainId'
           description: Chain to execute on. Required — a workflow carries no chain to inherit.
-    Lang:
-      type: string
-      enum:
-      - javascript
-      - json
-      - graphql
-      - handlebars
-      description: 'Language/format of an inline payload (e.g., custom code source,
-
-        manual trigger data). Mirrors the proto `Lang` enum minus the
-
-        `LANG_` prefix. Wire values are lowercase.
-
-        '
+    GraphQLQueryNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - graphqlQuery
+          config:
+            $ref: '#/components/schemas/GraphQLQueryNodeConfig'
     FilterNode:
       allOf:
       - type: object
@@ -455,245 +680,49 @@ components:
             - filter
           config:
             $ref: '#/components/schemas/FilterNodeConfig'
-    RunNodeRequest:
+    ERC20StateOverride:
       type: object
       required:
-      - node
-      properties:
-        node:
-          $ref: '#/components/schemas/Node'
-        inputVariables:
-          $ref: '#/components/schemas/InputVariables'
-        chainId:
-          $ref: '#/components/schemas/ChainId'
-        erc20Overrides:
-          type: array
-          description: 'Optional ERC20 balance/allowance state overrides applied only during this isolated node simulation. Lets callers seed token balances and approvals so contract-write simulations (e.g. Uniswap swaps) don''t revert with "transfer amount exceeds allowance/balance" before the approval/funding transactions have been run. Simulation-only: a real-execution request (isSimulated=false) that sets these is rejected with an error, never silently ignored.
-
-            '
-          items:
-            $ref: '#/components/schemas/ERC20StateOverride'
-    ContractReadNodeConfig:
-      type: object
-      required:
-      - contractAddress
-      - chainId
-      properties:
-        contractAddress:
-          $ref: '#/components/schemas/EthereumAddress'
-        contractAbi:
-          type: array
-          items:
-            additionalProperties: true
-        methodCalls:
-          type: array
-          items:
-            $ref: '#/components/schemas/MethodCall'
-        chainId:
-          $ref: '#/components/schemas/ChainId'
-          description: Chain to read from. Required — a workflow carries no chain to inherit.
-    AwaitNodeConfig:
-      type: object
-      description: 'Pauses the workflow until a wake arrives (durable execution). Two mutually
-
-        exclusive flavors: the external-signal flavor (human approval — set `channel`,
-
-        e.g. a Telegram approve/reject), or the chain-event flavor (cross-chain — set
-
-        `chainEvent` to pause until an operator observes that on-chain event, e.g. a
-
-        bridge arrival on another chain). Exactly one flavor must be configured.
+      - tokenAddress
+      - ownerAddress
+      description: 'Seeds a token''s balanceOf / allowance storage slots for a single simulation. balanceOf[owner] lives at keccak256(abi.encode(owner, balanceSlot)); allowance[owner][spender] at keccak256(abi.encode(spender, keccak256(abi.encode(owner, allowanceSlot)))).
 
         '
       properties:
-        channel:
+        tokenAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        ownerAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        spenderAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        balance:
           type: string
-          description: 'External-signal flavor — signal channel: `telegram` or `api`.'
-        approvers:
-          type: array
-          items:
-            type: string
-          description: External-signal flavor — authorized approver identities. Empty = the workflow owner.
-        prompt:
+          description: Balance override (hex 0x… or decimal string).
+        allowance:
           type: string
-          description: External-signal flavor — message shown to the approver.
-        chainEvent:
-          allOf:
-          - $ref: '#/components/schemas/EventTriggerConfig'
-          description: 'Chain-event flavor — the on-chain event to wait for (a mid-workflow
-
-            EventTrigger). An operator covering `chainEvent.chainId` watches it and
-
-            resumes the execution when it fires. Mutually exclusive with `channel`.
-
-            '
-        timeoutSeconds:
+          description: Allowance override (hex 0x… or decimal string).
+        balanceSlot:
           type: integer
           format: int64
-          description: Safety bound; 0 = server default (the wait is never unbounded).
-    AwaitNode:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - await
-          config:
-            $ref: '#/components/schemas/AwaitNodeConfig'
-    RestAPINode:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - restApi
-          config:
-            $ref: '#/components/schemas/RestAPINodeConfig'
-    LoopNodeConfig:
+          minimum: 0
+          description: Storage slot for the balanceOf mapping. Required when balance is set; ERC20 storage layout varies per token (OpenZeppelin 0, USDC FiatToken 9).
+        allowanceSlot:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Storage slot for the allowance mapping. Required when allowance is set; ERC20 storage layout varies per token (OpenZeppelin 1, USDC FiatToken 10).
+    FilterNodeConfig:
       type: object
-      description: 'Iterates over an input array, running an inner Node per item. The
-
-        runner node is one of the chain-aware or chain-agnostic node types;
-
-        a chain-aware runner must specify its own required `chainId` (there is
-
-        no inheritance from the loop or workflow).
-
-        '
       required:
       - inputVariable
-      - runner
+      - expression
       properties:
         inputVariable:
           type: string
-          description: Template path for the iterable (e.g., `{{settings.addressList}}`).
-        iterVar:
-          type: string
-          default: value
-          description: Name of the per-iteration variable (defaults to `value`).
-        runner:
-          $ref: '#/components/schemas/Node'
-    RunNodeResponse:
-      type: object
-      required:
-      - success
-      properties:
-        success:
-          type: boolean
-        error:
-          type: string
-        errorCode:
-          type: string
-        output:
-          additionalProperties: true
-        metadata:
-          additionalProperties: true
-        executionContext:
-          additionalProperties: true
-    BranchCondition:
-      type: object
-      required:
-      - id
-      - expression
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-          enum:
-          - if
-          - elseIf
-          - else
+          description: Template path for the source array (e.g., `{{custom_code1.data}}`).
         expression:
           type: string
-          description: JavaScript-evaluated boolean expression.
-    Node:
-      type: object
-      required:
-      - type
-      - id
-      - config
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        type:
-          $ref: '#/components/schemas/NodeType'
-      discriminator:
-        propertyName: type
-        mapping:
-          ethTransfer: '#/components/schemas/ETHTransferNode'
-          contractWrite: '#/components/schemas/ContractWriteNode'
-          contractRead: '#/components/schemas/ContractReadNode'
-          graphqlQuery: '#/components/schemas/GraphQLQueryNode'
-          restApi: '#/components/schemas/RestAPINode'
-          customCode: '#/components/schemas/CustomCodeNode'
-          branch: '#/components/schemas/BranchNode'
-          filter: '#/components/schemas/FilterNode'
-          loop: '#/components/schemas/LoopNode'
-          balance: '#/components/schemas/BalanceNode'
-          await: '#/components/schemas/AwaitNode'
-      oneOf:
-      - $ref: '#/components/schemas/ETHTransferNode'
-      - $ref: '#/components/schemas/ContractWriteNode'
-      - $ref: '#/components/schemas/ContractReadNode'
-      - $ref: '#/components/schemas/GraphQLQueryNode'
-      - $ref: '#/components/schemas/RestAPINode'
-      - $ref: '#/components/schemas/CustomCodeNode'
-      - $ref: '#/components/schemas/BranchNode'
-      - $ref: '#/components/schemas/FilterNode'
-      - $ref: '#/components/schemas/LoopNode'
-      - $ref: '#/components/schemas/BalanceNode'
-      - $ref: '#/components/schemas/AwaitNode'
-    BalanceNode:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - balance
-          config:
-            $ref: '#/components/schemas/BalanceNodeConfig'
-    ContractWriteNode:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - contractWrite
-          config:
-            $ref: '#/components/schemas/ContractWriteNodeConfig'
-    ChainId:
-      type: integer
-      format: int64
-      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
-
-        chain-aware trigger/node configs this is required and must be a
-
-        configured chain; on query/filter params it is optional.
-
-        '
-      example: 11155111
-    GraphQLQueryNodeConfig:
-      type: object
-      required:
-      - url
-      - query
-      properties:
-        url:
-          type: string
-          format: uri
-        query:
-          type: string
-        variables:
-          type: object
-          additionalProperties:
-            type: string
+          description: JavaScript predicate evaluated per item.
     Problem:
       type: object
       description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
@@ -742,65 +771,33 @@ components:
 
             '
           example: WORKFLOW_NOT_FOUND
-    EventMethodCall:
-      type: object
-      required:
-      - methodName
-      properties:
-        methodName:
-          type: string
-        callData:
-          $ref: '#/components/schemas/Hex'
-        applyToFields:
-          type: array
-          items:
-            type: string
-        methodParams:
-          type: array
-          items:
-            type: string
-            description: Handlebars template; resolves against decoded event data.
-    CustomCodeNode:
+    AwaitNode:
       allOf:
       - type: object
         properties:
           type:
             type: string
             enum:
-            - customCode
+            - await
           config:
-            $ref: '#/components/schemas/CustomCodeNodeConfig'
-    ERC20StateOverride:
+            $ref: '#/components/schemas/AwaitNodeConfig'
+    BranchCondition:
       type: object
       required:
-      - tokenAddress
-      - ownerAddress
-      description: 'Seeds a token''s balanceOf / allowance storage slots for a single simulation. balanceOf[owner] lives at keccak256(abi.encode(owner, balanceSlot)); allowance[owner][spender] at keccak256(abi.encode(spender, keccak256(abi.encode(owner, allowanceSlot)))).
-
-        '
+      - id
+      - expression
       properties:
-        tokenAddress:
-          $ref: '#/components/schemas/EthereumAddress'
-        ownerAddress:
-          $ref: '#/components/schemas/EthereumAddress'
-        spenderAddress:
-          $ref: '#/components/schemas/EthereumAddress'
-        balance:
+        id:
           type: string
-          description: Balance override (hex 0x… or decimal string).
-        allowance:
+        type:
           type: string
-          description: Allowance override (hex 0x… or decimal string).
-        balanceSlot:
-          type: integer
-          format: int64
-          minimum: 0
-          description: Storage slot for the balanceOf mapping. Required when balance is set; ERC20 storage layout varies per token (OpenZeppelin 0, USDC FiatToken 9).
-        allowanceSlot:
-          type: integer
-          format: int64
-          minimum: 0
-          description: Storage slot for the allowance mapping. Required when allowance is set; ERC20 storage layout varies per token (OpenZeppelin 1, USDC FiatToken 10).
+          enum:
+          - if
+          - elseIf
+          - else
+        expression:
+          type: string
+          description: JavaScript-evaluated boolean expression.
   responses:
     Unauthorized:
       description: Missing or invalid bearer token.

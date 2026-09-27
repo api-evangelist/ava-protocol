@@ -170,6 +170,43 @@ paths:
           $ref: '#/components/responses/NotFound'
 components:
   schemas:
+    WithdrawResponse:
+      type: object
+      required:
+      - status
+      properties:
+        status:
+          type: string
+          enum:
+          - pending
+          - confirmed
+          - failed
+        message:
+          type: string
+        userOpHash:
+          $ref: '#/components/schemas/Hex'
+        transactionHash:
+          $ref: '#/components/schemas/Hex'
+        submittedAt:
+          type: integer
+          format: int64
+        smartWalletAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        recipientAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        amount:
+          type: string
+        token:
+          type: string
+    WalletList:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Wallet'
     Wallet:
       type: object
       required:
@@ -201,42 +238,6 @@ components:
         disabledWorkflowCount:
           type: integer
           format: int64
-    WithdrawRequest:
-      type: object
-      required:
-      - recipientAddress
-      - amount
-      - token
-      properties:
-        recipientAddress:
-          $ref: '#/components/schemas/EthereumAddress'
-        amount:
-          type: string
-          description: Amount in wei (decimal string) or `max` for the full balance.
-        token:
-          type: string
-          description: '`ETH` for native token, or an ERC-20 contract address.'
-        chainId:
-          $ref: '#/components/schemas/ChainId'
-          description: Chain to execute the withdrawal on. 0 = aggregator default.
-    NonceResponse:
-      type: object
-      required:
-      - nonce
-      properties:
-        nonce:
-          type: string
-          description: Smart wallet nonce as a decimal string.
-    UpdateWalletRequest:
-      type: object
-      properties:
-        isHidden:
-          type: boolean
-    EthereumAddress:
-      type: string
-      pattern: ^0x[a-fA-F0-9]{40}$
-      description: Lowercase or checksummed hex EOA / contract address.
-      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
     ChainId:
       type: integer
       format: int64
@@ -248,15 +249,16 @@ components:
 
         '
       example: 11155111
-    WalletList:
+    EthereumAddress:
+      type: string
+      pattern: ^0x[a-fA-F0-9]{40}$
+      description: Lowercase or checksummed hex EOA / contract address.
+      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
+    UpdateWalletRequest:
       type: object
-      required:
-      - data
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Wallet'
+        isHidden:
+          type: boolean
     CreateWalletRequest:
       type: object
       required:
@@ -283,10 +285,6 @@ components:
             ownership, which is chain-independent.
 
             '
-    Hex:
-      type: string
-      pattern: ^0x[a-fA-F0-9]*$
-      description: Arbitrary-length hex-encoded byte string.
     Problem:
       type: object
       description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
@@ -335,41 +333,37 @@ components:
 
             '
           example: WORKFLOW_NOT_FOUND
-    WithdrawResponse:
+    NonceResponse:
       type: object
       required:
-      - status
+      - nonce
       properties:
-        status:
+        nonce:
           type: string
-          enum:
-          - pending
-          - confirmed
-          - failed
-        message:
-          type: string
-        userOpHash:
-          $ref: '#/components/schemas/Hex'
-        transactionHash:
-          $ref: '#/components/schemas/Hex'
-        submittedAt:
-          type: integer
-          format: int64
-        smartWalletAddress:
-          $ref: '#/components/schemas/EthereumAddress'
+          description: Smart wallet nonce as a decimal string.
+    Hex:
+      type: string
+      pattern: ^0x[a-fA-F0-9]*$
+      description: Arbitrary-length hex-encoded byte string.
+    WithdrawRequest:
+      type: object
+      required:
+      - recipientAddress
+      - amount
+      - token
+      properties:
         recipientAddress:
           $ref: '#/components/schemas/EthereumAddress'
         amount:
           type: string
+          description: Amount in wei (decimal string) or `max` for the full balance.
         token:
           type: string
+          description: '`ETH` for native token, or an ERC-20 contract address.'
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: Chain to execute the withdrawal on. 0 = aggregator default.
   responses:
-    NotFound:
-      description: Resource not found.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
     Unauthorized:
       description: Missing or invalid bearer token.
       content:
@@ -378,6 +372,12 @@ components:
             $ref: '#/components/schemas/Problem'
     BadRequest:
       description: Request validation failed.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Resource not found.
       content:
         application/problem+json:
           schema:

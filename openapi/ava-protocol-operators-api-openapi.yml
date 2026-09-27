@@ -51,29 +51,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    EthereumAddress:
-      type: string
-      pattern: ^0x[a-fA-F0-9]{40}$
-      description: Lowercase or checksummed hex EOA / contract address.
-      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
-    OperatorList:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/OperatorInfo'
-    OperatorCapabilities:
-      type: object
-      properties:
-        eventMonitoring:
-          type: boolean
-        blockMonitoring:
-          type: boolean
-        timeMonitoring:
-          type: boolean
     OperatorInfo:
       type: object
       required:
@@ -98,6 +75,35 @@ components:
         eventCount:
           type: integer
           format: int64
+    OperatorCapabilities:
+      type: object
+      properties:
+        eventMonitoring:
+          type: boolean
+        blockMonitoring:
+          type: boolean
+        timeMonitoring:
+          type: boolean
+    Timestamp:
+      type: string
+      format: date-time
+      description: RFC 3339 timestamp.
+    ChainId:
+      type: integer
+      format: int64
+      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
+
+        chain-aware trigger/node configs this is required and must be a
+
+        configured chain; on query/filter params it is optional.
+
+        '
+      example: 11155111
+    EthereumAddress:
+      type: string
+      pattern: ^0x[a-fA-F0-9]{40}$
+      description: Lowercase or checksummed hex EOA / contract address.
+      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
     Problem:
       type: object
       description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
@@ -146,21 +152,15 @@ components:
 
             '
           example: WORKFLOW_NOT_FOUND
-    ChainId:
-      type: integer
-      format: int64
-      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
-
-        chain-aware trigger/node configs this is required and must be a
-
-        configured chain; on query/filter params it is optional.
-
-        '
-      example: 11155111
-    Timestamp:
-      type: string
-      format: date-time
-      description: RFC 3339 timestamp.
+    OperatorList:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperatorInfo'
   responses:
     Unauthorized:
       description: Missing or invalid bearer token.

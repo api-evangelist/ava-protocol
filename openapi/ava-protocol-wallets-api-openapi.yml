@@ -169,44 +169,52 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    BadRequest:
+      description: Request validation failed.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Unauthorized:
+      description: Missing or invalid bearer token.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
   schemas:
-    WithdrawResponse:
+    CreateWalletRequest:
       type: object
       required:
-      - status
+      - salt
       properties:
-        status:
+        salt:
           type: string
-          enum:
-          - pending
-          - confirmed
-          - failed
-        message:
-          type: string
-        userOpHash:
-          $ref: '#/components/schemas/Hex'
-        transactionHash:
-          $ref: '#/components/schemas/Hex'
-        submittedAt:
-          type: integer
-          format: int64
-        smartWalletAddress:
+          description: Salt as a decimal string (big-int). Determines the derived address together with the factory.
+        factoryAddress:
           $ref: '#/components/schemas/EthereumAddress'
-        recipientAddress:
-          $ref: '#/components/schemas/EthereumAddress'
-        amount:
-          type: string
-        token:
-          type: string
-    WalletList:
-      type: object
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Wallet'
+          description: Optional factory override. Defaults to the aggregator's configured factory.
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: 'Chain to derive the wallet on. Optional override — when
+
+            omitted, the gateway defaults to the JWT `aud` chain (i.e.
+
+            the chain the caller signed the auth message for). Set
+
+            this when minting a wallet for a chain different from the
+
+            one the JWT was issued against; the JWT proves EOA
+
+            ownership, which is chain-independent.
+
+            '
     Wallet:
       type: object
       required:
@@ -238,6 +246,10 @@ components:
         disabledWorkflowCount:
           type: integer
           format: int64
+    Hex:
+      type: string
+      pattern: ^0x[a-fA-F0-9]*$
+      description: Arbitrary-length hex-encoded byte string.
     ChainId:
       type: integer
       format: int64
@@ -249,42 +261,11 @@ components:
 
         '
       example: 11155111
-    EthereumAddress:
-      type: string
-      pattern: ^0x[a-fA-F0-9]{40}$
-      description: Lowercase or checksummed hex EOA / contract address.
-      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
     UpdateWalletRequest:
       type: object
       properties:
         isHidden:
           type: boolean
-    CreateWalletRequest:
-      type: object
-      required:
-      - salt
-      properties:
-        salt:
-          type: string
-          description: Salt as a decimal string (big-int). Determines the derived address together with the factory.
-        factoryAddress:
-          $ref: '#/components/schemas/EthereumAddress'
-          description: Optional factory override. Defaults to the aggregator's configured factory.
-        chainId:
-          $ref: '#/components/schemas/ChainId'
-          description: 'Chain to derive the wallet on. Optional override — when
-
-            omitted, the gateway defaults to the JWT `aud` chain (i.e.
-
-            the chain the caller signed the auth message for). Set
-
-            this when minting a wallet for a chain different from the
-
-            one the JWT was issued against; the JWT proves EOA
-
-            ownership, which is chain-independent.
-
-            '
     Problem:
       type: object
       description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
@@ -333,18 +314,6 @@ components:
 
             '
           example: WORKFLOW_NOT_FOUND
-    NonceResponse:
-      type: object
-      required:
-      - nonce
-      properties:
-        nonce:
-          type: string
-          description: Smart wallet nonce as a decimal string.
-    Hex:
-      type: string
-      pattern: ^0x[a-fA-F0-9]*$
-      description: Arbitrary-length hex-encoded byte string.
     WithdrawRequest:
       type: object
       required:
@@ -363,25 +332,56 @@ components:
         chainId:
           $ref: '#/components/schemas/ChainId'
           description: Chain to execute the withdrawal on. 0 = aggregator default.
-  responses:
-    Unauthorized:
-      description: Missing or invalid bearer token.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-    BadRequest:
-      description: Request validation failed.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-    NotFound:
-      description: Resource not found.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
+    WithdrawResponse:
+      type: object
+      required:
+      - status
+      properties:
+        status:
+          type: string
+          enum:
+          - pending
+          - confirmed
+          - failed
+        message:
+          type: string
+        userOpHash:
+          $ref: '#/components/schemas/Hex'
+        transactionHash:
+          $ref: '#/components/schemas/Hex'
+        submittedAt:
+          type: integer
+          format: int64
+        smartWalletAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        recipientAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        amount:
+          type: string
+        token:
+          type: string
+    WalletList:
+      type: object
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Wallet'
+    NonceResponse:
+      type: object
+      required:
+      - nonce
+      properties:
+        nonce:
+          type: string
+          description: Smart wallet nonce as a decimal string.
+    EthereumAddress:
+      type: string
+      pattern: ^0x[a-fA-F0-9]{40}$
+      description: Lowercase or checksummed hex EOA / contract address.
+      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
   parameters:
     ChainIdQuery:
       name: chainId

@@ -66,8 +66,8 @@ paths:
           $ref: '#/components/responses/RateLimited'
 components:
   responses:
-    Unauthorized:
-      description: Missing or invalid bearer token.
+    BadRequest:
+      description: Request validation failed.
       content:
         application/problem+json:
           schema:
@@ -97,13 +97,17 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
-    BadRequest:
-      description: Request validation failed.
+    Unauthorized:
+      description: Missing or invalid bearer token.
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
   schemas:
+    Timestamp:
+      type: string
+      format: date-time
+      description: RFC 3339 timestamp.
     AuthExchangeRequest:
       type: object
       required:
@@ -125,15 +129,6 @@ components:
             target chain). SDKs generate this locally.
 
             '
-    Timestamp:
-      type: string
-      format: date-time
-      description: RFC 3339 timestamp.
-    EthereumAddress:
-      type: string
-      pattern: ^0x[a-fA-F0-9]{40}$
-      description: Lowercase or checksummed hex EOA / contract address.
-      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
     AuthExchangeResponse:
       type: object
       required:
@@ -148,6 +143,10 @@ components:
         subject:
           $ref: '#/components/schemas/EthereumAddress'
           description: The EOA the token is bound to (echoed for clients).
+    Hex:
+      type: string
+      pattern: ^0x[a-fA-F0-9]*$
+      description: Arbitrary-length hex-encoded byte string.
     Problem:
       type: object
       description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
@@ -196,10 +195,11 @@ components:
 
             '
           example: WORKFLOW_NOT_FOUND
-    Hex:
+    EthereumAddress:
       type: string
-      pattern: ^0x[a-fA-F0-9]*$
-      description: Arbitrary-length hex-encoded byte string.
+      pattern: ^0x[a-fA-F0-9]{40}$
+      description: Lowercase or checksummed hex EOA / contract address.
+      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
   securitySchemes:
     bearerAuth:
       type: http

@@ -286,47 +286,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    ValueFee:
-      type: object
-      required:
-      - fee
-      - tier
-      properties:
-        fee:
-          $ref: '#/components/schemas/Fee'
-        tier:
-          $ref: '#/components/schemas/ExecutionTier'
-        valueBase:
-          type: string
-          description: What the percentage applies to (e.g., `input_token_value`).
-        classificationMethod:
-          type: string
-          enum:
-          - ruleBased
-          - llm
-        confidence:
-          type: number
-          format: float
-          minimum: 0
-          maximum: 1
-        reason:
-          type: string
-    PageInfo:
-      type: object
-      required:
-      - hasNextPage
-      - hasPreviousPage
-      properties:
-        hasNextPage:
-          type: boolean
-        hasPreviousPage:
-          type: boolean
-        startCursor:
-          type: string
-          description: Cursor for the first item in the current page; pass to `before` for the previous page.
-        endCursor:
-          type: string
-          description: Cursor for the last item in the current page; pass to `after` for the next page.
     ExecutionStats:
       type: object
       required:
@@ -350,37 +309,6 @@ components:
           type: number
           format: double
           description: Average execution time in milliseconds.
-    ExecutionStatus:
-      type: string
-      enum:
-      - pending
-      - waiting
-      - success
-      - failed
-      - error
-      description: 'Outcome of an execution. `pending` is in-flight; `waiting` is suspended
-
-        mid-workflow at an `await` node, durably parked until a signal arrives
-
-        (a human approve/reject or an operator-observed chain event) or the wait
-
-        times out — non-terminal, like `pending`, but distinguishable so a client
-
-        can show "awaiting approval"; `success` is full success; `failed` is
-
-        logical failure (e.g., a node returned an error, or a wait timed out);
-
-        `error` is a system / infrastructure failure (e.g., RPC unreachable).
-
-        '
-    ExecutionCount:
-      type: object
-      required:
-      - total
-      properties:
-        total:
-          type: integer
-          format: int64
     ExecutionStep:
       type: object
       description: 'One node (or trigger) invocation within an Execution. The `type`
@@ -440,21 +368,41 @@ components:
         endAt:
           type: integer
           format: int64
-    SignalExecutionRequest:
+    NodeCOGS:
       type: object
       required:
-      - decision
+      - nodeId
+      - costType
+      - fee
       properties:
-        decision:
+        nodeId:
+          type: string
+        costType:
           type: string
           enum:
-          - approve
-          - reject
-          description: The approver's decision.
-        payload:
-          type: object
-          additionalProperties: true
-          description: Optional structured data delivered as the await step's output.
+          - gas
+          - externalApi
+          - walletCreation
+        fee:
+          $ref: '#/components/schemas/Fee'
+        gasUnits:
+          type: string
+          description: Gas units (for `gas` cost type only).
+    Fee:
+      type: object
+      required:
+      - amount
+      - unit
+      properties:
+        amount:
+          type: string
+          description: Decimal numeric value, encoded as a string for big-int safety.
+        unit:
+          type: string
+          enum:
+          - USD
+          - WEI
+          - PERCENTAGE
     ExecutionTier:
       type: string
       enum:
@@ -463,6 +411,81 @@ components:
       - tier2
       - tier3
       description: Pricing group for value-capture fees.
+    PageInfo:
+      type: object
+      required:
+      - hasNextPage
+      - hasPreviousPage
+      properties:
+        hasNextPage:
+          type: boolean
+        hasPreviousPage:
+          type: boolean
+        startCursor:
+          type: string
+          description: Cursor for the first item in the current page; pass to `before` for the previous page.
+        endCursor:
+          type: string
+          description: Cursor for the last item in the current page; pass to `after` for the next page.
+    ExecutionCount:
+      type: object
+      required:
+      - total
+      properties:
+        total:
+          type: integer
+          format: int64
+    Ulid:
+      type: string
+      pattern: ^[0-9A-HJKMNP-TV-Z]{26}$
+      description: ULID identifier (26-char Crockford base32).
+      example: 01JG2FE5MDVKBPHEG0PEYSDKAC
+    ValueFee:
+      type: object
+      required:
+      - fee
+      - tier
+      properties:
+        fee:
+          $ref: '#/components/schemas/Fee'
+        tier:
+          $ref: '#/components/schemas/ExecutionTier'
+        valueBase:
+          type: string
+          description: What the percentage applies to (e.g., `input_token_value`).
+        classificationMethod:
+          type: string
+          enum:
+          - ruleBased
+          - llm
+        confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        reason:
+          type: string
+    ExecutionStatusSummary:
+      type: object
+      description: Lightweight execution status (no steps payload).
+      required:
+      - id
+      - status
+      properties:
+        id:
+          $ref: '#/components/schemas/Ulid'
+        workflowId:
+          $ref: '#/components/schemas/Ulid'
+        status:
+          $ref: '#/components/schemas/ExecutionStatus'
+        startAt:
+          type: integer
+          format: int64
+        endAt:
+          type: integer
+          format: int64
+        error:
+          type: string
     Problem:
       type: object
       description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
@@ -511,47 +534,6 @@ components:
 
             '
           example: WORKFLOW_NOT_FOUND
-    NodeCOGS:
-      type: object
-      required:
-      - nodeId
-      - costType
-      - fee
-      properties:
-        nodeId:
-          type: string
-        costType:
-          type: string
-          enum:
-          - gas
-          - externalApi
-          - walletCreation
-        fee:
-          $ref: '#/components/schemas/Fee'
-        gasUnits:
-          type: string
-          description: Gas units (for `gas` cost type only).
-    ExecutionStatusSummary:
-      type: object
-      description: Lightweight execution status (no steps payload).
-      required:
-      - id
-      - status
-      properties:
-        id:
-          $ref: '#/components/schemas/Ulid'
-        workflowId:
-          $ref: '#/components/schemas/Ulid'
-        status:
-          $ref: '#/components/schemas/ExecutionStatus'
-        startAt:
-          type: integer
-          format: int64
-        endAt:
-          type: integer
-          format: int64
-        error:
-          type: string
     ExecutionList:
       type: object
       required:
@@ -564,26 +546,21 @@ components:
             $ref: '#/components/schemas/Execution'
         pageInfo:
           $ref: '#/components/schemas/PageInfo'
-    Ulid:
-      type: string
-      pattern: ^[0-9A-HJKMNP-TV-Z]{26}$
-      description: ULID identifier (26-char Crockford base32).
-      example: 01JG2FE5MDVKBPHEG0PEYSDKAC
-    Fee:
+    SignalExecutionRequest:
       type: object
       required:
-      - amount
-      - unit
+      - decision
       properties:
-        amount:
-          type: string
-          description: Decimal numeric value, encoded as a string for big-int safety.
-        unit:
+        decision:
           type: string
           enum:
-          - USD
-          - WEI
-          - PERCENTAGE
+          - approve
+          - reject
+          description: The approver's decision.
+        payload:
+          type: object
+          additionalProperties: true
+          description: Optional structured data delivered as the await step's output.
     Execution:
       type: object
       required:
@@ -638,17 +615,49 @@ components:
 
         '
       example: 11155111
+    ExecutionStatus:
+      type: string
+      enum:
+      - pending
+      - waiting
+      - success
+      - failed
+      - error
+      description: 'Outcome of an execution. `pending` is in-flight; `waiting` is suspended
+
+        mid-workflow at an `await` node, durably parked until a signal arrives
+
+        (a human approve/reject or an operator-observed chain event) or the wait
+
+        times out — non-terminal, like `pending`, but distinguishable so a client
+
+        can show "awaiting approval"; `success` is full success; `failed` is
+
+        logical failure (e.g., a node returned an error, or a wait timed out);
+
+        `error` is a system / infrastructure failure (e.g., RPC unreachable).
+
+        '
+  responses:
+    BadRequest:
+      description: Request validation failed.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Unauthorized:
+      description: Missing or invalid bearer token.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
   parameters:
-    PageLimit:
-      name: limit
-      in: query
-      description: Max items to return. Default 20; server-enforced ceiling applies.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 200
-        default: 20
     PageBefore:
       name: before
       in: query
@@ -661,25 +670,16 @@ components:
       description: Cursor — return items immediately after this position (forward pagination).
       schema:
         type: string
-  responses:
-    BadRequest:
-      description: Request validation failed.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-    NotFound:
-      description: Resource not found.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-    Unauthorized:
-      description: Missing or invalid bearer token.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
+    PageLimit:
+      name: limit
+      in: query
+      description: Max items to return. Default 20; server-enforced ceiling applies.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 200
+        default: 20
   securitySchemes:
     bearerAuth:
       type: http

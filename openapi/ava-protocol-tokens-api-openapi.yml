@@ -53,31 +53,14 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid bearer token.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
   schemas:
-    TokenMetadataResponse:
-      type: object
-      required:
-      - found
-      properties:
-        found:
-          type: boolean
-        address:
-          $ref: '#/components/schemas/EthereumAddress'
-        chainId:
-          $ref: '#/components/schemas/ChainId'
-        name:
-          type: string
-        symbol:
-          type: string
-        decimals:
-          type: integer
-          format: int32
-        source:
-          type: string
-          enum:
-          - whitelist
-          - rpc
-          - cache
     ChainId:
       type: integer
       format: int64
@@ -89,11 +72,6 @@ components:
 
         '
       example: 11155111
-    EthereumAddress:
-      type: string
-      pattern: ^0x[a-fA-F0-9]{40}$
-      description: Lowercase or checksummed hex EOA / contract address.
-      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
     Problem:
       type: object
       description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
@@ -142,13 +120,35 @@ components:
 
             '
           example: WORKFLOW_NOT_FOUND
-  responses:
-    Unauthorized:
-      description: Missing or invalid bearer token.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
+    TokenMetadataResponse:
+      type: object
+      required:
+      - found
+      properties:
+        found:
+          type: boolean
+        address:
+          $ref: '#/components/schemas/EthereumAddress'
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+        name:
+          type: string
+        symbol:
+          type: string
+        decimals:
+          type: integer
+          format: int32
+        source:
+          type: string
+          enum:
+          - whitelist
+          - rpc
+          - cache
+    EthereumAddress:
+      type: string
+      pattern: ^0x[a-fA-F0-9]{40}$
+      description: Lowercase or checksummed hex EOA / contract address.
+      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
   parameters:
     ChainIdQuery:
       name: chainId

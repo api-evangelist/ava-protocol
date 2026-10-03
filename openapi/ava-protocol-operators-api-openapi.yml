@@ -51,30 +51,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    OperatorInfo:
-      type: object
-      required:
-      - address
-      - supportedChainIds
-      properties:
-        address:
-          $ref: '#/components/schemas/EthereumAddress'
-        supportedChainIds:
-          type: array
-          items:
-            $ref: '#/components/schemas/ChainId'
-        capabilities:
-          $ref: '#/components/schemas/OperatorCapabilities'
-        version:
-          type: string
-        lastSeen:
-          $ref: '#/components/schemas/Timestamp'
-        blockNumber:
-          type: integer
-          format: int64
-        eventCount:
-          type: integer
-          format: int64
     OperatorCapabilities:
       type: object
       properties:
@@ -99,11 +75,30 @@ components:
 
         '
       example: 11155111
-    EthereumAddress:
-      type: string
-      pattern: ^0x[a-fA-F0-9]{40}$
-      description: Lowercase or checksummed hex EOA / contract address.
-      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
+    OperatorInfo:
+      type: object
+      required:
+      - address
+      - supportedChainIds
+      properties:
+        address:
+          $ref: '#/components/schemas/EthereumAddress'
+        supportedChainIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChainId'
+        capabilities:
+          $ref: '#/components/schemas/OperatorCapabilities'
+        version:
+          type: string
+        lastSeen:
+          $ref: '#/components/schemas/Timestamp'
+        blockNumber:
+          type: integer
+          format: int64
+        eventCount:
+          type: integer
+          format: int64
     Problem:
       type: object
       description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
@@ -161,6 +156,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OperatorInfo'
+    EthereumAddress:
+      type: string
+      pattern: ^0x[a-fA-F0-9]{40}$
+      description: Lowercase or checksummed hex EOA / contract address.
+      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
   responses:
     Unauthorized:
       description: Missing or invalid bearer token.

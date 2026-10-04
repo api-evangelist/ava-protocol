@@ -1,0 +1,26 @@
+slug: ava-protocol
+provider: Ava Protocol
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 1
+edges:
+- tag: Secrets
+  spec_file: ava-protocol-secrets-api-openapi.yml
+  capability_id: BC-4210.60
+  capability_id_l1: BC-4210
+  capability_name: Configuration & Secrets Management
+  confidence: 0.7
+  evidence: PUT /secrets/{name}  putSecret  Create or replace a secret (idempotent); GET /secrets  List
+    secrets (metadata only — values are never echoed)
+  reason: 'CRUD over named secrets whose values are never returned, consumed at runtime by workflow nodes
+    — matches Configuration & Secrets Management (runtime configuration values and secrets consumed by
+    services). Confidence moderate: it is a narrow secret store rather than a full config-management surface.'

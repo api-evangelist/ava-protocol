@@ -286,206 +286,49 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    ExecutionStats:
+    Execution:
       type: object
-      required:
-      - total
-      - succeeded
-      - failed
-      properties:
-        total:
-          type: integer
-          format: int64
-        succeeded:
-          type: integer
-          format: int64
-        failed:
-          type: integer
-          format: int64
-        pending:
-          type: integer
-          format: int64
-        avgExecutionTime:
-          type: number
-          format: double
-          description: Average execution time in milliseconds.
-    ExecutionStep:
-      type: object
-      description: 'One node (or trigger) invocation within an Execution. The `type`
-
-        field is the trigger or node type name (e.g., `cron`,
-
-        `contractWrite`); the corresponding output is in `output`.
-
-        '
       required:
       - id
-      - type
-      - success
-      properties:
-        id:
-          type: string
-        type:
-          type: string
-        name:
-          type: string
-        success:
-          type: boolean
-        error:
-          type: string
-        errorCode:
-          type: string
-        log:
-          type: string
-        inputs:
-          type: array
-          items:
-            type: string
-        config:
-          additionalProperties: true
-          description: Config of the trigger or node at execution time.
-        metadata:
-          additionalProperties: true
-          description: Optional structured metadata for testing/debugging.
-        executionContext:
-          additionalProperties: true
-          description: Runtime flags and extra info (e.g., `isSimulated`).
-        output:
-          additionalProperties: true
-          description: Type-specific output payload (trigger or node output).
-        gasUsed:
-          type: string
-          description: Gas units consumed (decimal string). Empty if unavailable.
-        gasPrice:
-          type: string
-          description: Gas price in wei per unit (decimal string).
-        totalGasCost:
-          type: string
-          description: gasUsed × gasPrice in wei (decimal string).
-        startAt:
-          type: integer
-          format: int64
-        endAt:
-          type: integer
-          format: int64
-    NodeCOGS:
-      type: object
-      required:
-      - nodeId
-      - costType
-      - fee
-      properties:
-        nodeId:
-          type: string
-        costType:
-          type: string
-          enum:
-          - gas
-          - externalApi
-          - walletCreation
-        fee:
-          $ref: '#/components/schemas/Fee'
-        gasUnits:
-          type: string
-          description: Gas units (for `gas` cost type only).
-    Fee:
-      type: object
-      required:
-      - amount
-      - unit
-      properties:
-        amount:
-          type: string
-          description: Decimal numeric value, encoded as a string for big-int safety.
-        unit:
-          type: string
-          enum:
-          - USD
-          - WEI
-          - PERCENTAGE
-    ExecutionTier:
-      type: string
-      enum:
-      - unspecified
-      - tier1
-      - tier2
-      - tier3
-      description: Pricing group for value-capture fees.
-    PageInfo:
-      type: object
-      required:
-      - hasNextPage
-      - hasPreviousPage
-      properties:
-        hasNextPage:
-          type: boolean
-        hasPreviousPage:
-          type: boolean
-        startCursor:
-          type: string
-          description: Cursor for the first item in the current page; pass to `before` for the previous page.
-        endCursor:
-          type: string
-          description: Cursor for the last item in the current page; pass to `after` for the next page.
-    ExecutionCount:
-      type: object
-      required:
-      - total
-      properties:
-        total:
-          type: integer
-          format: int64
-    Ulid:
-      type: string
-      pattern: ^[0-9A-HJKMNP-TV-Z]{26}$
-      description: ULID identifier (26-char Crockford base32).
-      example: 01JG2FE5MDVKBPHEG0PEYSDKAC
-    ValueFee:
-      type: object
-      required:
-      - fee
-      - tier
-      properties:
-        fee:
-          $ref: '#/components/schemas/Fee'
-        tier:
-          $ref: '#/components/schemas/ExecutionTier'
-        valueBase:
-          type: string
-          description: What the percentage applies to (e.g., `input_token_value`).
-        classificationMethod:
-          type: string
-          enum:
-          - ruleBased
-          - llm
-        confidence:
-          type: number
-          format: float
-          minimum: 0
-          maximum: 1
-        reason:
-          type: string
-    ExecutionStatusSummary:
-      type: object
-      description: Lightweight execution status (no steps payload).
-      required:
-      - id
+      - workflowId
       - status
+      - startAt
       properties:
         id:
           $ref: '#/components/schemas/Ulid'
         workflowId:
           $ref: '#/components/schemas/Ulid'
-        status:
-          $ref: '#/components/schemas/ExecutionStatus'
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+        index:
+          type: integer
+          format: int64
+          description: 0-based run counter within the workflow.
         startAt:
           type: integer
           format: int64
         endAt:
           type: integer
           format: int64
+        status:
+          $ref: '#/components/schemas/ExecutionStatus'
         error:
           type: string
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExecutionStep'
+        executionFee:
+          $ref: '#/components/schemas/Fee'
+          description: Flat platform fee charged for this execution.
+        cogs:
+          type: array
+          items:
+            $ref: '#/components/schemas/NodeCOGS'
+          description: Per-node actual costs (gas, external API).
+        valueFee:
+          $ref: '#/components/schemas/ValueFee'
+          description: Value-capture fee charged (post-paid).
     Problem:
       type: object
       description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
@@ -546,75 +389,6 @@ components:
             $ref: '#/components/schemas/Execution'
         pageInfo:
           $ref: '#/components/schemas/PageInfo'
-    SignalExecutionRequest:
-      type: object
-      required:
-      - decision
-      properties:
-        decision:
-          type: string
-          enum:
-          - approve
-          - reject
-          description: The approver's decision.
-        payload:
-          type: object
-          additionalProperties: true
-          description: Optional structured data delivered as the await step's output.
-    Execution:
-      type: object
-      required:
-      - id
-      - workflowId
-      - status
-      - startAt
-      properties:
-        id:
-          $ref: '#/components/schemas/Ulid'
-        workflowId:
-          $ref: '#/components/schemas/Ulid'
-        chainId:
-          $ref: '#/components/schemas/ChainId'
-        index:
-          type: integer
-          format: int64
-          description: 0-based run counter within the workflow.
-        startAt:
-          type: integer
-          format: int64
-        endAt:
-          type: integer
-          format: int64
-        status:
-          $ref: '#/components/schemas/ExecutionStatus'
-        error:
-          type: string
-        steps:
-          type: array
-          items:
-            $ref: '#/components/schemas/ExecutionStep'
-        executionFee:
-          $ref: '#/components/schemas/Fee'
-          description: Flat platform fee charged for this execution.
-        cogs:
-          type: array
-          items:
-            $ref: '#/components/schemas/NodeCOGS'
-          description: Per-node actual costs (gas, external API).
-        valueFee:
-          $ref: '#/components/schemas/ValueFee'
-          description: Value-capture fee charged (post-paid).
-    ChainId:
-      type: integer
-      format: int64
-      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
-
-        chain-aware trigger/node configs this is required and must be a
-
-        configured chain; on query/filter params it is optional.
-
-        '
-      example: 11155111
     ExecutionStatus:
       type: string
       enum:
@@ -638,6 +412,255 @@ components:
         `error` is a system / infrastructure failure (e.g., RPC unreachable).
 
         '
+    SignalExecutionRequest:
+      type: object
+      required:
+      - decision
+      properties:
+        decision:
+          type: string
+          enum:
+          - approve
+          - reject
+          description: The approver's decision.
+        payload:
+          type: object
+          additionalProperties: true
+          description: Optional structured data delivered as the await step's output.
+    ExecutionStatusSummary:
+      type: object
+      description: Lightweight execution status (no steps payload).
+      required:
+      - id
+      - status
+      properties:
+        id:
+          $ref: '#/components/schemas/Ulid'
+        workflowId:
+          $ref: '#/components/schemas/Ulid'
+        status:
+          $ref: '#/components/schemas/ExecutionStatus'
+        startAt:
+          type: integer
+          format: int64
+        endAt:
+          type: integer
+          format: int64
+        error:
+          type: string
+    ExecutionStep:
+      type: object
+      description: 'One node (or trigger) invocation within an Execution. The `type`
+
+        field is the trigger or node type name (e.g., `cron`,
+
+        `contractWrite`); the corresponding output is in `output`.
+
+        '
+      required:
+      - id
+      - type
+      - success
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        name:
+          type: string
+        success:
+          type: boolean
+        error:
+          type: string
+        errorCode:
+          type: string
+        log:
+          type: string
+        inputs:
+          type: array
+          items:
+            type: string
+        config:
+          additionalProperties: true
+          description: Config of the trigger or node at execution time.
+        metadata:
+          additionalProperties: true
+          description: Optional structured metadata for testing/debugging.
+        executionContext:
+          additionalProperties: true
+          description: Runtime flags and extra info (e.g., `isSimulated`).
+        output:
+          additionalProperties: true
+          description: Type-specific output payload (trigger or node output).
+        gasUsed:
+          type: string
+          description: Gas units consumed (decimal string). Empty if unavailable.
+        gasPrice:
+          type: string
+          description: Gas price in wei per unit (decimal string).
+        totalGasCost:
+          type: string
+          description: gasUsed × gasPrice in wei (decimal string).
+        startAt:
+          type: integer
+          format: int64
+        endAt:
+          type: integer
+          format: int64
+    ExecutionTier:
+      type: string
+      enum:
+      - unspecified
+      - tier1
+      - tier2
+      - tier3
+      description: Pricing group for value-capture fees.
+    NodeCOGS:
+      type: object
+      required:
+      - nodeId
+      - costType
+      - fee
+      properties:
+        nodeId:
+          type: string
+        costType:
+          type: string
+          enum:
+          - gas
+          - externalApi
+          - walletCreation
+        fee:
+          $ref: '#/components/schemas/Fee'
+        gasUnits:
+          type: string
+          description: Gas units (for `gas` cost type only).
+    ExecutionStats:
+      type: object
+      required:
+      - total
+      - succeeded
+      - failed
+      properties:
+        total:
+          type: integer
+          format: int64
+        succeeded:
+          type: integer
+          format: int64
+        failed:
+          type: integer
+          format: int64
+        pending:
+          type: integer
+          format: int64
+        avgExecutionTime:
+          type: number
+          format: double
+          description: Average execution time in milliseconds.
+    Ulid:
+      type: string
+      pattern: ^[0-9A-HJKMNP-TV-Z]{26}$
+      description: ULID identifier (26-char Crockford base32).
+      example: 01JG2FE5MDVKBPHEG0PEYSDKAC
+    ValueFee:
+      type: object
+      required:
+      - fee
+      - tier
+      properties:
+        fee:
+          $ref: '#/components/schemas/Fee'
+        tier:
+          $ref: '#/components/schemas/ExecutionTier'
+        valueBase:
+          type: string
+          description: What the percentage applies to (e.g., `input_token_value`).
+        classificationMethod:
+          type: string
+          enum:
+          - ruleBased
+          - llm
+        confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+        reason:
+          type: string
+    PageInfo:
+      type: object
+      required:
+      - hasNextPage
+      - hasPreviousPage
+      properties:
+        hasNextPage:
+          type: boolean
+        hasPreviousPage:
+          type: boolean
+        startCursor:
+          type: string
+          description: Cursor for the first item in the current page; pass to `before` for the previous page.
+        endCursor:
+          type: string
+          description: Cursor for the last item in the current page; pass to `after` for the next page.
+    ExecutionCount:
+      type: object
+      required:
+      - total
+      properties:
+        total:
+          type: integer
+          format: int64
+    Fee:
+      type: object
+      required:
+      - amount
+      - unit
+      properties:
+        amount:
+          type: string
+          description: Decimal numeric value, encoded as a string for big-int safety.
+        unit:
+          type: string
+          enum:
+          - USD
+          - WEI
+          - PERCENTAGE
+    ChainId:
+      type: integer
+      format: int64
+      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
+
+        chain-aware trigger/node configs this is required and must be a
+
+        configured chain; on query/filter params it is optional.
+
+        '
+      example: 11155111
+  parameters:
+    PageLimit:
+      name: limit
+      in: query
+      description: Max items to return. Default 20; server-enforced ceiling applies.
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 200
+        default: 20
+    PageBefore:
+      name: before
+      in: query
+      description: Cursor — return items immediately before this position (backward pagination).
+      schema:
+        type: string
+    PageAfter:
+      name: after
+      in: query
+      description: Cursor — return items immediately after this position (forward pagination).
+      schema:
+        type: string
   responses:
     BadRequest:
       description: Request validation failed.
@@ -657,29 +680,6 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
-  parameters:
-    PageBefore:
-      name: before
-      in: query
-      description: Cursor — return items immediately before this position (backward pagination).
-      schema:
-        type: string
-    PageAfter:
-      name: after
-      in: query
-      description: Cursor — return items immediately after this position (forward pagination).
-      schema:
-        type: string
-    PageLimit:
-      name: limit
-      in: query
-      description: Max items to return. Default 20; server-enforced ceiling applies.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        maximum: 200
-        default: 20
   securitySchemes:
     bearerAuth:
       type: http

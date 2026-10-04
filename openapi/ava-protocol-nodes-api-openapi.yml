@@ -59,6 +59,20 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
+    Lang:
+      type: string
+      enum:
+      - javascript
+      - json
+      - graphql
+      - handlebars
+      description: 'Language/format of an inline payload (e.g., custom code source,
+
+        manual trigger data). Mirrors the proto `Lang` enum minus the
+
+        `LANG_` prefix. Wire values are lowercase.
+
+        '
     AwaitNodeConfig:
       type: object
       description: 'Pauses the workflow until a wake arrives (durable execution). Two mutually
@@ -98,61 +112,6 @@ components:
           type: integer
           format: int64
           description: Safety bound; 0 = server default (the wait is never unbounded).
-    LoopNode:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - loop
-          config:
-            $ref: '#/components/schemas/LoopNodeConfig'
-    BalanceNode:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - balance
-          config:
-            $ref: '#/components/schemas/BalanceNodeConfig'
-    ContractReadNode:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - contractRead
-          config:
-            $ref: '#/components/schemas/ContractReadNodeConfig'
-    ETHTransferNode:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - ethTransfer
-          config:
-            $ref: '#/components/schemas/ETHTransferNodeConfig'
-    GraphQLQueryNodeConfig:
-      type: object
-      required:
-      - url
-      - query
-      properties:
-        url:
-          type: string
-          format: uri
-        query:
-          type: string
-        variables:
-          type: object
-          additionalProperties:
-            type: string
     RestAPINode:
       allOf:
       - type: object
@@ -163,160 +122,103 @@ components:
             - restApi
           config:
             $ref: '#/components/schemas/RestAPINodeConfig'
-    GraphQLQueryNode:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - graphqlQuery
-          config:
-            $ref: '#/components/schemas/GraphQLQueryNodeConfig'
-    CustomCodeNode:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - customCode
-          config:
-            $ref: '#/components/schemas/CustomCodeNodeConfig'
-    BranchCondition:
+    Problem:
+      type: object
+      description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
+
+        4xx/5xx response. `type` and `title` describe the error class; `detail`
+
+        is human-readable; `instance` is a per-request identifier suitable for
+
+        log correlation.
+
+        '
+      required:
+      - type
+      - title
+      - status
+      properties:
+        type:
+          type: string
+          format: uri
+          description: URI identifying the problem type.
+          example: https://docs.avaprotocol.org/errors/workflow-not-found
+        title:
+          type: string
+          description: Short, human-readable summary.
+          example: Workflow not found
+        status:
+          type: integer
+          format: int32
+          description: HTTP status code (echoed for clients that surface only the body).
+          example: 404
+        detail:
+          type: string
+          description: Human-readable explanation specific to this occurrence.
+          example: No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...
+        instance:
+          type: string
+          description: URI / opaque ID identifying this specific occurrence (e.g., request id).
+          example: req_01JG2FE5MFKTH0754RGF2DMVY7
+        code:
+          type: string
+          description: 'Machine-readable error code. Stable across releases; clients can
+
+            switch on this for programmatic handling. Mirrors the gRPC-era
+
+            ErrorCode enum vocabulary.
+
+            '
+          example: WORKFLOW_NOT_FOUND
+    Node:
       type: object
       required:
+      - type
       - id
-      - expression
+      - config
       properties:
         id:
           type: string
+        name:
+          type: string
         type:
-          type: string
-          enum:
-          - if
-          - elseIf
-          - else
-        expression:
-          type: string
-          description: JavaScript-evaluated boolean expression.
-    ContractWriteNodeConfig:
-      type: object
-      required:
-      - contractAddress
-      - chainId
-      properties:
-        contractAddress:
-          $ref: '#/components/schemas/EthereumAddress'
-        callData:
-          $ref: '#/components/schemas/Hex'
-        contractAbi:
-          type: array
-          items:
-            additionalProperties: true
-        methodCalls:
-          type: array
-          items:
-            $ref: '#/components/schemas/MethodCall'
-        isSimulated:
-          type: boolean
-          description: When true, use Tenderly simulation instead of sending a real UserOp.
-        value:
-          type: string
-          description: ETH value to send with the call (wei, decimal string).
-        gasLimit:
-          type: string
-          description: Custom gas limit (decimal string).
-        chainId:
-          $ref: '#/components/schemas/ChainId'
-          description: Chain to execute on. Required — a workflow carries no chain to inherit.
-    BranchNodeConfig:
-      type: object
-      required:
-      - conditions
-      properties:
-        conditions:
-          type: array
-          items:
-            $ref: '#/components/schemas/BranchCondition'
-          minItems: 1
-    ContractWriteNode:
+          $ref: '#/components/schemas/NodeType'
+      discriminator:
+        propertyName: type
+        mapping:
+          ethTransfer: '#/components/schemas/ETHTransferNode'
+          contractWrite: '#/components/schemas/ContractWriteNode'
+          contractRead: '#/components/schemas/ContractReadNode'
+          graphqlQuery: '#/components/schemas/GraphQLQueryNode'
+          restApi: '#/components/schemas/RestAPINode'
+          customCode: '#/components/schemas/CustomCodeNode'
+          branch: '#/components/schemas/BranchNode'
+          filter: '#/components/schemas/FilterNode'
+          loop: '#/components/schemas/LoopNode'
+          balance: '#/components/schemas/BalanceNode'
+          await: '#/components/schemas/AwaitNode'
+      oneOf:
+      - $ref: '#/components/schemas/ETHTransferNode'
+      - $ref: '#/components/schemas/ContractWriteNode'
+      - $ref: '#/components/schemas/ContractReadNode'
+      - $ref: '#/components/schemas/GraphQLQueryNode'
+      - $ref: '#/components/schemas/RestAPINode'
+      - $ref: '#/components/schemas/CustomCodeNode'
+      - $ref: '#/components/schemas/BranchNode'
+      - $ref: '#/components/schemas/FilterNode'
+      - $ref: '#/components/schemas/LoopNode'
+      - $ref: '#/components/schemas/BalanceNode'
+      - $ref: '#/components/schemas/AwaitNode'
+    ETHTransferNode:
       allOf:
       - type: object
         properties:
           type:
             type: string
             enum:
-            - contractWrite
+            - ethTransfer
           config:
-            $ref: '#/components/schemas/ContractWriteNodeConfig'
-    Lang:
-      type: string
-      enum:
-      - javascript
-      - json
-      - graphql
-      - handlebars
-      description: 'Language/format of an inline payload (e.g., custom code source,
-
-        manual trigger data). Mirrors the proto `Lang` enum minus the
-
-        `LANG_` prefix. Wire values are lowercase.
-
-        '
-    EventCondition:
-      type: object
-      description: Predicate evaluated against decoded event data.
-      required:
-      - fieldName
-      - operator
-      - value
-      properties:
-        fieldName:
-          type: string
-        operator:
-          type: string
-          enum:
-          - eq
-          - ne
-          - gt
-          - gte
-          - lt
-          - lte
-          - contains
-        value:
-          type: string
-          description: 'Value to compare against, encoded as a string. The operator
-
-            parses it according to `fieldType` (e.g. `int256` / `uint256`
-
-            → big.Int, `address` → checksummed hex, `bool` →
-
-            "true"/"false"). Matches the proto `EventCondition.value`,
-
-            which is also a string.
-
-            '
-        fieldType:
-          type: string
-    EventMethodCall:
-      type: object
-      required:
-      - methodName
-      properties:
-        methodName:
-          type: string
-        callData:
-          $ref: '#/components/schemas/Hex'
-        applyToFields:
-          type: array
-          items:
-            type: string
-        methodParams:
-          type: array
-          items:
-            type: string
-            description: Handlebars template; resolves against decoded event data.
+            $ref: '#/components/schemas/ETHTransferNodeConfig'
     MethodCall:
       type: object
       description: One call to a contract method (used by ContractWrite + ContractRead).
@@ -336,30 +238,6 @@ components:
           items:
             type: string
             description: Handlebars template for method args.
-    EventTriggerConfig:
-      type: object
-      description: Fires when matching on-chain events are observed.
-      required:
-      - queries
-      - chainId
-      properties:
-        queries:
-          type: array
-          items:
-            $ref: '#/components/schemas/EventTriggerQuery'
-          minItems: 1
-        cooldownSeconds:
-          type: integer
-          format: int32
-          minimum: 0
-          description: 'Seconds to wait after a fire before allowing the same task to
-
-            trigger again. Default 300. 0 disables cooldown.
-
-            '
-        chainId:
-          $ref: '#/components/schemas/ChainId'
-          description: Chain to watch events on. Required — a workflow carries no chain to inherit.
     RestAPINodeConfig:
       type: object
       required:
@@ -417,23 +295,71 @@ components:
 
                 '
           additionalProperties: true
-    RunNodeResponse:
+    EthereumAddress:
+      type: string
+      pattern: ^0x[a-fA-F0-9]{40}$
+      description: Lowercase or checksummed hex EOA / contract address.
+      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
+    ETHTransferNodeConfig:
       type: object
       required:
-      - success
+      - destination
+      - amount
+      - chainId
       properties:
-        success:
-          type: boolean
-        error:
+        destination:
+          $ref: '#/components/schemas/EthereumAddress'
+        amount:
           type: string
-        errorCode:
+          description: Amount in wei (decimal string for big-int safety). Special value `max` withdraws the entire balance.
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: Chain to execute on. Required — a workflow carries no chain to inherit.
+    FilterNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - filter
+          config:
+            $ref: '#/components/schemas/FilterNodeConfig'
+    EventCondition:
+      type: object
+      description: Predicate evaluated against decoded event data.
+      required:
+      - fieldName
+      - operator
+      - value
+      properties:
+        fieldName:
           type: string
-        output:
-          additionalProperties: true
-        metadata:
-          additionalProperties: true
-        executionContext:
-          additionalProperties: true
+        operator:
+          type: string
+          enum:
+          - eq
+          - ne
+          - gt
+          - gte
+          - lt
+          - lte
+          - contains
+        value:
+          type: string
+          description: 'Value to compare against, encoded as a string. The operator
+
+            parses it according to `fieldType` (e.g. `int256` / `uint256`
+
+            → big.Int, `address` → checksummed hex, `bool` →
+
+            "true"/"false"). Matches the proto `EventCondition.value`,
+
+            which is also a string.
+
+            '
+        fieldType:
+          type: string
     BalanceNodeConfig:
       type: object
       required:
@@ -458,16 +384,40 @@ components:
           items:
             $ref: '#/components/schemas/EthereumAddress'
           description: Restrict to these tokens. Empty = fetch all.
-    FilterNode:
+    EventTriggerConfig:
+      type: object
+      description: Fires when matching on-chain events are observed.
+      required:
+      - queries
+      - chainId
+      properties:
+        queries:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventTriggerQuery'
+          minItems: 1
+        cooldownSeconds:
+          type: integer
+          format: int32
+          minimum: 0
+          description: 'Seconds to wait after a fire before allowing the same task to
+
+            trigger again. Default 300. 0 disables cooldown.
+
+            '
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: Chain to watch events on. Required — a workflow carries no chain to inherit.
+    AwaitNode:
       allOf:
       - type: object
         properties:
           type:
             type: string
             enum:
-            - filter
+            - await
           config:
-            $ref: '#/components/schemas/FilterNodeConfig'
+            $ref: '#/components/schemas/AwaitNodeConfig'
     FilterNodeConfig:
       type: object
       required:
@@ -480,64 +430,44 @@ components:
         expression:
           type: string
           description: JavaScript predicate evaluated per item.
-    Node:
+    EventMethodCall:
       type: object
       required:
-      - type
-      - id
-      - config
+      - methodName
       properties:
-        id:
+        methodName:
           type: string
-        name:
-          type: string
-        type:
-          $ref: '#/components/schemas/NodeType'
-      discriminator:
-        propertyName: type
-        mapping:
-          ethTransfer: '#/components/schemas/ETHTransferNode'
-          contractWrite: '#/components/schemas/ContractWriteNode'
-          contractRead: '#/components/schemas/ContractReadNode'
-          graphqlQuery: '#/components/schemas/GraphQLQueryNode'
-          restApi: '#/components/schemas/RestAPINode'
-          customCode: '#/components/schemas/CustomCodeNode'
-          branch: '#/components/schemas/BranchNode'
-          filter: '#/components/schemas/FilterNode'
-          loop: '#/components/schemas/LoopNode'
-          balance: '#/components/schemas/BalanceNode'
-          await: '#/components/schemas/AwaitNode'
-      oneOf:
-      - $ref: '#/components/schemas/ETHTransferNode'
-      - $ref: '#/components/schemas/ContractWriteNode'
-      - $ref: '#/components/schemas/ContractReadNode'
-      - $ref: '#/components/schemas/GraphQLQueryNode'
-      - $ref: '#/components/schemas/RestAPINode'
-      - $ref: '#/components/schemas/CustomCodeNode'
-      - $ref: '#/components/schemas/BranchNode'
-      - $ref: '#/components/schemas/FilterNode'
-      - $ref: '#/components/schemas/LoopNode'
-      - $ref: '#/components/schemas/BalanceNode'
-      - $ref: '#/components/schemas/AwaitNode'
-    ContractReadNodeConfig:
+        callData:
+          $ref: '#/components/schemas/Hex'
+        applyToFields:
+          type: array
+          items:
+            type: string
+        methodParams:
+          type: array
+          items:
+            type: string
+            description: Handlebars template; resolves against decoded event data.
+    CustomCodeNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - customCode
+          config:
+            $ref: '#/components/schemas/CustomCodeNodeConfig'
+    CustomCodeNodeConfig:
       type: object
       required:
-      - contractAddress
-      - chainId
+      - lang
+      - source
       properties:
-        contractAddress:
-          $ref: '#/components/schemas/EthereumAddress'
-        contractAbi:
-          type: array
-          items:
-            additionalProperties: true
-        methodCalls:
-          type: array
-          items:
-            $ref: '#/components/schemas/MethodCall'
-        chainId:
-          $ref: '#/components/schemas/ChainId'
-          description: Chain to read from. Required — a workflow carries no chain to inherit.
+        lang:
+          $ref: '#/components/schemas/Lang'
+        source:
+          type: string
     RunNodeRequest:
       type: object
       required:
@@ -556,167 +486,16 @@ components:
             '
           items:
             $ref: '#/components/schemas/ERC20StateOverride'
-    ERC20StateOverride:
-      type: object
-      required:
-      - tokenAddress
-      - ownerAddress
-      description: 'Seeds a token''s balanceOf / allowance storage slots for a single simulation. balanceOf[owner] lives at keccak256(abi.encode(owner, balanceSlot)); allowance[owner][spender] at keccak256(abi.encode(spender, keccak256(abi.encode(owner, allowanceSlot)))).
-
-        '
-      properties:
-        tokenAddress:
-          $ref: '#/components/schemas/EthereumAddress'
-        ownerAddress:
-          $ref: '#/components/schemas/EthereumAddress'
-        spenderAddress:
-          $ref: '#/components/schemas/EthereumAddress'
-        balance:
-          type: string
-          description: Balance override (hex 0x… or decimal string).
-        allowance:
-          type: string
-          description: Allowance override (hex 0x… or decimal string).
-        balanceSlot:
-          type: integer
-          format: int64
-          minimum: 0
-          description: Storage slot for the balanceOf mapping. Required when balance is set; ERC20 storage layout varies per token (OpenZeppelin 0, USDC FiatToken 9).
-        allowanceSlot:
-          type: integer
-          format: int64
-          minimum: 0
-          description: Storage slot for the allowance mapping. Required when allowance is set; ERC20 storage layout varies per token (OpenZeppelin 1, USDC FiatToken 10).
-    AwaitNode:
+    ContractWriteNode:
       allOf:
       - type: object
         properties:
           type:
             type: string
             enum:
-            - await
+            - contractWrite
           config:
-            $ref: '#/components/schemas/AwaitNodeConfig'
-    LoopNodeConfig:
-      type: object
-      description: 'Iterates over an input array, running an inner Node per item. The
-
-        runner node is one of the chain-aware or chain-agnostic node types;
-
-        a chain-aware runner must specify its own required `chainId` (there is
-
-        no inheritance from the loop or workflow).
-
-        '
-      required:
-      - inputVariable
-      - runner
-      properties:
-        inputVariable:
-          type: string
-          description: Template path for the iterable (e.g., `{{settings.addressList}}`).
-        iterVar:
-          type: string
-          default: value
-          description: Name of the per-iteration variable (defaults to `value`).
-        runner:
-          $ref: '#/components/schemas/Node'
-    CustomCodeNodeConfig:
-      type: object
-      required:
-      - lang
-      - source
-      properties:
-        lang:
-          $ref: '#/components/schemas/Lang'
-        source:
-          type: string
-    Problem:
-      type: object
-      description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
-
-        4xx/5xx response. `type` and `title` describe the error class; `detail`
-
-        is human-readable; `instance` is a per-request identifier suitable for
-
-        log correlation.
-
-        '
-      required:
-      - type
-      - title
-      - status
-      properties:
-        type:
-          type: string
-          format: uri
-          description: URI identifying the problem type.
-          example: https://docs.avaprotocol.org/errors/workflow-not-found
-        title:
-          type: string
-          description: Short, human-readable summary.
-          example: Workflow not found
-        status:
-          type: integer
-          format: int32
-          description: HTTP status code (echoed for clients that surface only the body).
-          example: 404
-        detail:
-          type: string
-          description: Human-readable explanation specific to this occurrence.
-          example: No workflow with id 01JG2FE5MDVKBPHEG0PEYSDKAC for owner 0xabc...
-        instance:
-          type: string
-          description: URI / opaque ID identifying this specific occurrence (e.g., request id).
-          example: req_01JG2FE5MFKTH0754RGF2DMVY7
-        code:
-          type: string
-          description: 'Machine-readable error code. Stable across releases; clients can
-
-            switch on this for programmatic handling. Mirrors the gRPC-era
-
-            ErrorCode enum vocabulary.
-
-            '
-          example: WORKFLOW_NOT_FOUND
-    NodeType:
-      type: string
-      enum:
-      - ethTransfer
-      - contractWrite
-      - contractRead
-      - graphqlQuery
-      - restApi
-      - customCode
-      - branch
-      - filter
-      - loop
-      - balance
-      - await
-      description: 'Discriminator field for the Node union. Mirrors the proto
-
-        `NodeType` enum but without the `NODE_TYPE_` prefix.
-
-        '
-    InputVariables:
-      type: object
-      additionalProperties: true
-      description: 'Free-form key-value bag of values used to resolve `{{variable.path}}`
-
-        template references inside trigger and node configs. Conventional
-
-        well-known keys: `settings.runner` (smart wallet address),
-
-        `settings.chainId` (chain id). camelCase keys; back-compat support
-
-        for snake_case keys exists during the migration window.
-
-        '
-    EthereumAddress:
-      type: string
-      pattern: ^0x[a-fA-F0-9]{40}$
-      description: Lowercase or checksummed hex EOA / contract address.
-      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
+            $ref: '#/components/schemas/ContractWriteNodeConfig'
     EventTriggerQuery:
       type: object
       description: Single ethereum.FilterQuery — one subscription per query.
@@ -758,10 +537,192 @@ components:
           items:
             $ref: '#/components/schemas/EventMethodCall'
           description: Method calls used to enrich decoded event data (e.g., `decimals`).
-    Hex:
+    BranchNodeConfig:
+      type: object
+      required:
+      - conditions
+      properties:
+        conditions:
+          type: array
+          items:
+            $ref: '#/components/schemas/BranchCondition'
+          minItems: 1
+    ContractWriteNodeConfig:
+      type: object
+      required:
+      - contractAddress
+      - chainId
+      properties:
+        contractAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        callData:
+          $ref: '#/components/schemas/Hex'
+        contractAbi:
+          type: array
+          items:
+            additionalProperties: true
+        methodCalls:
+          type: array
+          items:
+            $ref: '#/components/schemas/MethodCall'
+        isSimulated:
+          type: boolean
+          description: When true, use Tenderly simulation instead of sending a real UserOp.
+        value:
+          type: string
+          description: ETH value to send with the call (wei, decimal string).
+        gasLimit:
+          type: string
+          description: Custom gas limit (decimal string).
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: Chain to execute on. Required — a workflow carries no chain to inherit.
+    InputVariables:
+      type: object
+      additionalProperties: true
+      description: 'Free-form key-value bag of values used to resolve `{{variable.path}}`
+
+        template references inside trigger and node configs. Conventional
+
+        well-known keys: `settings.runner` (smart wallet address),
+
+        `settings.chainId` (chain id). camelCase keys; back-compat support
+
+        for snake_case keys exists during the migration window.
+
+        '
+    ContractReadNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - contractRead
+          config:
+            $ref: '#/components/schemas/ContractReadNodeConfig'
+    RunNodeResponse:
+      type: object
+      required:
+      - success
+      properties:
+        success:
+          type: boolean
+        error:
+          type: string
+        errorCode:
+          type: string
+        output:
+          additionalProperties: true
+        metadata:
+          additionalProperties: true
+        executionContext:
+          additionalProperties: true
+    GraphQLQueryNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - graphqlQuery
+          config:
+            $ref: '#/components/schemas/GraphQLQueryNodeConfig'
+    LoopNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - loop
+          config:
+            $ref: '#/components/schemas/LoopNodeConfig'
+    BranchCondition:
+      type: object
+      required:
+      - id
+      - expression
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+          - if
+          - elseIf
+          - else
+        expression:
+          type: string
+          description: JavaScript-evaluated boolean expression.
+    LoopNodeConfig:
+      type: object
+      description: 'Iterates over an input array, running an inner Node per item. The
+
+        runner node is one of the chain-aware or chain-agnostic node types;
+
+        a chain-aware runner must specify its own required `chainId` (there is
+
+        no inheritance from the loop or workflow).
+
+        '
+      required:
+      - inputVariable
+      - runner
+      properties:
+        inputVariable:
+          type: string
+          description: Template path for the iterable (e.g., `{{settings.addressList}}`).
+        iterVar:
+          type: string
+          default: value
+          description: Name of the per-iteration variable (defaults to `value`).
+        runner:
+          $ref: '#/components/schemas/Node'
+    NodeType:
       type: string
-      pattern: ^0x[a-fA-F0-9]*$
-      description: Arbitrary-length hex-encoded byte string.
+      enum:
+      - ethTransfer
+      - contractWrite
+      - contractRead
+      - graphqlQuery
+      - restApi
+      - customCode
+      - branch
+      - filter
+      - loop
+      - balance
+      - await
+      description: 'Discriminator field for the Node union. Mirrors the proto
+
+        `NodeType` enum but without the `NODE_TYPE_` prefix.
+
+        '
+    BalanceNode:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - balance
+          config:
+            $ref: '#/components/schemas/BalanceNodeConfig'
+    GraphQLQueryNodeConfig:
+      type: object
+      required:
+      - url
+      - query
+      properties:
+        url:
+          type: string
+          format: uri
+        query:
+          type: string
+        variables:
+          type: object
+          additionalProperties:
+            type: string
     ChainId:
       type: integer
       format: int64
@@ -783,21 +744,60 @@ components:
             - branch
           config:
             $ref: '#/components/schemas/BranchNodeConfig'
-    ETHTransferNodeConfig:
+    ERC20StateOverride:
       type: object
       required:
-      - destination
-      - amount
+      - tokenAddress
+      - ownerAddress
+      description: 'Seeds a token''s balanceOf / allowance storage slots for a single simulation. balanceOf[owner] lives at keccak256(abi.encode(owner, balanceSlot)); allowance[owner][spender] at keccak256(abi.encode(spender, keccak256(abi.encode(owner, allowanceSlot)))).
+
+        '
+      properties:
+        tokenAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        ownerAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        spenderAddress:
+          $ref: '#/components/schemas/EthereumAddress'
+        balance:
+          type: string
+          description: Balance override (hex 0x… or decimal string).
+        allowance:
+          type: string
+          description: Allowance override (hex 0x… or decimal string).
+        balanceSlot:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Storage slot for the balanceOf mapping. Required when balance is set; ERC20 storage layout varies per token (OpenZeppelin 0, USDC FiatToken 9).
+        allowanceSlot:
+          type: integer
+          format: int64
+          minimum: 0
+          description: Storage slot for the allowance mapping. Required when allowance is set; ERC20 storage layout varies per token (OpenZeppelin 1, USDC FiatToken 10).
+    Hex:
+      type: string
+      pattern: ^0x[a-fA-F0-9]*$
+      description: Arbitrary-length hex-encoded byte string.
+    ContractReadNodeConfig:
+      type: object
+      required:
+      - contractAddress
       - chainId
       properties:
-        destination:
+        contractAddress:
           $ref: '#/components/schemas/EthereumAddress'
-        amount:
-          type: string
-          description: Amount in wei (decimal string for big-int safety). Special value `max` withdraws the entire balance.
+        contractAbi:
+          type: array
+          items:
+            additionalProperties: true
+        methodCalls:
+          type: array
+          items:
+            $ref: '#/components/schemas/MethodCall'
         chainId:
           $ref: '#/components/schemas/ChainId'
-          description: Chain to execute on. Required — a workflow carries no chain to inherit.
+          description: Chain to read from. Required — a workflow carries no chain to inherit.
   responses:
     BadRequest:
       description: Request validation failed.

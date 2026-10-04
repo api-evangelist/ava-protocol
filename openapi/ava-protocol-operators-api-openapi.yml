@@ -51,30 +51,11 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    OperatorCapabilities:
-      type: object
-      properties:
-        eventMonitoring:
-          type: boolean
-        blockMonitoring:
-          type: boolean
-        timeMonitoring:
-          type: boolean
-    Timestamp:
+    EthereumAddress:
       type: string
-      format: date-time
-      description: RFC 3339 timestamp.
-    ChainId:
-      type: integer
-      format: int64
-      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
-
-        chain-aware trigger/node configs this is required and must be a
-
-        configured chain; on query/filter params it is optional.
-
-        '
-      example: 11155111
+      pattern: ^0x[a-fA-F0-9]{40}$
+      description: Lowercase or checksummed hex EOA / contract address.
+      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
     OperatorInfo:
       type: object
       required:
@@ -147,6 +128,30 @@ components:
 
             '
           example: WORKFLOW_NOT_FOUND
+    Timestamp:
+      type: string
+      format: date-time
+      description: RFC 3339 timestamp.
+    OperatorCapabilities:
+      type: object
+      properties:
+        eventMonitoring:
+          type: boolean
+        blockMonitoring:
+          type: boolean
+        timeMonitoring:
+          type: boolean
+    ChainId:
+      type: integer
+      format: int64
+      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
+
+        chain-aware trigger/node configs this is required and must be a
+
+        configured chain; on query/filter params it is optional.
+
+        '
+      example: 11155111
     OperatorList:
       type: object
       required:
@@ -156,11 +161,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OperatorInfo'
-    EthereumAddress:
-      type: string
-      pattern: ^0x[a-fA-F0-9]{40}$
-      description: Lowercase or checksummed hex EOA / contract address.
-      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
   responses:
     Unauthorized:
       description: Missing or invalid bearer token.

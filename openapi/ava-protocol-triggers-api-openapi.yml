@@ -54,85 +54,6 @@ paths:
           $ref: '#/components/responses/Unauthorized'
 components:
   schemas:
-    RunTriggerRequest:
-      type: object
-      required:
-      - trigger
-      properties:
-        trigger:
-          $ref: '#/components/schemas/Trigger'
-        triggerInput:
-          $ref: '#/components/schemas/InputVariables'
-    FixedTimeTrigger:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - fixedTime
-          config:
-            $ref: '#/components/schemas/FixedTimeTriggerConfig'
-    RunTriggerResponse:
-      type: object
-      required:
-      - success
-      properties:
-        success:
-          type: boolean
-        error:
-          type: string
-        errorCode:
-          type: string
-        output:
-          additionalProperties: true
-        metadata:
-          additionalProperties: true
-    Trigger:
-      type: object
-      required:
-      - type
-      - name
-      - config
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        type:
-          $ref: '#/components/schemas/TriggerType'
-      discriminator:
-        propertyName: type
-        mapping:
-          manual: '#/components/schemas/ManualTrigger'
-          fixedTime: '#/components/schemas/FixedTimeTrigger'
-          cron: '#/components/schemas/CronTrigger'
-          block: '#/components/schemas/BlockTrigger'
-          event: '#/components/schemas/EventTrigger'
-      oneOf:
-      - $ref: '#/components/schemas/ManualTrigger'
-      - $ref: '#/components/schemas/FixedTimeTrigger'
-      - $ref: '#/components/schemas/CronTrigger'
-      - $ref: '#/components/schemas/BlockTrigger'
-      - $ref: '#/components/schemas/EventTrigger'
-    EventMethodCall:
-      type: object
-      required:
-      - methodName
-      properties:
-        methodName:
-          type: string
-        callData:
-          $ref: '#/components/schemas/Hex'
-        applyToFields:
-          type: array
-          items:
-            type: string
-        methodParams:
-          type: array
-          items:
-            type: string
-            description: Handlebars template; resolves against decoded event data.
     Lang:
       type: string
       enum:
@@ -147,75 +68,18 @@ components:
         `LANG_` prefix. Wire values are lowercase.
 
         '
-    EventCondition:
+    FixedTimeTriggerConfig:
       type: object
-      description: Predicate evaluated against decoded event data.
+      description: Fires at one or more absolute Unix-epoch milliseconds.
       required:
-      - fieldName
-      - operator
-      - value
+      - epochs
       properties:
-        fieldName:
-          type: string
-        operator:
-          type: string
-          enum:
-          - eq
-          - ne
-          - gt
-          - gte
-          - lt
-          - lte
-          - contains
-        value:
-          type: string
-          description: 'Value to compare against, encoded as a string. The operator
-
-            parses it according to `fieldType` (e.g. `int256` / `uint256`
-
-            → big.Int, `address` → checksummed hex, `bool` →
-
-            "true"/"false"). Matches the proto `EventCondition.value`,
-
-            which is also a string.
-
-            '
-        fieldType:
-          type: string
-    EventTriggerConfig:
-      type: object
-      description: Fires when matching on-chain events are observed.
-      required:
-      - queries
-      - chainId
-      properties:
-        queries:
+        epochs:
           type: array
           items:
-            $ref: '#/components/schemas/EventTriggerQuery'
+            type: integer
+            format: int64
           minItems: 1
-        cooldownSeconds:
-          type: integer
-          format: int32
-          minimum: 0
-          description: 'Seconds to wait after a fire before allowing the same task to
-
-            trigger again. Default 300. 0 disables cooldown.
-
-            '
-        chainId:
-          $ref: '#/components/schemas/ChainId'
-          description: Chain to watch events on. Required — a workflow carries no chain to inherit.
-    CronTrigger:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - cron
-          config:
-            $ref: '#/components/schemas/CronTriggerConfig'
     CronTriggerConfig:
       type: object
       description: Fires on one or more cron schedules.
@@ -231,39 +95,6 @@ components:
         timezone:
           type: string
           description: IANA timezone (e.g., `UTC`, `America/New_York`). Default UTC.
-    EventTrigger:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - event
-          config:
-            $ref: '#/components/schemas/EventTriggerConfig'
-    TriggerType:
-      type: string
-      enum:
-      - manual
-      - fixedTime
-      - cron
-      - block
-      - event
-      description: 'Discriminator field for the Trigger union. Mirrors the proto
-
-        `TriggerType` enum but without the `TRIGGER_TYPE_` prefix.
-
-        '
-    ManualTrigger:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - manual
-          config:
-            $ref: '#/components/schemas/ManualTriggerConfig'
     Problem:
       type: object
       description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
@@ -312,20 +143,64 @@ components:
 
             '
           example: WORKFLOW_NOT_FOUND
-    InputVariables:
-      type: object
-      additionalProperties: true
-      description: 'Free-form key-value bag of values used to resolve `{{variable.path}}`
+    TriggerType:
+      type: string
+      enum:
+      - manual
+      - fixedTime
+      - cron
+      - block
+      - event
+      description: 'Discriminator field for the Trigger union. Mirrors the proto
 
-        template references inside trigger and node configs. Conventional
-
-        well-known keys: `settings.runner` (smart wallet address),
-
-        `settings.chainId` (chain id). camelCase keys; back-compat support
-
-        for snake_case keys exists during the migration window.
+        `TriggerType` enum but without the `TRIGGER_TYPE_` prefix.
 
         '
+    RunTriggerRequest:
+      type: object
+      required:
+      - trigger
+      properties:
+        trigger:
+          $ref: '#/components/schemas/Trigger'
+        triggerInput:
+          $ref: '#/components/schemas/InputVariables'
+    CronTrigger:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - cron
+          config:
+            $ref: '#/components/schemas/CronTriggerConfig'
+    EthereumAddress:
+      type: string
+      pattern: ^0x[a-fA-F0-9]{40}$
+      description: Lowercase or checksummed hex EOA / contract address.
+      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
+    ManualTriggerConfig:
+      type: object
+      description: User-initiated trigger; no chain context.
+      required:
+      - lang
+      properties:
+        data:
+          description: Arbitrary structured payload returned in the trigger output.
+          additionalProperties: true
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+          description: HTTP headers (for webhook testing).
+        pathParams:
+          type: object
+          additionalProperties:
+            type: string
+          description: Path parameters (for webhook testing).
+        lang:
+          $ref: '#/components/schemas/Lang'
     BlockTriggerConfig:
       type: object
       description: Fires every N blocks on the target chain.
@@ -341,23 +216,138 @@ components:
         chainId:
           $ref: '#/components/schemas/ChainId'
           description: Chain to watch blocks on. Required — a workflow carries no chain to inherit.
-    FixedTimeTriggerConfig:
+    EventTrigger:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - event
+          config:
+            $ref: '#/components/schemas/EventTriggerConfig'
+    RunTriggerResponse:
       type: object
-      description: Fires at one or more absolute Unix-epoch milliseconds.
       required:
-      - epochs
+      - success
       properties:
-        epochs:
+        success:
+          type: boolean
+        error:
+          type: string
+        errorCode:
+          type: string
+        output:
+          additionalProperties: true
+        metadata:
+          additionalProperties: true
+    BlockTrigger:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - block
+          config:
+            $ref: '#/components/schemas/BlockTriggerConfig'
+    ManualTrigger:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - manual
+          config:
+            $ref: '#/components/schemas/ManualTriggerConfig'
+    EventCondition:
+      type: object
+      description: Predicate evaluated against decoded event data.
+      required:
+      - fieldName
+      - operator
+      - value
+      properties:
+        fieldName:
+          type: string
+        operator:
+          type: string
+          enum:
+          - eq
+          - ne
+          - gt
+          - gte
+          - lt
+          - lte
+          - contains
+        value:
+          type: string
+          description: 'Value to compare against, encoded as a string. The operator
+
+            parses it according to `fieldType` (e.g. `int256` / `uint256`
+
+            → big.Int, `address` → checksummed hex, `bool` →
+
+            "true"/"false"). Matches the proto `EventCondition.value`,
+
+            which is also a string.
+
+            '
+        fieldType:
+          type: string
+    FixedTimeTrigger:
+      allOf:
+      - type: object
+        properties:
+          type:
+            type: string
+            enum:
+            - fixedTime
+          config:
+            $ref: '#/components/schemas/FixedTimeTriggerConfig'
+    EventTriggerConfig:
+      type: object
+      description: Fires when matching on-chain events are observed.
+      required:
+      - queries
+      - chainId
+      properties:
+        queries:
           type: array
           items:
-            type: integer
-            format: int64
+            $ref: '#/components/schemas/EventTriggerQuery'
           minItems: 1
-    EthereumAddress:
-      type: string
-      pattern: ^0x[a-fA-F0-9]{40}$
-      description: Lowercase or checksummed hex EOA / contract address.
-      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
+        cooldownSeconds:
+          type: integer
+          format: int32
+          minimum: 0
+          description: 'Seconds to wait after a fire before allowing the same task to
+
+            trigger again. Default 300. 0 disables cooldown.
+
+            '
+        chainId:
+          $ref: '#/components/schemas/ChainId'
+          description: Chain to watch events on. Required — a workflow carries no chain to inherit.
+    EventMethodCall:
+      type: object
+      required:
+      - methodName
+      properties:
+        methodName:
+          type: string
+        callData:
+          $ref: '#/components/schemas/Hex'
+        applyToFields:
+          type: array
+          items:
+            type: string
+        methodParams:
+          type: array
+          items:
+            type: string
+            description: Handlebars template; resolves against decoded event data.
     EventTriggerQuery:
       type: object
       description: Single ethereum.FilterQuery — one subscription per query.
@@ -399,31 +389,47 @@ components:
           items:
             $ref: '#/components/schemas/EventMethodCall'
           description: Method calls used to enrich decoded event data (e.g., `decimals`).
-    ManualTriggerConfig:
+    InputVariables:
       type: object
-      description: User-initiated trigger; no chain context.
+      additionalProperties: true
+      description: 'Free-form key-value bag of values used to resolve `{{variable.path}}`
+
+        template references inside trigger and node configs. Conventional
+
+        well-known keys: `settings.runner` (smart wallet address),
+
+        `settings.chainId` (chain id). camelCase keys; back-compat support
+
+        for snake_case keys exists during the migration window.
+
+        '
+    Trigger:
+      type: object
       required:
-      - lang
+      - type
+      - name
+      - config
       properties:
-        data:
-          description: Arbitrary structured payload returned in the trigger output.
-          additionalProperties: true
-        headers:
-          type: object
-          additionalProperties:
-            type: string
-          description: HTTP headers (for webhook testing).
-        pathParams:
-          type: object
-          additionalProperties:
-            type: string
-          description: Path parameters (for webhook testing).
-        lang:
-          $ref: '#/components/schemas/Lang'
-    Hex:
-      type: string
-      pattern: ^0x[a-fA-F0-9]*$
-      description: Arbitrary-length hex-encoded byte string.
+        id:
+          type: string
+        name:
+          type: string
+        type:
+          $ref: '#/components/schemas/TriggerType'
+      discriminator:
+        propertyName: type
+        mapping:
+          manual: '#/components/schemas/ManualTrigger'
+          fixedTime: '#/components/schemas/FixedTimeTrigger'
+          cron: '#/components/schemas/CronTrigger'
+          block: '#/components/schemas/BlockTrigger'
+          event: '#/components/schemas/EventTrigger'
+      oneOf:
+      - $ref: '#/components/schemas/ManualTrigger'
+      - $ref: '#/components/schemas/FixedTimeTrigger'
+      - $ref: '#/components/schemas/CronTrigger'
+      - $ref: '#/components/schemas/BlockTrigger'
+      - $ref: '#/components/schemas/EventTrigger'
     ChainId:
       type: integer
       format: int64
@@ -435,16 +441,10 @@ components:
 
         '
       example: 11155111
-    BlockTrigger:
-      allOf:
-      - type: object
-        properties:
-          type:
-            type: string
-            enum:
-            - block
-          config:
-            $ref: '#/components/schemas/BlockTriggerConfig'
+    Hex:
+      type: string
+      pattern: ^0x[a-fA-F0-9]*$
+      description: Arbitrary-length hex-encoded byte string.
   responses:
     BadRequest:
       description: Request validation failed.

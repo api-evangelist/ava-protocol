@@ -65,49 +65,26 @@ paths:
         '429':
           $ref: '#/components/responses/RateLimited'
 components:
-  responses:
-    BadRequest:
-      description: Request validation failed.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-    RateLimited:
-      description: 'Rate limit exceeded. Inspect `X-RateLimit-Reset` for the next allowed
-
-        request time and `Retry-After` for the seconds to wait.
-
-        '
-      headers:
-        X-RateLimit-Limit:
-          schema:
-            type: integer
-        X-RateLimit-Remaining:
-          schema:
-            type: integer
-        X-RateLimit-Reset:
-          schema:
-            type: integer
-            description: Unix timestamp when the bucket refills.
-        Retry-After:
-          schema:
-            type: integer
-            description: Seconds to wait before retrying.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
-    Unauthorized:
-      description: Missing or invalid bearer token.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
   schemas:
-    Timestamp:
+    EthereumAddress:
       type: string
-      format: date-time
-      description: RFC 3339 timestamp.
+      pattern: ^0x[a-fA-F0-9]{40}$
+      description: Lowercase or checksummed hex EOA / contract address.
+      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
+    AuthExchangeResponse:
+      type: object
+      required:
+      - token
+      - expiresAt
+      properties:
+        token:
+          type: string
+          description: JWT bearer token.
+        expiresAt:
+          $ref: '#/components/schemas/Timestamp'
+        subject:
+          $ref: '#/components/schemas/EthereumAddress'
+          description: The EOA the token is bound to (echoed for clients).
     AuthExchangeRequest:
       type: object
       required:
@@ -129,24 +106,6 @@ components:
             target chain). SDKs generate this locally.
 
             '
-    AuthExchangeResponse:
-      type: object
-      required:
-      - token
-      - expiresAt
-      properties:
-        token:
-          type: string
-          description: JWT bearer token.
-        expiresAt:
-          $ref: '#/components/schemas/Timestamp'
-        subject:
-          $ref: '#/components/schemas/EthereumAddress'
-          description: The EOA the token is bound to (echoed for clients).
-    Hex:
-      type: string
-      pattern: ^0x[a-fA-F0-9]*$
-      description: Arbitrary-length hex-encoded byte string.
     Problem:
       type: object
       description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
@@ -195,11 +154,52 @@ components:
 
             '
           example: WORKFLOW_NOT_FOUND
-    EthereumAddress:
+    Timestamp:
       type: string
-      pattern: ^0x[a-fA-F0-9]{40}$
-      description: Lowercase or checksummed hex EOA / contract address.
-      example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
+      format: date-time
+      description: RFC 3339 timestamp.
+    Hex:
+      type: string
+      pattern: ^0x[a-fA-F0-9]*$
+      description: Arbitrary-length hex-encoded byte string.
+  responses:
+    BadRequest:
+      description: Request validation failed.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    RateLimited:
+      description: 'Rate limit exceeded. Inspect `X-RateLimit-Reset` for the next allowed
+
+        request time and `Retry-After` for the seconds to wait.
+
+        '
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+            description: Unix timestamp when the bucket refills.
+        Retry-After:
+          schema:
+            type: integer
+            description: Seconds to wait before retrying.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Unauthorized:
+      description: Missing or invalid bearer token.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
   securitySchemes:
     bearerAuth:
       type: http

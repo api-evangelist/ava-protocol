@@ -53,12 +53,30 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid bearer token.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
   schemas:
     EthereumAddress:
       type: string
       pattern: ^0x[a-fA-F0-9]{40}$
       description: Lowercase or checksummed hex EOA / contract address.
       example: '0x82F2Dd9a552a69f2ceD7Ff2D05c43aB8430158FB'
+    ChainId:
+      type: integer
+      format: int64
+      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
+
+        chain-aware trigger/node configs this is required and must be a
+
+        configured chain; on query/filter params it is optional.
+
+        '
+      example: 11155111
     Problem:
       type: object
       description: 'RFC 7807 problem+json. Returned as `application/problem+json` on any
@@ -107,17 +125,6 @@ components:
 
             '
           example: WORKFLOW_NOT_FOUND
-    ChainId:
-      type: integer
-      format: int64
-      description: 'Numeric chain ID (e.g. 11155111 for Sepolia, 8453 for Base). On
-
-        chain-aware trigger/node configs this is required and must be a
-
-        configured chain; on query/filter params it is optional.
-
-        '
-      example: 11155111
     TokenMetadataResponse:
       type: object
       required:
@@ -142,13 +149,6 @@ components:
           - whitelist
           - rpc
           - cache
-  responses:
-    Unauthorized:
-      description: Missing or invalid bearer token.
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/Problem'
   parameters:
     ChainIdQuery:
       name: chainId

@@ -64,6 +64,137 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Ava Protocol is a company surfaced as a portfolio company of greylock and added to the API Evangelist network as a stub for enrichment. Sector: fintech. This profile is a lead awaiting the enrichment pipeline.
+Ava Protocol is an AI-powered onchain automation platform for Ethereum and L2s (Base, Soneium), and the evolution of the OAK Network Substrate automation parachain. Users create "workflows" that connect triggers (scheduled time, price conditions, onchain events, or manual) to actions (swaps, transfers, contract calls, notifications) and run them non-custodially from scoped smart wallets — the user always approves before execution. Verifiable execution is provided by an EigenLayer AVS (Actively Validated Service). Developers integrate through a public REST API (the AVS aggregator gateway) and a TypeScript SDK, authenticating with a JWT bearer token obtained via wallet signature (EIP-191) or an operator-minted key.
 
-Source: portfolio company of [greylock](https://github.com/api-evangelist/greylock) — https://avaprotocol.org/
+**Areas:** Company · Fintech · Blockchain · DeFi · Automation · Web3 · Ethereum · Smart Wallets · Workflows · AI Agents
+
+## Ava Protocol on APIs.io
+
+Everything profiled for Ava Protocol is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/ava-protocol/](https://apis.io/providers/ava-protocol/)** — or go straight to one of the APIs or properties below.
+
+### APIs (10)
+
+- [Ava Protocol Auth API](https://apis.io/apis/ava-protocol/ava-protocol-auth-api/) — Token issuance and credential management
+- [Ava Protocol Executions API](https://apis.io/apis/ava-protocol/ava-protocol-executions-api/) — Workflow execution history and status
+- [Ava Protocol Health API](https://apis.io/apis/ava-protocol/ava-protocol-health-api/) — Liveness / readiness probes
+- [Ava Protocol Nodes API](https://apis.io/apis/ava-protocol/ava-protocol-nodes-api/) — Stand-alone node execution
+- [Ava Protocol Operators API](https://apis.io/apis/ava-protocol/ava-protocol-operators-api/) — Connected operator status (read-only)
+- [Ava Protocol Secrets API](https://apis.io/apis/ava-protocol/ava-protocol-secrets-api/) — User/workflow/org secret storage
+- [Ava Protocol Tokens API](https://apis.io/apis/ava-protocol/ava-protocol-tokens-api/) — ERC-20 metadata lookup
+- [Ava Protocol Triggers API](https://apis.io/apis/ava-protocol/ava-protocol-triggers-api/) — Stand-alone trigger evaluation
+- [Ava Protocol Wallets API](https://apis.io/apis/ava-protocol/ava-protocol-wallets-api/) — Smart-wallet derivation and operations
+- [Ava Protocol Workflows API](https://apis.io/apis/ava-protocol/ava-protocol-workflows-api/) — Workflow CRUD and lifecycle actions
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [ava-protocol](https://apis.io/servers/ava-protocol/ava-protocol/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Ava Protocol Agentic Access](https://apis.io/agentic-access/ava-protocol/ava-protocol-agentic-access/)
+
+#### Collections (10)
+
+Postman and Open Collection request collections.
+
+- [Ava Protocol AVS Auth API](https://apis.io/collections/ava-protocol/open-ava-protocol-auth-api/)
+- [Ava Protocol AVS Auth Executions API](https://apis.io/collections/ava-protocol/open-ava-protocol-executions-api/)
+- [Ava Protocol AVS Auth Health API](https://apis.io/collections/ava-protocol/open-ava-protocol-health-api/)
+- [Ava Protocol AVS Auth Nodes API](https://apis.io/collections/ava-protocol/open-ava-protocol-nodes-api/)
+- [Ava Protocol AVS Auth Operators API](https://apis.io/collections/ava-protocol/open-ava-protocol-operators-api/)
+- [Ava Protocol AVS Auth Secrets API](https://apis.io/collections/ava-protocol/open-ava-protocol-secrets-api/)
+- [Ava Protocol AVS Auth Tokens API](https://apis.io/collections/ava-protocol/open-ava-protocol-tokens-api/)
+- [Ava Protocol AVS Auth Triggers API](https://apis.io/collections/ava-protocol/open-ava-protocol-triggers-api/)
+- [Ava Protocol AVS Auth Wallets API](https://apis.io/collections/ava-protocol/open-ava-protocol-wallets-api/)
+- [Ava Protocol AVS Auth Workflows API](https://apis.io/collections/ava-protocol/open-ava-protocol-workflows-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Ava Protocol Avs Overlay](https://apis.io/overlays/ava-protocol/ava-protocol-avs-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Ava Protocol Authentication](https://apis.io/security/ava-protocol/ava-protocol-authentication/)
+- [Ava Protocol Domain Security](https://apis.io/security/ava-protocol/ava-protocol-domain-security/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://avaprotocol.org/)
+- [Documentation](https://avaprotocol.org/docs/ava-sdk-js/getting-started)
+- [Getting started](https://avaprotocol.org/docs/ava-sdk-js/getting-started)
+- [API reference](https://avaprotocol.org/docs/ava-sdk-js/rest-api)
+- [Sign up](https://app.avaprotocol.org)
+- [Support](https://avaprotocol.org/contact-us)
+- [Blog](https://avaprotocol.org/blog)
+- [Terms of service](https://avaprotocol.org/legal/discord-bot-terms)
+- [Privacy policy](https://avaprotocol.org/legal/discord-bot-privacy)
+- [GitHub](https://github.com/AvaProtocol)
+
+## API Evangelist rating
+
+**Kin Score 43.6** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 42.2 |
+| Contract governance | 4.5 |
+| Operational transparency | 2.6 |
+| Developer ergonomics | 80.4 |
+| Access clarity | 34.2 |
+
+**Agent readiness 35.8** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | documented (partial credit) |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | documented (partial credit) |
+| Error Semantics | verified |
+| OpenAPI Examples | — |
+| Rate Limit Signal | verified |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | partial |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 22.3** — Payments
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/ava-protocol/](https://apis.io/providers/ava-protocol/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Ava Protocol: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/ava-protocol/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
